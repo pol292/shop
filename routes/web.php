@@ -36,6 +36,10 @@ Route::group( [ 'prefix' => 'dashboard' ], function () {
             Route::delete( 'delete/{id}', 'Dashboard\CMS\ManageContentController@delete' );
         } );
     } );
+    Route::group( [ 'prefix' => 'restore' ], function () {
+        Route::get( 'show/{type}', 'Dashboard\BackupController@show' );
+        Route::get( '{id}', 'Dashboard\BackupController@restore' );
+    } );
 } );
 
 

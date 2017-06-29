@@ -4,6 +4,7 @@ namespace App\Models\CMS;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Backup;
 use Session;
 
 class Pages extends Model {
@@ -30,19 +31,22 @@ class Pages extends Model {
     }
 
     public static function getContentsById( $id, &$data ) {
-        $root = self::find( $id )->toArray();
-        self::getTree( $root );
+        if ( $root = self::find( $id ) ) {
+            $root = $root->toArray();
 
-        $data[ 'page_content' ][ 'id' ]      = &$root[ 'id' ];
-        $data[ 'page_content' ][ 'url' ]     = &$root[ 'url' ];
-        $data[ 'page_content' ][ 'title' ]   = &$root[ 'title' ];
-        $data[ 'page_content' ][ 'article' ] = &$root[ 'article' ];
-        $data[ 'page_content' ][ 'active' ]  = &$root[ 'active' ];
-        $data[ 'page_content' ][ 'created_at' ]  = &$root[ 'created_at' ];
-        $data[ 'page_content' ][ 'updated_at' ]  = &$root[ 'updated_at' ];
+            self::getTree( $root );
 
-        $data[ 'page_json' ][ 'childs' ] = &$root[ 'childs' ];
-        $data[ 'page_json' ]             = json_encode( $data[ 'page_json' ] );
+            $data[ 'page_content' ][ 'id' ]         = &$root[ 'id' ];
+            $data[ 'page_content' ][ 'url' ]        = &$root[ 'url' ];
+            $data[ 'page_content' ][ 'title' ]      = &$root[ 'title' ];
+            $data[ 'page_content' ][ 'article' ]    = &$root[ 'article' ];
+            $data[ 'page_content' ][ 'active' ]     = &$root[ 'active' ];
+            $data[ 'page_content' ][ 'created_at' ] = &$root[ 'created_at' ];
+            $data[ 'page_content' ][ 'updated_at' ] = &$root[ 'updated_at' ];
+
+            $data[ 'page_json' ][ 'childs' ] = &$root[ 'childs' ];
+            $data[ 'page_json' ]             = json_encode( $data[ 'page_json' ] );
+        }
     }
 
     private static function getTree( &$page ) {
@@ -79,31 +83,52 @@ class Pages extends Model {
     }
 
     public static function updatePage( &$request ) {
-        $update = self::find( $request[ 'id' ] );
+        DB::beginTransaction();
+        try {
 
-        $update[ 'title' ]   = $request[ 'title' ];
-        $update[ 'url' ]     = $request[ 'url' ];
-        $update[ 'article' ] = $request[ 'article' ];
-        $update[ 'active' ]  = $request[ 'active' ] ? 1 : 0;
+            $page = self::find( $request[ 'id' ] );
 
-        if ( $update->save() ) {
+            self::pageBackup( 'update', $page, 'chevron-circle-up' );
+
+            $page[ 'title' ]   = $request[ 'title' ];
+            $page[ 'url' ]     = $request[ 'url' ];
+            $page[ 'article' ] = $request[ 'article' ] ? $request[ 'article' ] : '';
+            $page[ 'active' ]  = $request[ 'active' ] ? 1 : 0;
+
+
+            $page->save();
+            DB::commit();
+
             Session::flash( 'sm', "You are save successfull update (  {$request[ 'title' ]} ) page." );
+        } catch ( \Exception $e ) {
+            DB::rollback();
+            Session::flash( 'wm', 'Can\'t add new page now please try after' );
+            return redirect( url( "dashboard/CMS/page/" ) );
         }
     }
 
     public static function addPage( &$request ) {
+        DB::beginTransaction();
+        try {
 
-        $page = new self;
+            $page = new self;
 
-        $page[ 'title' ]   = $request[ 'title' ];
-        $page[ 'url' ]     = $request[ 'url' ];
-        $page[ 'article' ] = $request[ 'article' ] ? $request[ 'article' ] : '';
-        $page[ 'active' ]  = $request[ 'active' ] ? 1 : 0;
+            $page[ 'title' ]   = $request[ 'title' ];
+            $page[ 'url' ]     = $request[ 'url' ];
+            $page[ 'article' ] = $request[ 'article' ] ? $request[ 'article' ] : '';
+            $page[ 'active' ]  = $request[ 'active' ] ? 1 : 0;
 
-        if ( $page->save() ) {
+            $page->save();
+            DB::commit();
+            $backup = [
+                'id'    => $page[ 'id' ],
+                'table' => 'pages',
+            ];
+            Backup::set( 'create', 'page', "Create page: {$page[ 'title' ]}", $backup, 'plus' );
             Session::flash( 'sm', "You are create successfull new (  {$request[ 'title' ]} ) page." );
             return redirect( url( "dashboard/CMS/page/{$page[ 'id' ]}/edit" ) );
-        } else {
+        } catch ( \Exception $e ) {
+            DB::rollback();
             Session::flash( 'wm', 'Can\'t add new page now please try after' );
             return redirect( url( "dashboard/CMS/page/" ) );
         }
@@ -118,17 +143,37 @@ class Pages extends Model {
             $content = Page_contents::where( 'pages_id', $id );
             $title   = $page[ 'title' ];
             if ( $page && $content ) {
+
+                self::pageBackup( 'delete', $page, 'trash-o' );
                 $page->delete();
                 $content->delete();
+
                 DB::commit();
+
                 Session::flash( 'sm', "You are successfull delete page ($title)" );
-            }else {
+            } else {
                 
             }
         } catch ( \Exception $e ) {
-            Session::flash( 'wm', 'Can\'t delete page now please try after' );
             DB::rollback();
+            Session::flash( 'wm', 'Can\'t delete page now please try after' );
         }
+    }
+
+    public static function contentBackup( $change, $id, $icon = '' ) {
+        $page = self::find( $id );
+        self::pageBackup( $change, $page, $icon );
+    }
+
+    private static function pageBackup( $change, &$page, $icon = '' ) {
+        $content = Page_contents::where( 'pages_id', $page[ 'id' ] );
+
+        $backup = [
+            'pages'         => $page->toArray(),
+            'page_contents' => $content->get()->toArray(),
+        ];
+
+        Backup::set( $change, 'page', ucfirst( $change ) . " page: {$page[ 'title' ]}", $backup, $icon );
     }
 
 }

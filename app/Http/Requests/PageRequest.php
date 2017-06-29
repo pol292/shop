@@ -25,7 +25,7 @@ class PageRequest extends FormRequest {
         $ignore = !empty( $request[ 'id' ] ) ? ',' . $request[ 'id' ] : '';
         return [
             'title' => 'required',
-            'url'   => 'required|regex:/^[a-z0-9-]+$/|unique:pages,url' . $ignore,
+            'url'   => 'required|regex:/^[a-z\d\-]+$/|unique:pages,url' . $ignore,
         ];
     }
 

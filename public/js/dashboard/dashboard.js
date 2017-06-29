@@ -75,6 +75,9 @@ $(function () {
                 type: "PUT",
                 dataType: "html",
                 data: {'data': data},
+                success: function () {
+                    location.reload();
+                }
             });
         }
     };
@@ -117,7 +120,7 @@ $(function () {
             }
         });
     }).on('keyup', '.friendly-url', function () {
-        var friendly_url = $(this).val().trim().toLowerCase().replace(/[^a-z0-9\s\-]/g, '').replace(/[\s]+/g, '-');
+        var friendly_url = $(this).val().trim().toLowerCase().replace(/[^a-z\d\s\-]/g, '').replace(/[\s]+/g, '-');
         $('.friendly-url-paste').val(friendly_url);
     });
 

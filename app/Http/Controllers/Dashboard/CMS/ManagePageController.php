@@ -59,9 +59,13 @@ class ManagePageController extends BaseDashboardController {
      * @return \Illuminate\Http\Response
      */
     public function edit( $id ) {
-        Pages::getContentsById( $id, self::$data );
-        self::$data[ 'subtitle' ] = 'Edit: ' . self::$data[ 'page_content' ][ 'title' ];
-        return view( 'dashboard.cms.page.page_edit', self::$data );
+        Pages::getContentsById( $id, self::$data );        
+        if ( !empty( self::$data[ 'page_content' ] ) ) {
+            self::$data[ 'subtitle' ] = 'Edit: ' . self::$data[ 'page_content' ][ 'title' ];
+            return view( 'dashboard.cms.page.page_edit', self::$data );
+        }else{
+            return redirect(url('dashboard/CMS/page'));
+        }
     }
 
     /**
