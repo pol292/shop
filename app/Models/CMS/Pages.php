@@ -18,10 +18,9 @@ class Pages extends Model {
             $page = $page->toArray();
             if ( $active || $page[ 'active' ] ) {
                 if ( $active )
-                    $data[ 'back' ]     = $active;
+                    $data[ 'back' ] = $active;
                 self::getTree( $page );
-                $data[ 'contents' ] = [];
-                self::sortChilds( $page, $data );
+                self::sortChilds( $page, $data[ 'contents' ] );
             }
         }
 
@@ -64,13 +63,11 @@ class Pages extends Model {
 
     private static function sortChilds( &$page, &$data, $c = 1 ) {
         if ( $c <= 6 ) {
-
-            $current                                     = count( $data[ 'contents' ] );
-            $data[ 'contents' ][ $current ][ 'tag' ]     = "h$c";
-            $data[ 'contents' ][ $current ][ 'title' ]   = $page[ 'title' ];
-            $data[ 'contents' ][ $current ][ 'article' ] = $page[ 'article' ];
-
-            if ( count( $page[ 'childs' ] ) ) {
+            $current                       = count( $data );
+            $data[ $current ][ 'tag' ]     = "h$c";
+            $data[ $current ][ 'title' ]   = !empty($page[ 'title' ])?$page[ 'title' ]:'';
+            $data[ $current ][ 'article' ] = !empty($page[ 'article' ])?$page[ 'article' ]:'';
+            if (!empty( $page[ 'childs' ] ) ) {
                 foreach ( $page[ 'childs' ] as $child ) {
                     self::sortChilds( $child, $data, $c + 1 );
                 }
@@ -166,7 +163,7 @@ class Pages extends Model {
     }
 
     private static function pageBackup( $change, &$page, $icon = '' ) {
-        $content = Page_contents::where( 'pages_id', $page[ 'id' ] );
+        $content = Page_contents::where( 'pages_id', $page[ 'id' ] )->orderBy( 'page_contents_id' )->orderBy( 'sort' );
 
         $backup = [
             'pages'         => $page->toArray(),
@@ -174,6 +171,23 @@ class Pages extends Model {
         ];
 
         Backup::set( $change, 'page', ucfirst( $change ) . " page: {$page[ 'title' ]}", $backup, $icon );
+    }
+
+    public static function previewHistory( &$history, &$data ) {
+        if ( !isset( $history[ 'no_old' ] ) ) {
+            self::sortChilds( $history, $data['diff'][ 'old' ], $c = 1 );
+        } else {
+            $data['diff'][ 'old' ] = &$history[ 'no_old' ];
+        }
+        self::getNewVersion( self::find( $history[ 'id' ] ), $data['diff'] );
+    }
+
+    private static function getNewVersion( $page, &$data ) {
+        if ( $page ) {
+            $page = $page->toArray();
+            self::getTree( $page );
+            self::sortChilds( $page, $data[ 'new' ] );
+        }
     }
 
 }

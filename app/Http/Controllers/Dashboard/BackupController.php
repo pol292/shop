@@ -12,14 +12,22 @@ class BackupController extends BaseDashboardController {
         self::$data[ 'page' ] = 'Restore';
     }
 
-    public function restore( $id ) {
+    public function restore( Request $request, $id ) {
         Backup::restore( $id );
+        return redirect( $request->header( 'referer' ) );
     }
 
-    public function show( $type ) {
+    public function view( Request $request, $id ) {
+        self::$data[ 'id' ] = $id;
+        self::$data[ 'back' ] = $request->header( 'referer' );
+        Backup::view( $id, self::$data );
+        return view( 'dashboard.restore.diff', self::$data );
+    }
+
+    public function history( $type ) {
         self::$data[ 'page' ] .= " $type";
         Backup::getBackup( $type, self::$data );
-        return view( 'dashboard.restore.view_all', self::$data );
+        return view( 'dashboard.restore.view', self::$data );
     }
 
 }

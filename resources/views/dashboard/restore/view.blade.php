@@ -16,8 +16,9 @@
         <td>{{$history['description']}}</td>
         <td>{{$history['updated_at']}}</td>
         <td class="text-center">
-            <a href="{{url('dashboard/restore/'.$history['id']) }}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="Restore">
-                <span class="fa fa-history"></span>
+            <a href="{{url('dashboard/restore/view/'.$history['id']) }}" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="View">
+
+                <span class="fa fa-eye"></span>
             </a> 
         </td>
     </tr>

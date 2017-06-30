@@ -80,8 +80,8 @@ class Page_contents extends Model {
             $content->sort             = $max + 1;
             $content->title            = $request[ 'content-title' ];
             $content->article          = $request[ 'content-article' ] ? $request[ 'content-article' ] : '';
-
             $content->save();
+            
             Pages::contentBackup( 'update', $request[ 'id' ], 'chevron-circle-up' );
 
             DB::commit();
@@ -89,6 +89,7 @@ class Page_contents extends Model {
         } catch ( \Exception $e ) {
             DB::rollback();
             Session::flash( 'wm', 'Can\'t  update page now please try after' );
+            Session::flash( 'wm', $e->getTraceAsString() );
         }
     }
 
