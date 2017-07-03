@@ -1,20 +1,5 @@
 <?php
 
-/*
-  |--------------------------------------------------------------------------
-  | Web Routes
-  |--------------------------------------------------------------------------
-  |
-  | Here is where you can register web routes for your application. These
-  | routes are loaded by the RouteServiceProvider within a group which
-  | contains the "web" middleware group. Now create something great!
-  |
- */
-
-Route::get( '/', function () {
-    return view( 'welcome' );
-} );
-
 #   Dashboard:
 Route::group( [ 'prefix' => 'dashboard' ], function () {
     Route::get( '/', 'Dashboard\DashboardController@index' );
@@ -27,8 +12,14 @@ Route::group( [ 'prefix' => 'dashboard' ], function () {
 
         Route::resource( 'page', 'Dashboard\CMS\ManagePageController' );
 
-#   Dashboard/CMS/Content:
 
+#   Dashboard/CMS/Menu:
+        Route::group( [ 'prefix' => 'menu' ], function () {
+            Route::get( 'view', 'Dashboard\CMS\ManageMenuController@edit' );
+            Route::put( 'update', 'Dashboard\CMS\ManageMenuController@update' );
+        } );
+
+#   Dashboard/CMS/Content:
         Route::group( [ 'prefix' => 'content' ], function () {
             Route::post( 'add', 'Dashboard\CMS\ManageContentController@add' );
             Route::put( 'update', 'Dashboard\CMS\ManageContentController@update' );
@@ -36,6 +27,9 @@ Route::group( [ 'prefix' => 'dashboard' ], function () {
             Route::delete( 'delete/{id}', 'Dashboard\CMS\ManageContentController@delete' );
         } );
     } );
+
+
+#   Dashboard/restore:
     Route::group( [ 'prefix' => 'restore' ], function () {
         Route::get( 'view/{id}', 'Dashboard\BackupController@view' );
         Route::get( 'history/{id}', 'Dashboard\BackupController@history' );

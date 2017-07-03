@@ -9,7 +9,7 @@ use Session;
 class Page_contents extends Model {
 
     private function getChilds() {
-        return $this->hasMany( 'App\Models\CMS\Page_contents', 'page_contents_id', 'id' )->orderBy( 'sort' );
+        return $this->hasMany( __CLASS__, 'page_contents_id', 'id' )->orderBy( 'sort' );
     }
 
     public function childs() {

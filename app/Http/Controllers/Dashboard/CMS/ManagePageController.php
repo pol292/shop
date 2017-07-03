@@ -20,7 +20,7 @@ class ManagePageController extends BaseDashboardController {
      */
     public function index() {
         Pages::getPages( self::$data );
-        return view( 'dashboard.cms.page.page_view_all', self::$data );
+        return view( 'dashboard.cms.page.view_all', self::$data );
     }
 
     /**
@@ -29,7 +29,8 @@ class ManagePageController extends BaseDashboardController {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return view( 'dashboard.cms.page.page_add', self::$data );
+        self::$data[ 'subtitle' ] = 'Add new page';
+        return view( 'dashboard.cms.page.add', self::$data );
     }
 
     /**
@@ -49,7 +50,10 @@ class ManagePageController extends BaseDashboardController {
      * @return \Illuminate\Http\Response
      */
     public function show( Request $request, $url ) {
-        return (new \App\Http\Controllers\Site\PagesController() )->showPage( $url, $request->header( 'referer' ) );
+        if ( Pages::where( 'url', $url )->first() )
+            return (new \App\Http\Controllers\Site\PagesController() )->showPage( $url, $request->header( 'referer' ) );
+        else
+            return redirect ( url( 'dashboard/CMS/page' ) );
     }
 
     /**
@@ -59,12 +63,12 @@ class ManagePageController extends BaseDashboardController {
      * @return \Illuminate\Http\Response
      */
     public function edit( $id ) {
-        Pages::getContentsById( $id, self::$data );        
+        Pages::getContentsById( $id, self::$data );
         if ( !empty( self::$data[ 'page_content' ] ) ) {
             self::$data[ 'subtitle' ] = 'Edit: ' . self::$data[ 'page_content' ][ 'title' ];
-            return view( 'dashboard.cms.page.page_edit', self::$data );
-        }else{
-            return redirect(url('dashboard/CMS/page'));
+            return view( 'dashboard.cms.page.edit', self::$data );
+        } else {
+            return redirect( url( 'dashboard/CMS/page' ) );
         }
     }
 

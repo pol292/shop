@@ -176,7 +176,7 @@ class Pages extends Model {
     public static function previewHistory( &$history, &$data ) {
         $data[ 'diff' ][ 'old' ] = '';
         $data[ 'diff' ][ 'new' ] = '';
-        if ( !empty( $history ) ) {
+        if ( !empty( $history['title'] ) ) {
             self::sortChilds( $history, $data[ 'diff' ][ 'old' ] );
         }
         if ( !empty( $history[ 'id' ] ) && $new = self::find( $history[ 'id' ] ) ) {

@@ -9,7 +9,7 @@ use App\Models\Backup;
 class BackupController extends BaseDashboardController {
 
     public function __construct() {
-        self::$data[ 'page' ] = 'Restore';
+        self::$data[ 'page' ] = 'Recovery';
     }
 
     public function restore( Request $request, $id ) {
@@ -20,8 +20,6 @@ class BackupController extends BaseDashboardController {
     public function view( Request $request, $id ) {
         self::$data[ 'id' ] = $id;
         Backup::view( $id, self::$data );
-        if ( empty( $data[ 'back' ] ) )
-            return redirect( url( "dashboard/restore/history/all" ) );
         return view( 'dashboard.restore.diff', self::$data );
     }
 

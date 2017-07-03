@@ -107,8 +107,10 @@ class Backup extends Model {
     }
 
     public static function view( &$id, &$data ) {
+        $data[ 'back' ] = 'all';
         if ( $view = self::find( $id ) ) {
             $view           = $view->toArray();
+            $data['subtitle'] = $view['description'];
             $data[ 'back' ] = $view[ 'type' ];
             $history        = unserialize( $view[ 'data' ] );
             if ( $history[ 'pages' ] ) {
@@ -136,8 +138,8 @@ class Backup extends Model {
         $history[ 'childs' ] = &$sort;
         Pages::previewHistory( $history, $data );
 
-        $old                 = explode( "\n", $data[ 'diff' ][ 'old' ] );
-        $new                 = explode( "\n", $data[ 'diff' ][ 'new' ] );
+        $old = explode( "\n", $data[ 'diff' ][ 'old' ] );
+        $new = explode( "\n", $data[ 'diff' ][ 'new' ] );
 
         $diff                  = new \Diff( $old, $new, [] );
         $renderer              = new \Diff_Renderer_Html_Inline;

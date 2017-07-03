@@ -50,7 +50,7 @@
  * Nestable Extras
  */
 
-.nestable-lists { display: block; clear: both; padding: 30px 0; width: 100%; border: 0; border-top: 2px solid #ddd; border-bottom: 2px solid #ddd; }
+.nestable-lists { display: block; clear: both; padding: 30px 0; width: 100%; border: 0;  border-bottom: 1px solid #eee; }
 
 #nestable-menu { padding: 0; margin: 20px 0; }
 

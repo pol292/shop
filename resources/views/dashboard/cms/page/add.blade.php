@@ -29,7 +29,7 @@
                 </label>
             </div>
 
-            <button class="btn btn-danger pull-left edit-page-btn">Cancel</button>
+            <a href="{{url('dashboard/CMS/page')}}" class="btn btn-danger pull-left edit-page-btn">Cancel</a>
             <input class="btn btn-primary pull-right" type="submit" value="Save change">
             <div class="clearfix"></div>
         </form>
