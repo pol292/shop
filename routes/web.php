@@ -38,7 +38,7 @@ Route::group( [ 'prefix' => 'dashboard' ], function () {
     } );
     Route::group( [ 'prefix' => 'restore' ], function () {
         Route::get( 'view/{id}', 'Dashboard\BackupController@view' );
-        Route::get( 'history/{type}', 'Dashboard\BackupController@history' );
+        Route::get( 'history/{id}', 'Dashboard\BackupController@history' );
         Route::get( '{id}', 'Dashboard\BackupController@restore' );
     } );
 } );

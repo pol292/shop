@@ -63,11 +63,13 @@ class Pages extends Model {
 
     private static function sortChilds( &$page, &$data, $c = 1 ) {
         if ( $c <= 6 ) {
-            $current                       = count( $data );
+            $data[]                        = [];
+            $current                       = count( $data ) - 1;
+            
             $data[ $current ][ 'tag' ]     = "h$c";
-            $data[ $current ][ 'title' ]   = !empty($page[ 'title' ])?$page[ 'title' ]:'';
-            $data[ $current ][ 'article' ] = !empty($page[ 'article' ])?$page[ 'article' ]:'';
-            if (!empty( $page[ 'childs' ] ) ) {
+            $data[ $current ][ 'title' ]   = !empty( $page[ 'title' ] ) ? $page[ 'title' ] : '';
+            $data[ $current ][ 'article' ] = !empty( $page[ 'article' ] ) ? $page[ 'article' ] : '';
+            if ( !empty( $page[ 'childs' ] ) ) {
                 foreach ( $page[ 'childs' ] as $child ) {
                     self::sortChilds( $child, $data, $c + 1 );
                 }
@@ -118,8 +120,7 @@ class Pages extends Model {
             $page->save();
             DB::commit();
             $backup = [
-                'id'    => $page[ 'id' ],
-                'table' => 'pages',
+                'pages' => [ 'id' => $page[ 'id' ] ],
             ];
             Backup::set( 'create', 'page', "Create page: {$page[ 'title' ]}", $backup, 'plus' );
             Session::flash( 'sm', "You are create successfull new (  {$request[ 'title' ]} ) page." );
@@ -169,25 +170,40 @@ class Pages extends Model {
             'pages'         => $page->toArray(),
             'page_contents' => $content->get()->toArray(),
         ];
-
         Backup::set( $change, 'page', ucfirst( $change ) . " page: {$page[ 'title' ]}", $backup, $icon );
     }
 
     public static function previewHistory( &$history, &$data ) {
-        if ( !isset( $history[ 'no_old' ] ) ) {
-            self::sortChilds( $history, $data['diff'][ 'old' ], $c = 1 );
-        } else {
-            $data['diff'][ 'old' ] = &$history[ 'no_old' ];
+        $data[ 'diff' ][ 'old' ] = '';
+        $data[ 'diff' ][ 'new' ] = '';
+        if ( !empty( $history ) ) {
+            self::sortChilds( $history, $data[ 'diff' ][ 'old' ] );
         }
-        self::getNewVersion( self::find( $history[ 'id' ] ), $data['diff'] );
+        if ( !empty( $history[ 'id' ] ) && $new = self::find( $history[ 'id' ] ) ) {
+            $new = $new->toArray();
+            self::getTree( $new );
+            self::sortChilds( $new, $data[ 'diff' ][ 'new' ] );
+        }
+
+        self::createHistoryHtml( $data );
     }
 
-    private static function getNewVersion( $page, &$data ) {
-        if ( $page ) {
-            $page = $page->toArray();
-            self::getTree( $page );
-            self::sortChilds( $page, $data[ 'new' ] );
+    public static function createHistoryHtml( &$data ) {
+        $ret = [];
+        if ( !empty( $data[ 'diff' ] ) ) {
+            foreach ( $data[ 'diff' ] as $type => $version ) {
+                if ( is_array( $version ) ) {
+                    $ret[ $type ] = '';
+                    foreach ( $version as $content ) {
+                        $ret[ $type ] .= "<{$content[ 'tag' ]}>{$content[ 'title' ]}</{$content[ 'tag' ]}>\n";
+                        $ret[ $type ] .= "<p>{$content[ 'article' ]}</p>\n";
+                    }
+                } else {
+                    $ret[ $type ] = $version;
+                }
+            }
         }
+        $data[ 'diff' ] = &$ret;
     }
 
 }

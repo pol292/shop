@@ -50,7 +50,9 @@
     </tr>
 </table>
 @else
-<p>You are not have pages in your CMS system</p>
+<div class="alert alert-warning">
+    You are not have pages in your CMS system
+</div>
 @endif
 @yield('add_page')
 @endsection

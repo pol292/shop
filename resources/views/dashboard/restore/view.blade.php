@@ -32,6 +32,8 @@
     
 </table>
 @else
-<p>You Are not have backup for {{$type}}</p>
+    <div class="alert alert-warning">
+        You Are not have backup for {{$type}}
+    </div>
 @endif
 @endsection

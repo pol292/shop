@@ -20,6 +20,10 @@ class Page_contents extends Model {
         if ( $request[ 'data' ] ) {
             DB::beginTransaction();
             try {
+                $key = key( $request[ 'data' ] );
+                $key = self::find( $key )[ 'pages_id' ];
+                Pages::contentBackup( 'update', $key, 'chevron-circle-up' );
+
                 foreach ( $request[ 'data' ] as $id => $sort ) {
                     $valid = isset( $id ) &&
                             is_numeric( $id ) &&
@@ -37,7 +41,6 @@ class Page_contents extends Model {
                     }
                 }
 
-                Pages::contentBackup( 'update', $content->toArray()[ 'pages_id' ], 'chevron-circle-up' );
                 DB::commit();
                 Session::flash( 'sm', "You are save successfull update sort of page" );
             } catch ( \Exception $e ) {
@@ -81,7 +84,7 @@ class Page_contents extends Model {
             $content->title            = $request[ 'content-title' ];
             $content->article          = $request[ 'content-article' ] ? $request[ 'content-article' ] : '';
             $content->save();
-            
+
             Pages::contentBackup( 'update', $request[ 'id' ], 'chevron-circle-up' );
 
             DB::commit();

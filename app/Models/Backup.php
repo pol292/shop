@@ -9,8 +9,17 @@ use Session;
 
 class Backup extends Model {
 
-    private static $backup = [];
+    private static $backup      = [];
+    private static $backupTitle = '';
 
+    /**
+     * Set Backup
+     * @param string $change The change 
+     * @param string $type Where you change
+     * @param string $description Info about change
+     * @param array $data Data to save
+     * @param string $icon fa icon name
+     */
     public static function set( $change, $type, $description, &$data, $icon = '' ) {
         $backup = new self();
 
@@ -26,56 +35,69 @@ class Backup extends Model {
     public static function restore( $id ) {
         DB::beginTransaction();
         try {
-            $restore = self::find( $id )->toArray();
-            switch ( $restore[ 'change' ] ) {
-                case 'delete':
-                case 'update':
-                case 'restore':
-                    self::restoreCheck( $restore );
-                    break;
-                case 'create':
-                    self::unCreate( $restore );
-                    break;
+            if ( $restore = self::find( $id ) ) {
+                $restore = $restore->toArray();
+                self::restoreCheck( $restore, $restore[ 'type' ] . 's_id' );
+                if ( self::$backup ) {
+                    switch ( $restore[ 'change' ] ) {
+                        case 'create':
+                        case 'restore: create':
+                            $des = 'delete';
+                            break;
+                        case 'delete':
+                        case 'restore: delete':
+                            $des = 'create';
+                            break;
+                        default:
+                            $des = 'update';
+                    }
+                    self::set( 'restore: ' . $des, $restore[ 'type' ], "Restore $des: " . self::$backupTitle . " {$restore[ 'type' ]}", self::$backup, 'history' );
+                }
+                DB::commit();
+                Session::flash( 'sm', "You are successfull resotre {$restore[ 'change' ]}." );
+            } else {
+                //Todo: error
             }
-            if ( self::$backup ) {
-                self::set( 'restore', $restore[ 'type' ], "Restore: {$restore[ 'type' ]} {$restore[ 'change' ]}", self::$backup );
-            }
-            DB::commit();
         } catch ( \Exception $e ) {
             DB::rollback();
+            Session::flash( 'wm', "Can't restore {$restore[ 'change' ]} now please try after." );
+            Session::flash( 'wm', $e->getMessage() );
         }
     }
 
-    private static function restoreCheck( &$restore ) {
+    private static function restoreCheck( &$restore, $type ) {
         $data = unserialize( $restore[ 'data' ] );
         foreach ( $data as $table => $backup ) {
+            $db = DB::table( $table );
             if ( !empty( $backup[ 'id' ] ) ) {
-                self::restoreProcess( $table, $backup );
-            } elseif ( is_array( $backup ) ) {
-                foreach ( $backup as $arr ) {
-                    self::restoreProcess( $table, $arr );
+                if ( $find = $db->where( 'id', $backup[ 'id' ] ) ) {
+                    $data = ( array ) $find->first();
+                    if ( !empty( $data ) ) {
+                        self::$backup[ $db->from ] = $data;
+                        if ( !empty( $data[ 'title' ] ) )
+                            self::$backupTitle         = $data[ 'title' ];
+                        $find->delete();
+                    } else if ( !empty( $backup ) ) {
+                        self::$backup[ $db->from ] = [ 'id' => $backup[ 'id' ] ];
+                        if ( !empty( $backup[ 'title' ] ) )
+                            self::$backupTitle         = $backup[ 'title' ];
+                    }
+                } elseif ( !empty( $backup[ 'id' ] ) ) {
+                    self::$backup[ $table ] = [ 'id' => $backup[ 'id' ] ];
                 }
+                if ( count( $backup ) > 1 ) {
+                    $db->insert( $backup );
+                }
+            } elseif ( is_array( $backup ) ) {
+                if ( !empty( $backup[ 0 ][ 'id' ] ) && $find = $db->where( $type, $backup[ 0 ][ $type ] ) ) {
+                    self::$backup[ $db->from ] = $find->get()->toArray();
+                    foreach ( self::$backup[ $db->from ] as $key => $value ) {
+                        self::$backup[ $db->from ][ $key ] = ( array ) $value;
+                    }
+                    $find->delete();
+                }
+                $db->insert( $backup );
             }
-        }
-    }
-
-    private static function restoreProcess( &$table, &$backup ) {
-        $backup = ( array ) $backup;
-        $db     = DB::table( $table );
-        self::dataToBackup( $db, $backup[ 'id' ] );
-        $db->insert( $backup );
-    }
-
-    private static function unCreate( &$restore ) {
-        $data = unserialize( $restore[ 'data' ] );
-        $db   = DB::table( $data[ 'table' ] );
-        self::dataToBackup( $db, $data[ 'id' ] );
-    }
-
-    private static function dataToBackup( &$db, &$id ) {
-        if ( $find = $db->where( 'id', $id ) ) {
-            self::$backup[ $db->from ][] = ( array ) $find->first();
-            $find->delete();
         }
     }
 
@@ -85,64 +107,41 @@ class Backup extends Model {
     }
 
     public static function view( &$id, &$data ) {
-        $view    = self::find( $id )->toArray();
-        $history = unserialize( $view[ 'data' ] );
-        $sort    = [];
+        if ( $view = self::find( $id ) ) {
+            $view           = $view->toArray();
+            $data[ 'back' ] = $view[ 'type' ];
+            $history        = unserialize( $view[ 'data' ] );
+            if ( $history[ 'pages' ] ) {
+                self::backupPage( $history, $data );
+            }
+        }
+    }
+
+    private static function backupPage( &$history, &$data ) {
+        $sort = [];
         if ( !empty( $history[ 'page_contents' ] ) ) {
             foreach ( $history[ 'page_contents' ] as $arr ) {
+                $arr                              = ( array ) $arr;
                 $sort[ $arr[ 'id' ] ]             = $arr;
                 $sort[ $arr[ 'id' ] ][ 'childs' ] = [];
             }
-            foreach ( $sort as $key => $arr ) {
-                if ( $arr[ 'page_contents_id' ] ) {
-                    $sort[ $arr[ 'page_contents_id' ] ][ 'childs' ][] = $arr;
+            foreach ( $sort as $key => $value ) {
+                if ( $value[ 'page_contents_id' ] ) {
+                    $sort[ $value[ 'page_contents_id' ] ][ 'childs' ][] = &$sort[ $value[ 'id' ] ];
                     unset( $sort[ $key ] );
                 }
             }
-            $history             = &$history[ 'pages' ];
-            $history[ 'childs' ] = &$sort;
-        } else {
-            $history[ 'no_old' ] = "";
         }
-        if ( empty( $history[ 'id' ] ) ) {
-            if ( isset( $history[ 'no_old' ] ) ) {
-                unset( $history[ 'no_old' ] );
-                sort( $history );
-                $history[ 0 ][ 0 ][ 'no_old' ] = "";
-            }
-            $history = $history[ 0 ][ 0 ];
-        }
+        $history             = &$history[ 'pages' ];
+        $history[ 'childs' ] = &$sort;
+        Pages::previewHistory( $history, $data );
 
-        if ( !empty( $history[ 'id' ] ) )
-            Pages::previewHistory( $history, $data );
-        self::createPageHtml( $data );
-        $old = !empty( $data[ 'diff' ][ 'old' ] ) ? $data[ 'diff' ][ 'old' ] : '';
-        $new = !empty( $data[ 'diff' ][ 'new' ] ) ? $data[ 'diff' ][ 'new' ] : '';
+        $old                 = explode( "\n", $data[ 'diff' ][ 'old' ] );
+        $new                 = explode( "\n", $data[ 'diff' ][ 'new' ] );
 
-        $old            = explode( "\n", $old );
-        $new            = explode( "\n", $new );
-        $diff           = new \Diff( $old, $new, [] );
-        $renderer       = new \Diff_Renderer_Html_SideBySide;
-        $data[ 'diff' ] = $diff->Render( $renderer );
-    }
-
-    public static function createPageHtml( &$data ) {
-        $ret = [];
-        if ( !empty( $data['diff'] ) ) {
-            foreach ( $data[ 'diff' ] as $type => $version ) {
-                if ( is_array( $version ) ) {
-                    $ret[ $type ] = '';
-                    foreach ( $version as $content ) {
-                        $ret[ $type ] .= "<{$content[ 'tag' ]}>{$content[ 'title' ]}</{$content[ 'tag' ]}>\n";
-                        $ret[ $type ] .= "<p>{$content[ 'article' ]}</p>\n";
-                    }
-                    $ret[ $type ] .= "</div>";
-                } else {
-                    $ret[ $type ] = $version;
-                }
-            }
-        }
-        $data[ 'diff' ] = &$ret;
+        $diff                  = new \Diff( $old, $new, [] );
+        $renderer              = new \Diff_Renderer_Html_Inline;
+        $data[ 'differences' ] = $diff->Render( $renderer );
     }
 
 }

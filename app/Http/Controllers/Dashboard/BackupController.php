@@ -14,13 +14,14 @@ class BackupController extends BaseDashboardController {
 
     public function restore( Request $request, $id ) {
         Backup::restore( $id );
-        return redirect( $request->header( 'referer' ) );
+        return redirect( url( "dashboard/restore/view/$id" ) );
     }
 
     public function view( Request $request, $id ) {
         self::$data[ 'id' ] = $id;
-        self::$data[ 'back' ] = $request->header( 'referer' );
         Backup::view( $id, self::$data );
+        if ( empty( $data[ 'back' ] ) )
+            return redirect( url( "dashboard/restore/history/all" ) );
         return view( 'dashboard.restore.diff', self::$data );
     }
 
