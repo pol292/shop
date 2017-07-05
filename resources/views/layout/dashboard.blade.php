@@ -288,11 +288,11 @@
                                 </ul>
                                 <!-- /.nav-second-level -->
                             </li>
-                            <li>
-                                <a href="#"><i class="fa fa-history fa-fw"></i> Backup<span class="fa arrow"></span></a>
+                            <li @if( $page == 'Recovery' ) class="active" @endif>
+                                <a href="#" ><i class="fa fa-history fa-fw"></i> Backup<span class="fa arrow"></span></a>
                                 <ul class="nav nav-second-level">
                                     <li>
-                                        <a href="{{url('dashboard/restore/history/all')}}">Recovery All</a>
+                                         <a  @if( $page == 'Recovery') class="active" @endif href="{{url('dashboard/restore/history/all')}}">Recovery All</a>
                                     </li>
                                     <li>
                                         <a href="{{url('dashboard/restore/history/page')}}">Recovery Page</a>
