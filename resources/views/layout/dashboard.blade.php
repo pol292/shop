@@ -297,6 +297,9 @@
                                     <li>
                                         <a href="{{url('dashboard/restore/history/page')}}">Recovery Page</a>
                                     </li>
+                                    <li>
+                                        <a href="{{url('dashboard/restore/history/menu')}}">Recovery Menu</a>
+                                    </li>
                                 </ul>
                                 <!-- /.nav-second-level -->
                             </li>

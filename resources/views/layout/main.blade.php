@@ -46,15 +46,31 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li>
-                            <a href="#">About</a>
-                        </li>
-                        <li>
-                            <a href="#">Services</a>
-                        </li>
-                        <li>
-                            <a href="#">Contact</a>
-                        </li>
+                        @if(!empty($menu))
+                            @foreach($menu as $item)
+                                <li>
+                                    @if(!empty($item['sub_menu']))
+                                    <li class="dropdown">
+                                        <a href="{{$item['pages']['url']}}">
+                                            {{$item['pages']['title']}} <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu sub-menu">
+                                        @foreach($item['sub_menu'] as $sub_page)
+                                            @if(!empty($sub_page))
+                                                <li>
+                                                    <a href="{{$sub_page['pages']['url']}}">{{$sub_page['pages']['title']}}</a>
+                                                </li>
+                                            @endif
+                                        @endforeach
+                                        </ul>
+                                    </li>
+                                    @else
+                                    <a href="{{$item['pages']['url']}}">{{$item['pages']['title']}}</a>
+                                    @endif
+                                </li>
+                            @endforeach
+                        @endif
+
                     </ul>
                 </div>
                 <!-- /.navbar-collapse -->

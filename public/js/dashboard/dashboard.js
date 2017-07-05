@@ -163,7 +163,7 @@ $(function () {
      */
     var updateMenu = function (e)
     {
-        var list = e.length ? e : $(e.target);
+        var list = $('#nestable').length ? $('#nestable') : $($('#nestable').target);
         if (window.JSON) {
             var json_list = JSON.stringify(list.nestable('serialize'));
             json_list = JSON.parse(json_list);

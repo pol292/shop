@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CMS\Pages;
+use App\Models\CMS\Menu;
 use Session;
 
 class Backup extends Model {
@@ -12,15 +13,7 @@ class Backup extends Model {
     private static $backup      = [];
     private static $backupTitle = '';
 
-    /**
-     * Set Backup
-     * @param string $change The change 
-     * @param string $type Where you change
-     * @param string $description Info about change
-     * @param array $data Data to save
-     * @param string $icon fa icon name
-     */
-    public static function set( $change, $type, $description, &$data, $icon = '' ) {
+   public static function set( $change, $type, $description, &$data, $icon = '' ) {
         $backup = new self();
 
         $backup[ 'change' ]      = $change;
@@ -37,21 +30,27 @@ class Backup extends Model {
         try {
             if ( $restore = self::find( $id ) ) {
                 $restore = $restore->toArray();
-                self::restoreCheck( $restore, $restore[ 'type' ] . 's_id' );
-                if ( self::$backup ) {
-                    switch ( $restore[ 'change' ] ) {
-                        case 'create':
-                        case 'restore: create':
-                            $des = 'delete';
-                            break;
-                        case 'delete':
-                        case 'restore: delete':
-                            $des = 'create';
-                            break;
-                        default:
-                            $des = 'update';
+                if ( $restore[ 'type' ] == 'menu' ) {
+                    Menu::restore( $restore );
+                }
+                if ( $restore[ 'type' ] == 'page' ) {
+                    self::restoreCheck( $restore, $restore[ 'type' ] . 's_id' );
+
+                    if ( self::$backup ) {
+                        switch ( $restore[ 'change' ] ) {
+                            case 'create':
+                            case 'restore: create':
+                                $des = 'delete';
+                                break;
+                            case 'delete':
+                            case 'restore: delete':
+                                $des = 'create';
+                                break;
+                            default:
+                                $des = 'update';
+                        }
+                        self::set( 'restore: ' . $des, $restore[ 'type' ], "Restore $des: " . self::$backupTitle . " {$restore[ 'type' ]}", self::$backup, 'history' );
                     }
-                    self::set( 'restore: ' . $des, $restore[ 'type' ], "Restore $des: " . self::$backupTitle . " {$restore[ 'type' ]}", self::$backup, 'history' );
                 }
                 DB::commit();
                 Session::flash( 'sm', "You are successfull resotre {$restore[ 'change' ]}." );
@@ -89,33 +88,46 @@ class Backup extends Model {
                     $db->insert( $backup );
                 }
             } elseif ( is_array( $backup ) ) {
-                if ( !empty( $backup[ 0 ][ 'id' ] ) && $find = $db->where( $type, $backup[ 0 ][ $type ] ) ) {
-                    self::$backup[ $db->from ] = $find->get()->toArray();
-                    foreach ( self::$backup[ $db->from ] as $key => $value ) {
-                        self::$backup[ $db->from ][ $key ] = ( array ) $value;
-                    }
-                    $find->delete();
+                
+            } elseif ( !empty( $backup[ 0 ][ 'id' ] ) && $find = $db->where( $type, $backup[ 0 ][ $type ] ) ) {
+                self::$backup[ $db->from ] = $find->get()->toArray();
+                foreach ( self::$backup[ $db->from ] as $key => $value ) {
+                    self::$backup[ $db->from ][ $key ] = ( array ) $value;
                 }
-                $db->insert( $backup );
+                $find->delete();
             }
+            $db->insert( $backup );
         }
     }
 
     public static function getBackup( &$type, &$data ) {
         $data[ 'type' ]     = $type;
-        $data[ 'historys' ] = self::where( 'type', $type )->orderBy( 'updated_at', 'desc' )->get()->toArray();
+        $data[ 'historys' ] = self::orderBy( 'updated_at', 'desc' )->get();
+        if ( $type != 'all' ) {
+            $data[ 'historys' ] = $data[ 'historys' ]->where( 'type', $type );
+        }
+        $data[ 'historys' ] = $data[ 'historys' ]->toArray();
     }
 
     public static function view( &$id, &$data ) {
         $data[ 'back' ] = 'all';
-        if ( $view = self::find( $id ) ) {
-            $view           = $view->toArray();
-            $data['subtitle'] = $view['description'];
-            $data[ 'back' ] = $view[ 'type' ];
-            $history        = unserialize( $view[ 'data' ] );
-            if ( $history[ 'pages' ] ) {
+        if ( $view           = self::find( $id ) ) {
+            $view               = $view->toArray();
+            $data[ 'subtitle' ] = $view[ 'description' ];
+            $data[ 'back' ]     = $view[ 'type' ];
+            $history            = unserialize( $view[ 'data' ] );
+            if ( isset( $history[ 'pages' ] ) ) {
                 self::backupPage( $history, $data );
+            } elseif ( isset( $history[ 'menu' ] ) ) {
+                Menu::previewHistory( $history, $data );
             }
+
+            $old = explode( "\n", $data[ 'diff' ][ 'old' ] );
+            $new = explode( "\n", $data[ 'diff' ][ 'new' ] );
+
+            $diff                  = new \Diff( $old, $new, [] );
+            $renderer              = new \Diff_Renderer_Html_Inline;
+            $data[ 'differences' ] = $diff->Render( $renderer );
         }
     }
 
@@ -137,13 +149,6 @@ class Backup extends Model {
         $history             = &$history[ 'pages' ];
         $history[ 'childs' ] = &$sort;
         Pages::previewHistory( $history, $data );
-
-        $old = explode( "\n", $data[ 'diff' ][ 'old' ] );
-        $new = explode( "\n", $data[ 'diff' ][ 'new' ] );
-
-        $diff                  = new \Diff( $old, $new, [] );
-        $renderer              = new \Diff_Renderer_Html_Inline;
-        $data[ 'differences' ] = $diff->Render( $renderer );
     }
 
 }

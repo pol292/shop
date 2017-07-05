@@ -4,14 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/xampp/htdocs/shop/routes/web.php</file>
-            <file>file:/C:/xampp/htdocs/shop/app/Http/Controllers/Dashboard/BackupController.php</file>
-            <file>file:/C:/xampp/htdocs/shop/app/Models/Backup.php</file>
-            <file>file:/C:/xampp/htdocs/shop/resources/views/dashboard/restore/diff.blade.php</file>
-            <file>file:/C:/xampp/htdocs/shop/app/Http/Controllers/Site/PagesController.php</file>
-            <file>file:/C:/xampp/htdocs/shop/public/css/dashboard/diff.css</file>
-            <file>file:/C:/xampp/htdocs/shop/app/Models/CMS/Pages.php</file>
-            <file>file:/C:/xampp/htdocs/shop/app/Models/CMS/Page_contents.php</file>
-            <file>file:/C:/xampp/htdocs/shop/resources/views/dashboard/restore/view.blade.php</file>
+            <file>file:/C:/xampp/htdocs/shop/public/css/style.css</file>
+            <file>file:/C:/xampp/htdocs/shop/app/Models/CMS/Menu.php</file>
+            <file>file:/C:/xampp/htdocs/shop/resources/views/layout/main.blade.php</file>
+            <file>file:/C:/xampp/htdocs/shop/app/Http/Controllers/MainController.php</file>
+            <file>file:/C:/xampp/htdocs/shop/app/Http/Controllers/Dashboard/CMS/ManageMenuController.php</file>
         </group>
     </open-files>
 </project-private>

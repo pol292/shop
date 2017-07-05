@@ -13,12 +13,12 @@ class ManageMenuController extends BaseDashboardController {
     }
 
     public function edit() {
-        Menu::getMenu(self::$data);
+        Menu::getMenuEdit(self::$data );
         return view( 'dashboard.cms.menu.edit', self::$data );
     }
     
     public function update(Request $request){
         Menu::updateMenu($request);
     }
-
+    
 }

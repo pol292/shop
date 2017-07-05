@@ -10,13 +10,13 @@
             <li class="dd-item" data-id="{{$item['id']}}" data-page-id="{{$item['pages']['id']}}">
                 <div class="dd-handle">{{$item['pages']['title']}}</div>
                 @if(!empty($item['sub_menu']))
-                @foreach($item['sub_menu'] as $sub_page)
                 <ol class="dd-list">
+                @foreach($item['sub_menu'] as $sub_page)
                     <li class="dd-item" data-id="{{$sub_page['id']}}" data-page-id="{{$sub_page['pages']['id']}}">
                         <div class="dd-handle">{{$sub_page['pages']['title']}}</div>
                     </li>
-                </ol>
                 @endforeach
+                </ol>
                 @endif
             </li>
             @endforeach
