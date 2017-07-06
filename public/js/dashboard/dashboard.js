@@ -161,11 +161,10 @@ $(function () {
     /*
      * menu js
      */
-    var updateMenu = function (e)
+    var updateMenu = function ()
     {
-        var list = $('#nestable').length ? $('#nestable') : $($('#nestable').target);
         if (window.JSON) {
-            var json_list = JSON.stringify(list.nestable('serialize'));
+            var json_list = JSON.stringify($('#nestable').nestable('serialize'));
             json_list = JSON.parse(json_list);
             var recToArr = function rec(arr, data, parent = false) {
                 var end = arr.length;
@@ -185,7 +184,6 @@ $(function () {
             };
             var data = [];
             recToArr(json_list, data);
-            console.log(data);
             $.ajax({
                 url: URL + 'dashboard/CMS/menu/update',
                 type: "PUT",
@@ -208,6 +206,6 @@ $(function () {
     $('#nestable2').nestable({
         group: 1,
         maxDepth: 1
-    });
+    }).on('change', updateMenu);
 
 });

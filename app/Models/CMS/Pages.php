@@ -9,8 +9,18 @@ use Session;
 
 class Pages extends Model {
 
-    public static function getPages( &$data ) {
-        $data[ 'cms_pages' ] = self::all()->toArray();
+    public static function getPages( $request, &$data ) {
+        $data[ 'pagination' ][ 'url' ]   = url( "dashboard/CMS/page?page=" );
+        
+        $limit                            = 5;
+        $data[ 'pagination' ][ 'active' ] = !empty( $request[ 'page' ] ) ? $request[ 'page' ] : 1;
+        $page                             = $data[ 'pagination' ][ 'active' ] - 1;
+        $offset                           = $limit * $page;
+
+        $data[ 'cms_pages' ]             = self::all();
+        $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'cms_pages' ]->count() / $limit );
+
+        $data[ 'cms_pages' ] = self::offset( $offset )->limit( $limit )->get()->toArray();
     }
 
     public static function getContents( $url, &$data, &$active ) {
@@ -63,9 +73,9 @@ class Pages extends Model {
 
     private static function sortChilds( &$page, &$data, $c = 1 ) {
         if ( $c <= 6 ) {
-            $data[]                        = [];
-            $current                       = count( $data ) - 1;
-            
+            $data[]  = [];
+            $current = count( $data ) - 1;
+
             $data[ $current ][ 'tag' ]     = "h$c";
             $data[ $current ][ 'title' ]   = !empty( $page[ 'title' ] ) ? $page[ 'title' ] : '';
             $data[ $current ][ 'article' ] = !empty( $page[ 'article' ] ) ? $page[ 'article' ] : '';
@@ -176,7 +186,7 @@ class Pages extends Model {
     public static function previewHistory( &$history, &$data ) {
         $data[ 'diff' ][ 'old' ] = '';
         $data[ 'diff' ][ 'new' ] = '';
-        if ( !empty( $history['title'] ) ) {
+        if ( !empty( $history[ 'title' ] ) ) {
             self::sortChilds( $history, $data[ 'diff' ][ 'old' ] );
         }
         if ( !empty( $history[ 'id' ] ) && $new = self::find( $history[ 'id' ] ) ) {

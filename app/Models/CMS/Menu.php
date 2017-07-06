@@ -51,22 +51,21 @@ class Menu extends Model {
     }
 
     public static function updateMenu( &$data, $backup = TRUE ) {
-        if ( !empty( $data[ 'data' ] ) || !$backup) {
             DB::beginTransaction();
             try {
                 if ( $backup )
                     self::backup();
                 self::truncate();
-                self::insert( $data[ 'data' ] );
-                DB::commit();
+                if ( !empty( $data[ 'data' ] ) )
+                    self::insert( $data[ 'data' ] );
 
+                DB::commit();
                 Session::flash( 'sm', "You are save successfull update site menu." );
             } catch ( \Exception $e ) {
                 DB::rollback();
                 Session::flash( 'wm', 'Can\'t update site menu now please try after' );
                 Session::flash( 'wm', $e->getMessage() );
             }
-        }
     }
 
     private static function backup( $type = 'update', $icon = 'chevron-circle-up' ) {
@@ -112,7 +111,7 @@ class Menu extends Model {
     public static function restore( &$restore ) {
         self::backup( 'restore: update', 'history' );
         $menu[ 'data' ] = unserialize( $restore[ 'data' ] )[ 'menu' ];
-        self::updateMenu( $menu , FALSE );
+        self::updateMenu( $menu, FALSE );
     }
 
 }

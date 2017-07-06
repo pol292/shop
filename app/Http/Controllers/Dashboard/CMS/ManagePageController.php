@@ -18,8 +18,8 @@ class ManagePageController extends BaseDashboardController {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
-        Pages::getPages( self::$data );
+    public function index( Request $request ) {
+        Pages::getPages( $request, self::$data );
         return view( 'dashboard.cms.page.view_all', self::$data );
     }
 
@@ -53,7 +53,7 @@ class ManagePageController extends BaseDashboardController {
         if ( Pages::where( 'url', $url )->first() )
             return (new \App\Http\Controllers\Site\PagesController() )->showPage( $url, $request->header( 'referer' ) );
         else
-            return redirect ( url( 'dashboard/CMS/page' ) );
+            return redirect( url( 'dashboard/CMS/page' ) );
     }
 
     /**

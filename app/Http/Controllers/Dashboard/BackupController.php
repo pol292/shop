@@ -23,9 +23,9 @@ class BackupController extends BaseDashboardController {
         return view( 'dashboard.restore.diff', self::$data );
     }
 
-    public function history( $type ) {
+    public function history( Request $request, $type ) {
         self::$data[ 'page' ] .= " $type";
-        Backup::getBackup( $type, self::$data );
+        Backup::getBackup( $request, $type, self::$data );
         return view( 'dashboard.restore.view', self::$data );
     }
 

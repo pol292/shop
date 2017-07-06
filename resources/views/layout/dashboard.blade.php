@@ -288,17 +288,17 @@
                                 </ul>
                                 <!-- /.nav-second-level -->
                             </li>
-                            <li @if( $page == 'Recovery' ) class="active" @endif>
-                                <a href="#" ><i class="fa fa-history fa-fw"></i> Backup<span class="fa arrow"></span></a>
+                            <li @if( strpos($page,'Recovery') != -1) class="active" @endif>
+                                 <a href="#" ><i class="fa fa-history fa-fw"></i> Backup<span class="fa arrow"></span></a>
                                 <ul class="nav nav-second-level">
                                     <li>
-                                         <a  @if( $page == 'Recovery') class="active" @endif href="{{url('dashboard/restore/history/all')}}">Recovery All</a>
+                                        <a  @if( $page == 'Recovery all') class="active" @endif href="{{url('dashboard/restore/history/all')}}">Recovery All</a>
                                     </li>
                                     <li>
-                                        <a href="{{url('dashboard/restore/history/page')}}">Recovery Page</a>
+                                        <a @if( $page == 'Recovery page') class="active" @endif href="{{url('dashboard/restore/history/page')}}">Recovery Page</a>
                                     </li>
                                     <li>
-                                        <a href="{{url('dashboard/restore/history/menu')}}">Recovery Menu</a>
+                                        <a @if( $page == 'Recovery menu') class="active" @endif href="{{url('dashboard/restore/history/menu')}}">Recovery Menu</a>
                                     </li>
                                 </ul>
                                 <!-- /.nav-second-level -->
@@ -341,6 +341,54 @@
                             @endif
 
                             @yield('content')
+
+                            @if(!empty($pagination['count']) && $pagination['count'] > 1)
+                            <div class="text-center">
+                                
+                                <ul class="pagination">
+                                    @if($pagination['active'] != 1)
+                                        <li>
+                                            <a href="{{$pagination['url'] .'1' }}"><span class="fa fa-fast-backward"></span></a>
+                                        </li>
+                                        <li>
+                                            <a href="{{$pagination['url'] . ($pagination['active'] - 1) }}"><span class="fa fa-step-backward"></span></a>
+                                        </li>
+                                    @endif
+                                    @if ($pagination['active'])
+                                    
+                                        @if ($pagination['active'] < 3)
+                                            @for($i = 1, $end = (($pagination['count'] > 5)? 5 : $pagination['count']); $i <= $end ; $i++)
+                                                <li @if($i == $pagination['active'])class="active"@endif>
+                                                     <a href="{{$pagination['url'].$i}}">{{$i}}</a>
+                                                </li>
+                                            @endfor
+                                        @elseif($pagination['active'] >= ($pagination['count'] - 2) )
+                                            @for($i = $pagination['count'] - 5; $i <= $pagination['count'] ; $i++)
+                                                <li @if($i == $pagination['active'])class="active"@endif>
+                                                     <a href="{{$pagination['url'].$i}}">{{$i}}</a>
+                                                </li>
+                                            @endfor
+                                        @else
+                                            @for($i = $pagination['active'] - 2,$end = $pagination['active'] + 2; $i <= $end ; $i++)
+                                                <li @if($i == $pagination['active'])class="active"@endif>
+                                                     <a href="{{$pagination['url'].$i}}">{{$i}}</a>
+                                                </li>
+                                            @endfor
+                                        @endif
+                                    @endif
+                                    @if($pagination['count'] != $pagination['active'])
+                                        <li>
+                                            <a href="{{$pagination['url'] . ($pagination['active'] + 1)}}"><span class="fa fa-step-forward"></span></a>
+                                        </li>
+                                        <li>
+                                            <a href="{{$pagination['url'] .($pagination['count'])}}"><span class="fa fa-fast-forward"></span></a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </div>
+                            @endif
+
+
                         </div>
                         <!-- /.col-lg-12 -->
                     </div>

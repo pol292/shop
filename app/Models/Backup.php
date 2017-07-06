@@ -13,7 +13,7 @@ class Backup extends Model {
     private static $backup      = [];
     private static $backupTitle = '';
 
-   public static function set( $change, $type, $description, &$data, $icon = '' ) {
+    public static function set( $change, $type, $description, &$data, $icon = '' ) {
         $backup = new self();
 
         $backup[ 'change' ]      = $change;
@@ -100,12 +100,23 @@ class Backup extends Model {
         }
     }
 
-    public static function getBackup( &$type, &$data ) {
-        $data[ 'type' ]     = $type;
-        $data[ 'historys' ] = self::orderBy( 'updated_at', 'desc' )->get();
+    public static function getBackup( &$request, &$type, &$data ) {
+        $data[ 'pagination' ][ 'active' ] = !empty( $request[ 'page' ] ) ? $request[ 'page' ] : 1;
+        $page                             = $data[ 'pagination' ][ 'active' ] - 1;
+        $data[ 'type' ]                   = $type;
+        $limit                            = 5;
+        $offset                           = $limit * $page;
+
+        $data[ 'historys' ] = self::orderBy( 'updated_at', 'desc' );
+
         if ( $type != 'all' ) {
-            $data[ 'historys' ] = $data[ 'historys' ]->where( 'type', $type );
+            $data[ 'historys' ]              = $data[ 'historys' ]->where( 'type', $type );
+            $data[ 'pagination' ][ 'count' ] = $data[ 'historys' ] ->where( 'type', $type );
         }
+        $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'historys' ]->count() / $limit );
+        $data[ 'historys' ]              = $data[ 'historys' ]->offset( $offset )->limit( $limit )->get();
+
+        $data[ 'pagination' ][ 'url' ] = url("dashboard/restore/history/$type?page=");
         $data[ 'historys' ] = $data[ 'historys' ]->toArray();
     }
 

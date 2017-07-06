@@ -1,14 +1,12 @@
 @extends('layout.dashboard')
 
-@section('add_page')
+@section('content')
 <div class="form-group">
     <a class="btn btn-primary" href="{{url('dashboard/CMS/page/create')}}" data-toggle="tooltip" data-placement="top" title="Add">
         <span class="fa fa-plus"></span> Add page
     </a>
 </div>
-@endsection
-@section('content')
-@yield('add_page')
+
 @if(!empty($cms_pages))
 
 <table class="table">
@@ -54,5 +52,4 @@
     You are not have pages in your CMS system
 </div>
 @endif
-@yield('add_page')
 @endsection
