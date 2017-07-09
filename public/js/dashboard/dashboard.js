@@ -2,14 +2,15 @@
  * pages js
  */
 
-var createTree = function tree(data) {
+var createTree = function tree(data, level) {
     var end = data.length;
     var ret = '';
     for (var i = 0; i < end; i++) {
         if (data[i].title) {
             ret += '<li class="dd-item dd3-item" data-id="' + data[i].id + '">' +
                     '<div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">' +
-                    data[i].title + '<div class="btn-group btn-group-xs pull-right" role="group">' +
+                    data[i].title + ' <small class="header">( <span>Header ' + level + '</span> )</small>' +
+                    '<div class="btn-group btn-group-xs pull-right" role="group">' +
                     '<a href="#" class="btn btn-xs btn-primary edit-content" data-toggle="tooltip" data-placement="top" title="Edit"><span class="fa fa-edit"></span></a>' +
                     '<a href="#" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#delete" data-route="dashboard/CMS/content/delete/' + data[i].id + '" data-msg="Did you want to delete (' + data[i].title + ') this content" data-toggle="tooltip" data-placement="top" title="Delete"><span class="fa fa-trash"></span></a>' +
                     '</div></div><div class="page-article">' +
@@ -23,12 +24,12 @@ var createTree = function tree(data) {
                     '</div>';
 
             if (data[i].childs) {
-                ret += '<ol class="dd-list">' + tree(data[i].childs) + '</ol>';
+                ret += '<ol class="dd-list">' + tree(data[i].childs, (level + 1)) + '</ol>';
             }
             ret += '</li>';
 
         } else if (data[i].childs) {
-            var data = tree(data[i].childs);
+            var data = tree(data[i].childs, (level));
             if (data)
                 ret += '<ol class="dd-list">' + data + '</ol>';
         }
@@ -45,11 +46,12 @@ $(function () {
         }
     });
     if (typeof page_data !== 'undefined') {
-        page_content = createTree(page_data);
+        page_content = createTree(page_data,2);
         if (!page_content) {
             page_content = '<div class="alert alert-warning">No Content in this page</div>';
         }
-        $('#drag_content').html(page_content);
+        var drag = $('#drag_content');
+        $(drag).html(drag.html() + page_content);
     }
     $('.summernote').summernote();
     $('[data-toggle="tooltip"]').tooltip();
@@ -176,7 +178,7 @@ $(function () {
                         'menu_id': (parent) ? parent : 0,
                         'sort': i
                     };
-                    
+
                     if (typeof arr[i]['children'] !== 'undefined' && arr[i]['children'] !== null) {
                         rec(arr[i]['children'], data, arr[i]['id']);
                     }

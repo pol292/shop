@@ -29,3 +29,9 @@
     border:1px dotted #337ab7;
     content: 'Drag page here to add inside menu'
 }
+small.header{
+    font-weight: normal;
+}
+small.header span{
+    font-style: italic;
+}
