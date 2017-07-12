@@ -13,12 +13,18 @@
             @else
             @foreach($menu as $item)
             <li class="dd-item" data-id="{{$item['id']}}" data-page-id="{{$item['pages']['id']}}">
-                <div class="dd-handle">{{$item['pages']['title']}}</div>
+                <div class="dd-handle">
+                    {{$item['pages']['title']}}@if($item['pages']['active'])
+                    <span class="pull-right fa fa-eye"></span>@endif
+                </div>
                 @if(!empty($item['sub_menu']))
                 <ol class="dd-list">
                     @foreach($item['sub_menu'] as $sub_page)
                     <li class="dd-item" data-id="{{$sub_page['id']}}" data-page-id="{{$sub_page['pages']['id']}}">
-                        <div class="dd-handle">{{$sub_page['pages']['title']}}</div>
+                        <div class="dd-handle">
+                            {{$sub_page['pages']['title']}}
+                            @if($sub_page['pages']['active'])<span class="pull-right fa fa-eye"></span>@endif
+                        </div>
                     </li>
                     @endforeach
                 </ol>
@@ -41,7 +47,10 @@
             <input type="text" class="search-page form-control" placeholder="Search page...">
             @foreach($pages as $p)
             <li class="dd-item" data-id='' data-page-id="{{$p['id']}}">
-                <div class="dd-handle">{{$p['title']}}</div>
+                <div class="dd-handle">
+                    {{$p['title']}}
+                    @if($p['active'])<span class="pull-right fa fa-eye"></span>@endif
+                </div>
             </li>
             @endforeach
             @endif
