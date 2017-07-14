@@ -33,10 +33,6 @@ class Pages extends Model {
                 self::sortChilds( $page, $data[ 'contents' ] );
             }
         }
-
-        if ( empty( $data[ 'contents' ] ) ) {
-            abort( 404 );
-        }
     }
 
     public static function getContentsById( $id, &$data ) {
