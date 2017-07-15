@@ -10,8 +10,11 @@ use Session;
 
 class Categorie extends Model {
 
+    private static $limit;
+    private static $offset;
+
     public function products() {
-        return $this->hasMany( 'App\Models\Shop\Product' );
+        return $this->hasMany( 'App\Models\Shop\Product' )->with( 'sale' );
     }
 
     private static function getProductsRate( $id, &$rates ) {
@@ -22,24 +25,33 @@ class Categorie extends Model {
         ];
     }
 
-    public static function showCat( &$data, &$cat ) {
+    public static function showCat( &$data, &$cat, &$request ) {
         $data[ 'range' ] = true;
+        self::$limit     = empty($request[ 'spg' ])? 8 : $request[ 'spg' ];
+        self::$offset    = empty( $request[ 'page' ] ) ? 0 : ($request[ 'page' ] - 1) * self::$limit;
+
         if ( $cat == 'sale' ) {
+            if ( $product = Product::has( 'sale' )->with('sale')->offset( self::$offset )->limit( self::$limit )->get() ) {
+                $product = $product->toArray();
+            } else {
+                $product = '';
+            }
             $data[ 'cat' ] = [
-                'title' => 'Sale',
-                'article' => 'Sale Sale Sale',
+                'title'    => 'Sale',
+                'article'  => 'Sale Sale Sale',
+                'url'      => 'sale',
+                'products' => $product,
             ];
         } else {
             $data[ 'cat' ] = self::where( 'url', $cat )
                     ->with( 'products' )
                     ->first();
             if ( $data[ 'cat' ] ) {
-                $data[ 'cat' ]   = $data[ 'cat' ]->toArray();
-
+                $data[ 'cat' ] = $data[ 'cat' ]->toArray();
                 self::getProductsRate( $data[ 'cat' ][ 'id' ], $data[ 'rates' ] );
-                $data[ 'breadcrumb' ][ 'active' ] = $data[ 'cat' ][ 'title' ];
             }
         }
+        $data[ 'breadcrumb' ][ 'active' ] = $data[ 'cat' ][ 'title' ];
     }
 
 }

@@ -7,10 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Backup;
 use Session;
 
-class Product extends Model {
+class Sale extends Model {
 
-    public function sale() {
-        return $this->hasOne( 'App\Models\Shop\Sale' );
-    }
-
+    
 }

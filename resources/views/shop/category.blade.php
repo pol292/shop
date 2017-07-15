@@ -2,12 +2,10 @@
 @section('content')
 <!-- Main Content -->
 <div class="container m-t-3">
-
     <div class="row">
-
         <!-- Filter Sidebar -->
         <div class="col-sm-3 hidden-xs">
-            <form>
+            <form method="GET">
                 <div class="filter-sidebar">
                     <div class="title"><span>Sort By</span></div>
                     <ul>
@@ -26,10 +24,10 @@
                     <ul>
                         <li>
                             <select name="spg" class="selectpicker" data-width="100%">
-                                <option value="8">8</option>
-                                <option value="12">12</option>
-                                <option value="16">16</option>
-                                <option value="20">20</option>
+                                <option @if(old('spg') == 8) selected="selected" @endif  value="8">8</option>
+                                <option @if(old('spg') == 12) selected="selected" @endif value="12">12</option>
+                                <option @if(old('spg') == 16) selected="selected" @endif value="16">16</option>
+                                <option @if(old('spg') == 20) selected="selected" @endif value="20">20</option>
                             </select>
                         </li>
                     </ul>
@@ -69,7 +67,7 @@
                     There are no products in {{$cat['title']}} category.
                 </div>
                 @else
-                @for($i = 0 , $c = 0, $end = count($cat['products']) ; $i < $end ; $i++, ($c == 4? 0: $c++ ) )
+                @for($i = 0 , $c = 1, $end = count($cat['products']) ; $i < $end ; $i++, ($c === 4? 0: $c++ ) )
                 <? $product = $cat['products'][$i]; ?>
                 <div class="col-xs-6 col-md-4 col-lg-3 box-product-outer">
                     <div class="box-product">
@@ -77,12 +75,20 @@
                             <a href="{{url("shop/{$cat['url']}/{$product['url']}")}}">
                                 <img alt="Product" src="{{asset('images/up/'.(empty($product['image'])? 'empty.png': $product['image']))}}">
                             </a>
+                            @if(!empty($product['sale']))
+
                             <div class="tags">
-                                <span class="label-tags"><span class="label label-default arrowed">Featured</span></span>
+                                <span class="label-tags">
+                                    <span class="label label-default arrowed">-{{$product['sale']['discount']}}%</span>
+                                </span>
                             </div>
                             <div class="tags tags-left">
-                                <span class="label-tags"><span class="label label-danger arrowed-right">Sale</span></span>
+                                <span class="label-tags">
+                                    <span class="label label-{{$product['sale']['color']}} arrowed-right">Sale</span>
+                                </span>
                             </div>
+                            @endif
+
                             <div class="option">
                                 <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
                                 <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
@@ -94,10 +100,19 @@
                                 {{$product['title']}}
                             </a>
                         </h6>
+                        @if(empty($product['sale']))
+                        <div>${{$product['price']}} </div>
+                        @else
                         <div class="price">
-                            <div>${{$product['price']}} <span class="label-tags"><span class="label label-default">-10%</span></span></div>
-                            <span class="price-old">$15.00</span>
+                            <div>
+                                ${{$product['price']*(1-$product['sale']['discount']/100)}} 
+                                <span class="label-tags">
+                                    <span class="label label-default">-{{$product['sale']['discount']}}%</span>
+                                </span>
+                            </div>
+                            <span class="price-old">${{$product['price']}}</span>
                         </div>
+                        @endif
                         <div class="rating">
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
@@ -111,7 +126,7 @@
 
                 @if($c === 2)
                 <div class="clearfix visible-xs visible-sm"></div>
-                @elseif($c == 4)
+                @elseif($c === 4)
                 <div class="clearfix"></div>
                 @endif
 

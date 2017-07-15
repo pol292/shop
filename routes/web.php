@@ -1,7 +1,7 @@
 <?php
 
 Route::group( [ 'prefix' => 'shop' ], function () {
-    Route::get( '{cat}', 'Shop\CategorieController@show' );
+    Route::any( '{cat}', 'Shop\CategorieController@show' );
 } );
 
 #   Dashboard:
