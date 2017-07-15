@@ -9,11 +9,9 @@ use App\Models\Shop\Categorie;
 class CategorieController extends MainController {
 
     public function show( $cat ) {
-        self::$data[ 'range' ]                  = true;
-        self::$data[ 'cat' ]                    = Categorie::where( 'url', $cat )->first()->toArray();
-        $title                                = self::$data[ 'cat' ][ 'title' ];
-        self::setTitle( $title );
-        self::$data[ 'breadcrumb' ][ 'active' ] = $title;
+        Categorie::showCat(self::$data,$cat);     
+        self::setTitle(self::$data[ 'cat' ][ 'title' ]);
+        
         return view( 'shop.category', self::$data );
     }
 

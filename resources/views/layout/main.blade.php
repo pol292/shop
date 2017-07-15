@@ -51,7 +51,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-3 logo">
-                        <a href="{{url('/')}}"><img alt="Logo" src="{{asset('images/logo-indigo.png')}}" class="img-responsive" /></a>
+                        <a href="{{url('/')}}"><img alt="Logo" src="{{asset('images/logo-indigo.png')}}" class="img-responsive"  data-text-logo="Mimity Online Shop"/></a>
                     </div>
                     <div class="col-sm-8 col-md-6 search-box m-t-2">
                         <div class="input-group">
