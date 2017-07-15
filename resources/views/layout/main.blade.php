@@ -68,7 +68,7 @@
                                     <option value="6">Gym Wear</option>
                                     <option value="7">Others</option>
                                 </select>
-                                    <button type="submit" class="btn btn-default btn-search"><i class="fa fa-search"></i></button>
+                                <button type="submit" class="btn btn-default btn-search"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
                     </form>
@@ -170,18 +170,18 @@
             <div class="container">
                 <ol class="breadcrumb">
                     @foreach($breadcrumb as $key => $b)
-                        @if(!$key || $key != 'active')
-                            <li><a href="{{$b['url']}}">
-                                    @if($b['title'] == 'home') <span class="fa fa-fw fa-home"></span> @endif
-                                    {{ucfirst($b['title'])}}
-                                </a>
-                            </li>
-                        @else
-                            <li class="active">
-                                @if($b == 'home') <span class="fa fa-fw fa-home"></span> @endif
-                                {{ucfirst($b)}}
-                            </li>
-                        @endif
+                    @if(!$key || $key != 'active')
+                    <li><a href="{{$b['url']}}">
+                            @if($b['title'] == 'home') <span class="fa fa-fw fa-home"></span> @endif
+                            {{ucfirst($b['title'])}}
+                        </a>
+                    </li>
+                    @else
+                    <li class="active">
+                        @if($b == 'home') <span class="fa fa-fw fa-home"></span> @endif
+                        {{ucfirst($b)}}
+                    </li>
+                    @endif
                     @endforeach
                 </ol>
             </div>
@@ -287,14 +287,18 @@
         </div>
         <!-- End Footer -->
 
-                <a href="#top" class="back-top text-center" onclick="$('body,html').animate({scrollTop: 0}, 500); return false">
+        <a href="#top" class="back-top text-center" onclick="$('body,html').animate({scrollTop: 0}, 500); return false">
             <i class="fa fa-angle-double-up"></i>
-            </a>
+        </a>
 
-            <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+        <script>
+            const URL = '{{url('')}}/';
+        </script>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="{{asset('js/jquery/jquery.min.js')}}"></script>
 
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="{{asset('js/bootstrap/bootstrap.min.js')}}"></script>
 
         <!-- Plugins -->
@@ -302,12 +306,12 @@
         <script src="{{asset('js/nouislider.js')}}"></script>
         <script src="{{asset('js/owl.carousel.js')}}"></script>
         <script src="{{asset('js/bootstrap3-typeahead.js')}}"></script>
-                                                                                   <script src="{{asset('js/bootstrap-toolkit.js')}}"></script>
+        <script src="{{asset('js/bootstrap-toolkit.js')}}"></script>
         <script src="{{asset('js/metisMenu.js')}}"></script>
         <script src="{{asset('js/mimity.js')}}"></script>
 
-                                                                                                                                        @if(!empty($range))
-            <script src="{{asset('js/mimity.filter-sidebar.js')}}"></script>
-                                                                                                                                            @endif
+        @if(!empty($range))
+        <script src="{{asset('js/mimity.filter-sidebar.js')}}"></script>
+        @endif
     </body>
-                                                                                                                                        </html>
+</html>

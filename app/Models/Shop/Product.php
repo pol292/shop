@@ -13,4 +13,13 @@ class Product extends Model {
         return $this->hasOne( 'App\Models\Shop\Sale' );
     }
 
+    public static function getProductList( &$products ) {
+        if ( $products = Product::select( 'title' )->get() ) {
+            $products = $products->toArray();
+            foreach ( $products as $key => $p ) {
+                $products[ $key ] = $p[ 'title' ];
+            }
+        }
+    }
+
 }
