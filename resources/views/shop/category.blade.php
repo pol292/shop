@@ -69,12 +69,13 @@
                     There are no products in {{$cat['title']}} category.
                 </div>
                 @else
-
+                @for($i = 0 , $c = 0, $end = count($cat['products']) ; $i < $end ; $i++, ($c == 4? 0: $c++ ) )
+                <? $product = $cat['products'][$i]; ?>
                 <div class="col-xs-6 col-md-4 col-lg-3 box-product-outer">
                     <div class="box-product">
                         <div class="img-wrapper">
-                            <a href="detail.html">
-                                <img alt="Product" src="images/demo/p1-1.jpg">
+                            <a href="{{url("shop/{$cat['url']}/{$product['url']}")}}">
+                                <img alt="Product" src="{{asset('images/up/'.(empty($product['image'])? 'empty.png': $product['image']))}}">
                             </a>
                             <div class="tags">
                                 <span class="label-tags"><span class="label label-default arrowed">Featured</span></span>
@@ -88,39 +89,13 @@
                                 <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
                             </div>
                         </div>
-                        <h6><a href="detail.html">WranglerGrey Printed Slim Fit Round Neck T-Shirt</a></h6>
-                        <div class="price">
-                            <div>$13.50 <span class="label-tags"><span class="label label-default">-10%</span></span></div>
-                            <span class="price-old">$15.00</span>
-                        </div>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-half-o"></i>
-                            <a href="#">(5 reviews)</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-6 col-md-4 col-lg-3 box-product-outer">
-                    <div class="box-product">
-                        <div class="img-wrapper">
-                            <a href="detail.html">
-                                <img alt="Product" src="images/demo/p2-1.jpg">
+                        <h6>
+                            <a href="{{url("shop/{$cat['url']}/{$product['url']}")}}">
+                                {{$product['title']}}
                             </a>
-                            <div class="tags tags-left">
-                                <span class="label-tags"><span class="label label-success arrowed-right">New Arrivals</span></span>
-                            </div>
-                            <div class="option">
-                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                        <h6><a href="detail.html">CelioKhaki Printed Round Neck T-Shirt</a></h6>
+                        </h6>
                         <div class="price">
-                            <div>$13.50 <span class="label-tags"><span class="label label-primary">-10%</span></span></div>
+                            <div>${{$product['price']}} <span class="label-tags"><span class="label label-default">-10%</span></span></div>
                             <span class="price-old">$15.00</span>
                         </div>
                         <div class="rating">
@@ -133,188 +108,15 @@
                         </div>
                     </div>
                 </div>
+
+                @if($c === 2)
                 <div class="clearfix visible-xs visible-sm"></div>
-                <div class="col-xs-6 col-md-4 col-lg-3 box-product-outer">
-                    <div class="box-product">
-                        <div class="img-wrapper">
-                            <a href="detail.html">
-                                <img alt="Product" src="images/demo/p3-1.jpg">
-                            </a>
-                            <div class="tags">
-                                <span class="label-tags"><span class="label label-danger arrowed">Sale</span></span>
-                                <span class="label-tags"><span class="label label-info arrowed">Collection</span></span>
-                            </div>
-                            <div class="option">
-                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                        <h6><a href="detail.html">CelioOff White Printed Round Neck T-Shirt</a></h6>
-                        <div class="price">
-                            <div>$13.50</div>
-                        </div>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-half-o"></i>
-                            <a href="#">(5 reviews)</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-6 col-md-4 col-lg-3 hidden-md box-product-outer">
-                    <div class="box-product">
-                        <div class="img-wrapper">
-                            <a href="detail.html">
-                                <img alt="Product" src="images/demo/p4-1.jpg">
-                            </a>
-                            <div class="tags">
-                                <span class="label-tags"><span class="label label-primary arrowed">Popular</span></span>
-                            </div>
-                            <div class="option">
-                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                        <h6><a href="detail.html">Levi'sNavy Blue Printed Round Neck T-Shirt</a></h6>
-                        <div class="price">
-                            <div>$13.50</div>
-                        </div>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-half-o"></i>
-                            <a href="#">(5 reviews)</a>
-                        </div>
-                    </div>
-                </div>
+                @elseif($c == 4)
                 <div class="clearfix"></div>
-                <div class="col-xs-6 col-md-4 col-lg-3 box-product-outer">
-                    <div class="box-product">
-                        <div class="img-wrapper">
-                            <a href="detail.html">
-                                <img alt="Product" src="images/demo/p5-1.jpg">
-                            </a>
-                            <div class="tags tags-left">
-                                <span class="label-tags"><span class="label label-primary arrowed-right">Pupolar</span></span>
-                            </div>
-                            <div class="option">
-                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                        <h6><a href="detail.html">IncultAcid Wash Raglan Crew Neck T-Shirt</a></h6>
-                        <div class="price">
-                            <div>$13.50 <span class="label-tags"><span class="label label-danger arrowed">-10%</span></span></div>
-                            <span class="price-old">$15.00</span>
-                        </div>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-half-o"></i>
-                            <a href="#">(5 reviews)</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-6 col-md-4 col-lg-3 box-product-outer">
-                    <div class="box-product">
-                        <div class="img-wrapper">
-                            <a href="detail.html">
-                                <img alt="Product" src="images/demo/p6-1.jpg">
-                            </a>
-                            <div class="tags">
-                                <span class="label-tags"><span class="label label-danger arrowed">Hot Item</span></span>
-                            </div>
-                            <div class="option">
-                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                        <h6><a href="detail.html">Avoir EnvieOlive Printed Round Neck T-Shirt</a></h6>
-                        <div class="price">
-                            <div>$13.50 <span class="label-tags"><span class="label label-success arrowed">-10%</span></span></div>
-                            <span class="price-old">$15.00</span>
-                        </div>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-half-o"></i>
-                            <a href="#">(5 reviews)</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="clearfix visible-xs visible-sm"></div>
-                <div class="col-xs-6 col-md-4 col-lg-3 box-product-outer">
-                    <div class="box-product">
-                        <div class="img-wrapper">
-                            <a href="detail.html">
-                                <img alt="Product" src="images/demo/p7-1.jpg">
-                            </a>
-                            <div class="tags">
-                                <span class="label-tags"><span class="label label-default arrowed">Hot Item</span></span>
-                            </div>
-                            <div class="option">
-                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                        <h6><a href="detail.html">ElaboradoBrown Printed Round Neck T-Shirt</a></h6>
-                        <div class="price">
-                            <div>$13.50 <span class="label-tags"><span class="label label-primary arrowed">-10%</span></span></div>
-                            <span class="price-old">$15.00</span>
-                        </div>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-half-o"></i>
-                            <a href="#">(5 reviews)</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-6 col-md-4 col-lg-3 hidden-md box-product-outer">
-                    <div class="box-product">
-                        <div class="img-wrapper">
-                            <a href="detail.html">
-                                <img alt="Product" src="images/demo/polo1.jpg">
-                            </a>
-                            <div class="tags">
-                                <span class="label-tags"><span class="label label-success arrowed">New Arrivals</span></span>
-                            </div>
-                            <div class="option">
-                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                        <h6><a href="detail.html">IncultGeo Print Polo T-Shirt</a></h6>
-                        <div class="price">
-                            <div>$13.50 <span class="label-tags"><span class="label label-default arrowed">-10%</span></span></div>
-                            <span class="price-old">$15.00</span>
-                        </div>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-half-o"></i>
-                            <a href="#">(5 reviews)</a>
-                        </div>
-                    </div>
-                </div>
+                @endif
+
+
+                @endfor
 
                 <!--Pagination--> 
                 <div class="col-xs-12 text-center">

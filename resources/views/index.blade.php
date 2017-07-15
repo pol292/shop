@@ -10,16 +10,22 @@
             <nav class="sidebar-nav">
                 <ul class="metismenu vertical-menu">
                     @if(empty($categories))
-                        <li><a class="active">No categories in system</a></li>
+                    <li><a class="active">No categories in system</a></li>
                     @else
-                        @foreach($categories as $categorie)
-                            <li>
-                                <a href="{{url("shop/{$categorie['url']}")}}">
-                                    {{$categorie['title']}}
-                                    <span class="label label-danger arrowed pull-right">Sale</span>
-                                </a>
-                            </li>
-                        @endforeach
+                    @foreach($categories as $categorie)
+                    <li>
+                        <a href="{{url("shop/{$categorie['url']}")}}">
+                            {{$categorie['title']}}
+                        </a>
+                    </li>
+                    @endforeach
+                    <li>
+                        <a href="{{url("shop/sale")}}" class="text-center">
+                            <span class="label label-danger arrowed-right pull-left">Up to 20%</span>
+                            <strong>Sale</strong>
+                            <span class="label label-danger arrowed pull-right">Up to 20%</span>
+                        </a>
+                    </li>
                     @endif
                 </ul>
             </nav>

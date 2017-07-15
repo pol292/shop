@@ -16,7 +16,7 @@ class Categorie extends Model {
 
     private static function getProductsRate( $id, &$rates ) {
         $product = Product::where( 'categorie_id', $id );
-        $rates = [
+        $rates   = [
             'minValue' => $product->min( 'price' ),
             'maxValue' => $product->max( 'price' )
         ];
@@ -24,13 +24,22 @@ class Categorie extends Model {
 
     public static function showCat( &$data, &$cat ) {
         $data[ 'range' ] = true;
-        $data[ 'cat' ]   = self::where( 'url', $cat )
-                ->with( 'products' )
-                ->first()
-                ->toArray();
-        self::getProductsRate( $data[ 'cat' ][ 'id' ], $data[ 'rates' ] );
+        if ( $cat == 'sale' ) {
+            $data[ 'cat' ] = [
+                'title' => 'Sale',
+                'article' => 'Sale Sale Sale',
+            ];
+        } else {
+            $data[ 'cat' ] = self::where( 'url', $cat )
+                    ->with( 'products' )
+                    ->first();
+            if ( $data[ 'cat' ] ) {
+                $data[ 'cat' ]   = $data[ 'cat' ]->toArray();
 
-        $data[ 'breadcrumb' ][ 'active' ] = $data[ 'cat' ][ 'title' ];
+                self::getProductsRate( $data[ 'cat' ][ 'id' ], $data[ 'rates' ] );
+                $data[ 'breadcrumb' ][ 'active' ] = $data[ 'cat' ][ 'title' ];
+            }
+        }
     }
 
 }
