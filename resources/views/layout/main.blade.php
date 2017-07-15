@@ -53,9 +53,10 @@
                     <div class="col-md-3 logo">
                         <a href="{{url('/')}}"><img alt="Logo" src="{{asset('images/logo-indigo.png')}}" class="img-responsive"  data-text-logo="Mimity Online Shop"/></a>
                     </div>
-                    <div class="col-sm-8 col-md-6 search-box m-t-2">
+                    <form method="GET" action="{{url('all')}}" class="col-sm-8 col-md-6 search-box m-t-2">
+
                         <div class="input-group">
-                            <input type="text" class="form-control search-input" aria-label="Search here..." placeholder="Search here..." autocomplete="off">
+                            <input type="text" name="search" class="form-control search-input" aria-label="Search here..." placeholder="Search here..." autocomplete="off">
                             <div class="input-group-btn">
                                 <select class="selectpicker hidden-xs" data-width="150px">
                                     <option value="0">All Categories</option>
@@ -67,10 +68,10 @@
                                     <option value="6">Gym Wear</option>
                                     <option value="7">Others</option>
                                 </select>
-                                <button type="button" class="btn btn-default btn-search"><i class="fa fa-search"></i></button>
+                                    <button type="submit" class="btn btn-default btn-search"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
-                    </div>
+                    </form>
                     <div class="col-sm-4 col-md-3 cart-btn hidden-xs m-t-2">
                         <button type="button" class="btn btn-default dropdown-toggle" id="dropdown-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             <i class="fa fa-shopping-cart"></i> Shopping Cart : 4 items <i class="fa fa-caret-down"></i>

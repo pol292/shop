@@ -1,12 +1,9 @@
 // Price Range
 var price = document.getElementById('price');
 noUiSlider.create(price, {
-  start: [20, 80],
+  start: current_rate,
   connect: true,
-  range: {
-    'min': 0,
-    'max': 100
-  }
+  range: rates
 });
 price.noUiSlider.on('update', function(values, handle) {
   var value = values[handle];

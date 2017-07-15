@@ -10,9 +10,6 @@ use Session;
 
 class Categorie extends Model {
 
-    private static $limit;
-    private static $offset;
-
     public function products() {
         return $this->hasMany( 'App\Models\Shop\Product' )->with( 'sale' );
     }
@@ -27,30 +24,56 @@ class Categorie extends Model {
 
     public static function showCat( &$data, &$cat, &$request ) {
         $data[ 'range' ] = true;
-        self::$limit     = empty($request[ 'spg' ])? 8 : $request[ 'spg' ];
-        self::$offset    = empty( $request[ 'page' ] ) ? 0 : ($request[ 'page' ] - 1) * self::$limit;
+
+        $limit  = empty( $request[ 'spg' ] ) ? 8 : $request[ 'spg' ];
+        $offset = empty( $request[ 'page' ] ) ? 0 : ($request[ 'page' ] - 1) * $limit;
 
         if ( $cat == 'sale' ) {
-            if ( $product = Product::has( 'sale' )->with('sale')->offset( self::$offset )->limit( self::$limit )->get() ) {
-                $product = $product->toArray();
-            } else {
-                $product = '';
-            }
-            $data[ 'cat' ] = [
-                'title'    => 'Sale',
-                'article'  => 'Sale Sale Sale',
-                'url'      => 'sale',
-                'products' => $product,
+            $product = Product::has( 'sale' );
+
+            $data[ 'cat' ]   = [
+                'title'   => 'Sale',
+                'article' => 'Sale Sale Sale',
+                'url'     => 'sale',
             ];
+            $data[ 'rates' ] = [
+                'minValue' => Product::has( 'sale' )->min( 'price' ),
+                'maxValue' => Product::has( 'sale' )->max( 'price' ),
+            ];
+            $product         = $product->with( 'sale' );
         } else {
-            $data[ 'cat' ] = self::where( 'url', $cat )
-                    ->with( 'products' )
-                    ->first();
+            $data[ 'cat' ] = self::where( 'url', $cat )->first();
             if ( $data[ 'cat' ] ) {
                 $data[ 'cat' ] = $data[ 'cat' ]->toArray();
-                self::getProductsRate( $data[ 'cat' ][ 'id' ], $data[ 'rates' ] );
+                $product       = Product::where( 'categorie_id', $data[ 'cat' ][ 'id' ] );
             }
+            self::getProductsRate( $data[ 'cat' ][ 'id' ], $data[ 'rates' ] );
         }
+
+
+        $min = $request[ 'min-price' ];
+        $max = $request[ 'max-price' ];
+
+        if ( empty( $min ) && !is_numeric( $min ) ) {
+            $min = $data[ 'rates' ][ 'minValue' ];
+        }
+        if ( empty( $max ) && !is_numeric( $max ) ) {
+            $max = $data[ 'rates' ][ 'maxValue' ];
+        }
+        $product = $product->whereBetween( 'price', [ $min, $max ] )
+                ->offset( $offset )
+                ->limit( $limit );
+
+        if ( !empty( $request[ 'sort' ] ) && $request[ 'sort' ] == 'lth' ) {
+            $product = $product->orderBy( 'price' );
+        } elseif ( !empty( $request[ 'sort' ] ) && $request[ 'sort' ] == 'htl' ) {
+            $product = $product->orderBy( 'price', 'desc' );
+        }
+
+        $product = $product->get();
+
+
+        $data[ 'cat' ][ 'products' ]      = ($product) ? $product->toArray() : '';
         $data[ 'breadcrumb' ][ 'active' ] = $data[ 'cat' ][ 'title' ];
     }
 
