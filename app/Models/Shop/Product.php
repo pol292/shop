@@ -22,4 +22,29 @@ class Product extends Model {
         }
     }
 
+    public static function getSearch(&$request , &$data, &$product) {
+        $find = $request[ 'find' ];
+
+
+        $product         = Product::where( 'title', 'LIKE', "%$find%" )
+                ->orWhere( 'article', 'LIKE', "%$find%" );
+        $data[ 'cat' ]   = [
+            'title'   => "Search for $find",
+            'article' => "We are found for you {$product->count()} products.",
+            'url'     => 'sale',
+        ];
+    }
+
+    
+    public static function getSale(&$request , &$data, &$product) {
+        $product = Product::has( 'sale' );
+
+            $data[ 'cat' ]   = [
+                'title'   => 'Sale',
+                'article' => 'Sale Sale Sale',
+                'url'     => 'sale',
+            ];
+            $product         = $product->has( 'sale' )->with( 'sale' );
+            
+    }
 }

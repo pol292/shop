@@ -9,5 +9,8 @@ use Session;
 
 class Sale extends Model {
 
+    public static function getMaxDiscount(&$max){
+        $max = self::max('discount');
+    }
     
 }

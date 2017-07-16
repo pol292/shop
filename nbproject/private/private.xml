@@ -3,11 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/shop/routes/web.php</file>
-            <file>file:/C:/xampp/htdocs/shop/app/Http/Controllers/Site/AjaxController.php</file>
+            <file>file:/C:/xampp/htdocs/shop/app/Http/Controllers/Shop/CategorieController.php</file>
             <file>file:/C:/xampp/htdocs/shop/resources/views/layout/main.blade.php</file>
-            <file>file:/C:/xampp/htdocs/shop/public/js/mimity.js</file>
-            <file>file:/C:/xampp/htdocs/shop/public/js/bootstrap3-typeahead.js</file>
+            <file>file:/C:/xampp/htdocs/shop/resources/views/layout/dashboard.blade.php</file>
         </group>
     </open-files>
 </project-private>

@@ -19,7 +19,7 @@ class Pages extends Model {
 
         $data[ 'cms_pages' ]             = self::all();
         $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'cms_pages' ]->count() / $limit );
-
+        
         $data[ 'cms_pages' ] = self::offset( $offset )->limit( $limit )->get()->toArray();
     }
 

@@ -53,21 +53,11 @@
                     <div class="col-md-3 logo">
                         <a href="{{url('/')}}"><img alt="Logo" src="{{asset('images/logo-indigo.png')}}" class="img-responsive"  data-text-logo="Mimity Online Shop"/></a>
                     </div>
-                    <form method="GET" action="{{url('all')}}" class="col-sm-8 col-md-6 search-box m-t-2">
+                    <form method="GET" action="{{url('shop/search')}}" class="col-sm-8 col-md-6 search-box m-t-2">
 
                         <div class="input-group">
-                            <input type="text" name="search" class="form-control search-input" aria-label="Search here..." placeholder="Search here..." autocomplete="off">
+                            <input type="text" name="find" class="form-control search-input" aria-label="Search here..." placeholder="Search here..." autocomplete="off" value="{{$request['find']}}">
                             <div class="input-group-btn">
-                                <select class="selectpicker hidden-xs" data-width="150px">
-                                    <option value="0">All Categories</option>
-                                    <option value="1">Dresses</option>
-                                    <option value="2">Tops</option>
-                                    <option value="3">Bottoms</option>
-                                    <option value="4">Jackets / Coats</option>
-                                    <option value="5">Sweaters</option>
-                                    <option value="6">Gym Wear</option>
-                                    <option value="7">Others</option>
-                                </select>
                                 <button type="submit" class="btn btn-default btn-search"><i class="fa fa-search"></i></button>
                             </div>
                         </div>
@@ -132,7 +122,7 @@
                         @foreach($menu as $item)
                         @if(!empty($item['sub_menu']))
                         <li class="dropdown @if($item['pages']['url'] == $page_url) active @endif">
-                            <a href="{{$item['pages']['url']}}">
+                            <a href="{{url($item['pages']['url'])}}">
                                 {{$item['pages']['title']}} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu sub-menu">
@@ -193,6 +183,7 @@
         <div class="container m-t-2">
             <div class="row">
                 @yield('content')
+                @include('layout.pagination')
             </div>
         </div>
         <!-- End Main Content -->

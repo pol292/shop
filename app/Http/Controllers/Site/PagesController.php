@@ -27,6 +27,7 @@ class PagesController extends MainController {
         self::$data[ 'page_url' ]   = 'index';
         self::$data[ 'categories' ] = Categorie::orderBy( 'title' )->get()->toArray();
         self::$data[ 'breadcrumb' ] = [ 'active' => 'home' ];
+        \App\Models\Shop\Sale::getMaxDiscount(self::$data['max_discount']);
         return view( 'index', self::$data );
     }
 

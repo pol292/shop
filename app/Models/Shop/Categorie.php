@@ -14,14 +14,6 @@ class Categorie extends Model {
         return $this->hasMany( 'App\Models\Shop\Product' )->with( 'sale' );
     }
 
-    private static function getProductsRate( $id, &$rates ) {
-        $product = Product::where( 'categorie_id', $id );
-        $rates   = [
-            'minValue' => $product->min( 'price' ),
-            'maxValue' => $product->max( 'price' )
-        ];
-    }
-
     public static function showCat( &$data, &$cat, &$request ) {
         $data[ 'range' ] = true;
 
@@ -29,26 +21,27 @@ class Categorie extends Model {
         $offset = empty( $request[ 'page' ] ) ? 0 : ($request[ 'page' ] - 1) * $limit;
 
         if ( $cat == 'sale' ) {
-            $product = Product::has( 'sale' );
-
-            $data[ 'cat' ]   = [
-                'title'   => 'Sale',
-                'article' => 'Sale Sale Sale',
-                'url'     => 'sale',
-            ];
-            $data[ 'rates' ] = [
-                'minValue' => Product::has( 'sale' )->min( 'price' ),
-                'maxValue' => Product::has( 'sale' )->max( 'price' ),
-            ];
-            $product         = $product->with( 'sale' );
+            Product::getSale( $request, $data, $product );
+        } elseif ( $cat == 'search' ) {
+            Product::getSearch( $request, $data, $product );
         } else {
             $data[ 'cat' ] = self::where( 'url', $cat )->first();
             if ( $data[ 'cat' ] ) {
                 $data[ 'cat' ] = $data[ 'cat' ]->toArray();
                 $product       = Product::where( 'categorie_id', $data[ 'cat' ][ 'id' ] );
             }
-            self::getProductsRate( $data[ 'cat' ][ 'id' ], $data[ 'rates' ] );
         }
+
+        $data[ 'rates' ] = [
+            'minValue' => $product->min( 'price' ),
+            'maxValue' => $product->max( 'price' )
+        ];
+
+        $data[ 'pagination' ] = [
+            'active' => (empty( $request[ 'page' ] ) ? 1 : $request[ 'page' ]),
+            'count'  => ( int ) ceil( $product->count() / $limit ),
+            'url'    => url( 'shop/' . $cat . '?page=' ),
+        ];
 
 
         $min = $request[ 'min-price' ];
@@ -69,6 +62,9 @@ class Categorie extends Model {
         } elseif ( !empty( $request[ 'sort' ] ) && $request[ 'sort' ] == 'htl' ) {
             $product = $product->orderBy( 'price', 'desc' );
         }
+
+
+
 
         $product = $product->get();
 

@@ -45,6 +45,5 @@ Route::group( [ 'prefix' => 'dashboard' ], function () {
     } );
 } );
 
-Route::get( 'search', 'Site\PagesController@index' );
 Route::get( '/', 'Site\PagesController@index' );
 Route::get( '/{url}', 'Site\PagesController@showPage' );

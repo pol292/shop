@@ -133,22 +133,6 @@
 
                 @endfor
 
-                <!--Pagination--> 
-                <div class="col-xs-12 text-center">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            <li class="disabled"><span>&laquo;</span></li>
-                            <li class="disabled"><span>&lsaquo;</span></li>
-                            <li class="active"><span>1</span></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">&rsaquo;</a></li>
-                            <li><a href="#">&raquo;</a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <!--End Pagination--> 
-
                 @endif
             </div>
         </div>
@@ -159,12 +143,12 @@
 
 <script>
     var rates = {
-        'min': {{empty($rates['minValue'])? 0 : $rates['minValue']}}, 
-        'max': {{empty($rates['maxValue'])? 0 : $rates['maxValue']}}
+    'min': {{empty($rates['minValue'])? 0 : $rates['minValue']}},
+            'max': {{empty($rates['maxValue'])? 0 : $rates['maxValue']}}
     };
     var current_rate = [
-        {{empty($request['min-price'])? $rates['minValue']: $request['min-price']}}, 
-        {{empty($request['max-price'])? $rates['maxValue']: $request['max-price']}}
+    {{empty($request['min-price'])? $rates['minValue']: $request['min-price']}},
+    {{empty($request['max-price'])? $rates['maxValue']: $request['max-price']}}
     ];
     console.log(rates);
     console.log(current_rate);
