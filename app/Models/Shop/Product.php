@@ -26,6 +26,10 @@ class Product extends Model {
         return $this->hasOne( 'App\Models\Shop\Sale' );
     }
 
+    public function category() {
+        return $this->hasOne( 'App\Models\Shop\Categorie', 'id', 'categorie_id' );
+    }
+
     public function images() {
         return $this->hasMany( 'App\Models\Shop\ProductImage' );
     }
@@ -61,6 +65,37 @@ class Product extends Model {
             'url'     => 'sale',
         ];
         $product       = $product->has( 'sale' )->with( 'sale' );
+    }
+
+    public static function getIndexProducts( &$data ) {
+        $new = self::orderBy( 'created_at', 'DESC' )
+                ->where( 'stock', '>', '0' )
+                ->limit( 5 )
+                ->with( 'sale' )
+                ->with( 'category' )
+                ->get();
+        if ( $new ) {
+            $data[ 'new_product' ] = $new->toArray();
+        }
+
+        $randomList = self::inRandomOrder()
+                ->limit( 8 )
+                ->with( 'sale' )
+                ->with( 'category' )
+                ->get();
+        if ( $randomList ) {
+            $data[ 'random_list_product' ] = $randomList->toArray();
+        }
+        
+        $sale = self::has('sale')
+                ->inRandomOrder()
+                ->with( 'sale' )
+                ->limit( 4 )
+                ->with( 'category' )
+                ->get();
+        if ( $sale ) {
+            $data[ 'sale_product' ] = $sale->toArray();
+        }
     }
 
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\MainController;
 use App\Models\CMS\Pages;
 use App\Models\Shop\Categorie;
+use App\Models\Shop\Product;
 
 class PagesController extends MainController {
 
@@ -13,13 +14,12 @@ class PagesController extends MainController {
         self::$data[ 'page_url' ] = $url;
         Pages::getContents( $url, self::$data, $useActive );
         if ( !empty( self::$data[ 'contents' ] ) ) {
-            $title = self::$data['contents'][0]['title'];
-            self::setTitle( $title);
-            self::$data[ 'breadcrumb' ]['active'] = $title ;
+            $title                                  = self::$data[ 'contents' ][ 0 ][ 'title' ];
+            self::setTitle( $title );
+            self::$data[ 'breadcrumb' ][ 'active' ] = $title;
             return view( 'cms.page', self::$data );
         } else {
-            self::setTitle( 'Page not found' );
-            return response()->view( 'errors.404', self::$data, 404 );
+            return self::show404();
         }
     }
 
@@ -27,8 +27,14 @@ class PagesController extends MainController {
         self::$data[ 'page_url' ]   = 'index';
         self::$data[ 'categories' ] = Categorie::orderBy( 'title' )->get()->toArray();
         self::$data[ 'breadcrumb' ] = [ 'active' => 'home' ];
-        \App\Models\Shop\Sale::getMaxDiscount(self::$data['max_discount']);
+        Product::getIndexProducts( self::$data );
+        \App\Models\Shop\Sale::getMaxDiscount( self::$data[ 'max_discount' ] );
         return view( 'index', self::$data );
+    }
+
+    public function show404() {
+        self::setTitle( 'Page not found' );
+        return response()->view( 'errors.404', self::$data, 404 );
     }
 
 }

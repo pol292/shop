@@ -73,4 +73,6 @@ class Categorie extends Model {
         $data[ 'breadcrumb' ][ 'active' ] = $data[ 'cat' ][ 'title' ];
     }
 
+   
+
 }

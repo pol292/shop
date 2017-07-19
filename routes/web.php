@@ -2,7 +2,6 @@
 
 Route::group( [ 'prefix' => 'ajax' ], function () {
     Route::get( 'product-list', 'Site\AjaxController@getProductList' );
-
 } );
 Route::group( [ 'prefix' => 'shop' ], function () {
     Route::get( '{cat}', 'Shop\CategorieController@show' );
@@ -48,3 +47,8 @@ Route::group( [ 'prefix' => 'dashboard' ], function () {
 
 Route::get( '/', 'Site\PagesController@index' );
 Route::get( '/{url}', 'Site\PagesController@showPage' );
+
+
+
+
+Route::get( '/{any}', 'Site\PagesController@show404' )->where( 'any', '.*' );
