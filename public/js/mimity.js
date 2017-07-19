@@ -246,7 +246,9 @@ function get_current_scroll() {
         if ($('.input-qty').exist()) {
             $('.input-qty input').TouchSpin({
                 verticalbuttons: true,
-                prefix: 'qty'
+                prefix: 'qty',
+                min: 1,
+                max: max_qty? max_qty: 99
             });
         }
 

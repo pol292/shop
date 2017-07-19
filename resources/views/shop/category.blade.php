@@ -150,8 +150,6 @@
     {{empty($request['min-price'])? $rates['minValue']: $request['min-price']}},
     {{empty($request['max-price'])? $rates['maxValue']: $request['max-price']}}
     ];
-    console.log(rates);
-    console.log(current_rate);
 </script>
 <!-- End Main Content -->
 @endsection

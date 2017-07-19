@@ -10,7 +10,7 @@
         <title>{{$title}}</title>
 
         <!-- Bootstrap -->
-        <link href="{{asset('css/bootstrap/bootstrap.min.css')}}" rel="stylesheet">
+        <link href="{{asset('bootstrap/css/bootstrap.css')}}" rel="stylesheet">
 
         <!-- Plugins -->
         <link href="{{asset('css/font-awesome.css')}}" rel="stylesheet">
@@ -18,6 +18,7 @@
         <link href="{{asset('css/nouislider.css')}}" rel="stylesheet">
         <link href="{{asset('css/owl.carousel.css')}}" rel="stylesheet">
         <link href="{{asset('css/owl.theme.default.css')}}" rel="stylesheet">
+        <link href="{{asset('css/jquery.bootstrap-touchspin.css')}}" rel="stylesheet">
         <link href="{{asset('css/metisMenu.css')}}" rel="stylesheet" id="theme">
         <link href="{{asset('css/mm-vertical.css')}}" rel="stylesheet" id="theme">
         <link href="{{asset('css/style.indigo.rounded.css')}}" rel="stylesheet" id="theme">
@@ -296,11 +297,15 @@
         <script src="{{asset('js/bootstrap-select.js')}}"></script>
         <script src="{{asset('js/nouislider.js')}}"></script>
         <script src="{{asset('js/owl.carousel.js')}}"></script>
+        <script src="{{asset('js/jquery.ez-plus.js')}}"></script>
+        <script src="{{asset('js/jquery.bootstrap-touchspin.js')}}"></script>
+        <script src="{{asset('js/jquery.raty-fa.js')}}"></script>
         <script src="{{asset('js/bootstrap3-typeahead.js')}}"></script>
         <script src="{{asset('js/bootstrap-toolkit.js')}}"></script>
         <script src="{{asset('js/metisMenu.js')}}"></script>
         <script src="{{asset('js/mimity.js')}}"></script>
 
+        <script src="{{asset('js/mimity.detail.js')}}"></script>
         @if(!empty($range))
         <script src="{{asset('js/mimity.filter-sidebar.js')}}"></script>
         @endif

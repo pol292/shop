@@ -6,6 +6,7 @@ Route::group( [ 'prefix' => 'ajax' ], function () {
 } );
 Route::group( [ 'prefix' => 'shop' ], function () {
     Route::get( '{cat}', 'Shop\CategorieController@show' );
+    Route::get( '{cat}/{item}', 'Shop\ProductController@show' );
 } );
 
 #   Dashboard:
