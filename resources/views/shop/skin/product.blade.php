@@ -7,17 +7,16 @@
     </a>
     @if(!empty($product['sale']))
     <div class="tags">
-        
         <span class="label-tags">
             <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
-                <span class="label label-{{$color[array_rand($color)]}} arrowed">Sale</span>
+                <span class="label label-default arrowed">-{{$product['sale']['discount']}}%</span>
             </a>
         </span>
     </div>
     <div class="tags tags-left">
         <span class="label-tags">
             <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
-                <span class="label label-default arrowed-right">-{{$product['sale']['discount']}}%</span>
+                <span class="label label-{{$color[array_rand($color)]}} arrowed-right">Sale</span>
             </a>
         </span>
     </div>
