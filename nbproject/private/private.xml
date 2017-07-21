@@ -5,9 +5,9 @@
         <group>
             <file>file:/C:/xampp/htdocs/shop/resources/views/shop/product.blade.php</file>
             <file>file:/C:/xampp/htdocs/shop/routes/web.php</file>
+            <file>file:/C:/xampp/htdocs/shop/app/Http/Controllers/Site/PagesController.php</file>
             <file>file:/C:/xampp/htdocs/shop/app/Models/Shop/Product.php</file>
-            <file>file:/C:/xampp/htdocs/shop/public/js/mimity.js</file>
-            <file>file:/C:/xampp/htdocs/shop/app/Http/Controllers/Shop/ProductController.php</file>
+            <file>file:/C:/xampp/htdocs/shop/resources/views/index.blade.php</file>
         </group>
     </open-files>
 </project-private>

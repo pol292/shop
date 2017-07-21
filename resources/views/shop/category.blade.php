@@ -68,61 +68,13 @@
                 </div>
                 @else
                 @for($i = 0 , $c = 1, $end = count($cat['products']) ; $i < $end ; $i++, ($c === 4? $c = 1 : $c++ ) )
-                <? $product = $cat['products'][$i]; ?>
-                <div class="col-xs-6 col-md-4 col-lg-3 box-product-outer">
-                    <div class="box-product">
-                        <div class="img-wrapper">
-                            <a href="{{url("shop/{$cat['url']}/{$product['url']}")}}">
-                                <img alt="Product" src="{{asset('images/up/'.(empty($product['image'])? 'empty.png': $product['image']))}}">
-                            </a>
-                            @if(!empty($product['sale']))
-
-                            <div class="tags">
-                                <span class="label-tags">
-                                    <span class="label label-default arrowed">-{{$product['sale']['discount']}}%</span>
-                                </span>
-                            </div>
-                            <div class="tags tags-left">
-                                <span class="label-tags">
-                                    <span class="label label-{{$product['sale']['color']}} arrowed-right">Sale</span>
-                                </span>
-                            </div>
-                            @endif
-
-                            <div class="option">
-                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                        <h6>
-                            <a href="{{url("shop/{$cat['url']}/{$product['url']}")}}">
-                                {{$product['title']}}
-                            </a>
-                        </h6>
-                        @if(empty($product['sale']))
-                        <div>${{$product['price']}} </div>
-                        @else
-                        <div class="price">
-                            <div>
-                                ${{$product['price']*(1-$product['sale']['discount']/100)}} 
-                                <span class="label-tags">
-                                    <span class="label label-default">-{{$product['sale']['discount']}}%</span>
-                                </span>
-                            </div>
-                            <span class="price-old">${{$product['price']}}</span>
-                        </div>
-                        @endif
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-half-o"></i>
-                            <a href="#">(5 reviews)</a>
-                        </div>
-                    </div>
-                </div>
+                
+                @php 
+                $product = $cat['products'][$i];
+                $product['category']  = &$cat;
+                @endphp
+                
+                @include('shop.skin.product_list')
 
                 @if($c === 2)
                 <div class="clearfix visible-xs visible-sm"></div>

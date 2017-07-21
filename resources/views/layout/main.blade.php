@@ -309,5 +309,6 @@
         @if(!empty($range))
         <script src="{{asset('js/mimity.filter-sidebar.js')}}"></script>
         @endif
+        <script src="{{asset('js/web.js')}}"></script>
     </body>
 </html>

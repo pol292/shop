@@ -89,8 +89,8 @@ class Product extends Model {
         
         $sale = self::has('sale')
                 ->inRandomOrder()
-                ->with( 'sale' )
                 ->limit( 4 )
+                ->with( 'sale' )
                 ->with( 'category' )
                 ->get();
         if ( $sale ) {
