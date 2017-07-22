@@ -138,7 +138,7 @@ class Pages extends Model {
         }
     }
 
-    public static function deletePage( &$id, &$request ) {
+    public static function deletePage( &$id ) {
 
         DB::beginTransaction();
         try {

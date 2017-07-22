@@ -3,7 +3,8 @@
 @if(!empty($pagination['count']) && $pagination['count'] > 1)
 
 @php
-    $query_string = '&' . str_replace("page={$request->page}" , '' , $_SERVER['QUERY_STRING']);
+    $query_string =  str_replace("page={$request->page}" , '' , $_SERVER['QUERY_STRING']);
+    $query_string = empty($query_string)? '' : '&' . $query_string;
 @endphp
 <div class="text-center">
 

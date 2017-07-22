@@ -8,6 +8,8 @@ Route::group( [ 'prefix' => 'shop' ], function () {
     Route::get( '{cat}/{item}', 'Shop\ProductController@show' );
 } );
 
+
+
 #   Dashboard:
 Route::group( [ 'prefix' => 'dashboard' ], function () {
     Route::get( '/', 'Dashboard\DashboardController@index' );
@@ -37,6 +39,14 @@ Route::group( [ 'prefix' => 'dashboard' ], function () {
     } );
 
 
+#   Dashboard/Shop:
+
+    Route::group( [ 'prefix' => 'shop' ], function () {
+
+#   Dashboard/Shop:
+        Route::resource( 'category', 'Dashboard\Shop\ManageCategoriesController', [ 'except' => [ 'show' ] ] );
+    } );
+
 #   Dashboard/restore:
     Route::group( [ 'prefix' => 'restore' ], function () {
         Route::get( 'view/{id}', 'Dashboard\BackupController@view' );
@@ -47,8 +57,5 @@ Route::group( [ 'prefix' => 'dashboard' ], function () {
 
 Route::get( '/', 'Site\PagesController@index' );
 Route::get( '/{url}', 'Site\PagesController@showPage' );
-
-
-
 
 Route::get( '/{any}', 'Site\PagesController@show404' )->where( 'any', '.*' );

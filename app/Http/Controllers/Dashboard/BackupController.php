@@ -8,7 +8,8 @@ use App\Models\Backup;
 
 class BackupController extends BaseDashboardController {
 
-    public function __construct() {
+    public function __construct(Request $request) {
+        parent::__construct($request);
         self::$data[ 'page' ] = 'Recovery';
     }
 

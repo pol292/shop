@@ -73,6 +73,69 @@ class Categorie extends Model {
         $data[ 'breadcrumb' ][ 'active' ] = $data[ 'cat' ][ 'title' ];
     }
 
-   
+    public static function getCategories( $request, &$data ) {
+        $data[ 'pagination' ][ 'url' ] = url( "dashboard/shop/category?page=" );
+
+        $limit                            = 5;
+        $data[ 'pagination' ][ 'active' ] = !empty( $request[ 'page' ] ) ? $request[ 'page' ] : 1;
+        $page                             = $data[ 'pagination' ][ 'active' ] - 1;
+        $offset                           = $limit * $page;
+
+        $data[ 'categories' ]            = self::all();
+        $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'categories' ]->count() / $limit );
+
+        $data[ 'categories' ] = self::offset( $offset )->limit( $limit )->get()->toArray();
+        
+    }
+
+    public static function getContentsById( &$id, &$data ) {
+        if ( $cat = self::find( $id ) ) {
+            $data[ 'category' ] = $cat->toArray();
+        }
+    }
+
+    public static function addCategory( &$request ) {
+        DB::beginTransaction();
+        try {
+
+            $category = new self;
+
+            $category[ 'title' ]   = $request[ 'title' ];
+            $category[ 'url' ]     = $request[ 'url' ];
+            $category[ 'article' ] = $request[ 'article' ] ? $request[ 'article' ] : '';
+
+            $category->save();
+//            $backup = [
+//                'pages' => [ 'id' => $page[ 'id' ] ],
+//            ];
+            DB::commit();
+//            Backup::set( 'create', 'page', "Create page: {$category[ 'title' ]}", $backup, 'plus' );
+            Session::flash( 'sm', "You are create successfull new (  {$request[ 'title' ]} ) category." );
+        } catch ( \Exception $e ) {
+            DB::rollback();
+            Session::flash( 'wm', 'Can\'t add new category now please try after' );
+        }
+    }
+
+    public static function deleteCategory( $id ) {
+        DB::beginTransaction();
+        try {
+
+            $category = self::find( $id );
+            $title    = $category[ 'title' ];
+            if ( $category ) {
+//                self::pageBackup( 'delete', $category, 'trash-o' );
+                $category->delete();
+
+                DB::commit();
+                Session::flash( 'sm', "You are successfull delete category ($title)" );
+            } else {
+                
+            }
+        } catch ( \Exception $e ) {
+            DB::rollback();
+            Session::flash( 'wm', 'Can\'t delete page now please try after' );
+        }
+    }
 
 }

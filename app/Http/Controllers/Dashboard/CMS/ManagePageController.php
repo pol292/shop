@@ -9,7 +9,8 @@ use App\Http\Requests\PageRequest;
 
 class ManagePageController extends BaseDashboardController {
 
-    public function __construct() {
+    public function __construct( Request $request ) {
+        parent::__construct( $request );
         self::$data[ 'page' ] = 'Page Manager';
     }
 
@@ -20,6 +21,9 @@ class ManagePageController extends BaseDashboardController {
      */
     public function index( Request $request ) {
         Pages::getPages( $request, self::$data );
+        if ( empty( self::$data[ 'cms_pages' ] ) ) {
+            return redirect( 'dashboard/CMS/page?page=' . self::$data[ 'pagination' ][ 'count' ] );
+        }
         return view( 'dashboard.cms.page.view_all', self::$data );
     }
 
