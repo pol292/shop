@@ -48,14 +48,14 @@
                     <tr>
                         <td>Price</td>
                         <td>
-                            @if(empty($product['sale']))
+                            @if(empty((float) $product['sale']))
                             <div>${{$product['price']}} </div>
                             @else
                             <div class="price">
                                 <div>
-                                    ${{$product['price']*(1-$product['sale']['discount']/100)}} 
+                                    ${{$product['price']*(1-$product['sale']/100)}} 
                                     <span class="label-tags">
-                                        <span class="label label-default">-{{$product['sale']['discount']}}%</span>
+                                        <span class="label label-default">-{{$product['sale']}}%</span>
                                     </span>
                                 </div>
                                 <span class="price-old">${{$product['price']}}</span>
@@ -67,11 +67,11 @@
                         <td>Availability</td>
                         <td>
                             @if(empty($product['stock']))
-                            <span class="label label-danger arrowed"><s>Out of Stock</s></span>
+                            <span class="label label-danger"><s>Out of Stock</s></span>
                             @elseif($product['stock'] == 1)
-                            <span class="label label-warning arrowed">Last 1 Ready in Stock</span>
+                            <span class="label label-warning">Last 1 Ready in Stock</span>
                             @elseif($product['stock'] > 1)
-                            <span class="label label-success arrowed">Ready in Stock</span>
+                            <span class="label label-success">Ready in Stock</span>
                             @endif
                         </td>
                     </tr>

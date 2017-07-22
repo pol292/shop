@@ -11,7 +11,7 @@ class Product extends Model {
 
     public static function getProduct( &$product, &$data ) {
         $product = self::where( 'url', $product );
-        $product = $product->with( 'sale' )->with( 'images' )->first();
+        $product = $product->with( 'images' )->first();
 
         $data[ 'product' ] = ($product) ? $product->toArray() : '';
         $cat               = Categorie::find( $data[ 'product' ][ 'categorie_id' ] );
@@ -20,10 +20,6 @@ class Product extends Model {
             $data[ 'breadcrumb' ][] = [ 'title' => $cat[ 'title' ], 'url' => url( "shop/{$cat[ 'url' ]}" ) ];
         }
         $data[ 'breadcrumb' ][ 'active' ] = $data[ 'product' ][ 'title' ];
-    }
-
-    public function sale() {
-        return $this->hasOne( 'App\Models\Shop\Sale' );
     }
 
     public function category() {
@@ -57,44 +53,41 @@ class Product extends Model {
     }
 
     public static function getSale( &$request, &$data, &$product ) {
-        $product = Product::has( 'sale' );
+        $product = Product::where( 'sale', '>', '0' );
 
         $data[ 'cat' ] = [
             'title'   => 'Sale',
             'article' => 'Sale Sale Sale',
             'url'     => 'sale',
         ];
-        $product       = $product->has( 'sale' )->with( 'sale' );
+        $product       = $product->where( 'sale', '>', '0' );
     }
 
     public static function getIndexProducts( &$data ) {
+        $data[ 'max_discount' ] = self::max( 'sale' );
         $new = self::orderBy( 'created_at', 'DESC' )
                 ->where( 'stock', '>', '0' )
                 ->limit( 5 )
-                ->with( 'sale' )
                 ->with( 'category' )
                 ->get();
         if ( $new ) {
             $data[ 'new_product' ] = $new->toArray();
         }
 
-        $sale = self::has( 'sale' )
+        $sale = self::where( 'sale', '>', '0' )
                 ->inRandomOrder()
                 ->limit( 4 )
-                ->with( 'sale' )
                 ->with( 'category' )
                 ->get();
         if ( $sale ) {
             $data[ 'sale_product' ] = $sale->toArray();
         }
-
         self::randomItems( $data );
     }
 
     public static function randomItems( &$data ) {
         $randomList = self::inRandomOrder()
                 ->limit( 8 )
-                ->with( 'sale' )
                 ->with( 'category' )
                 ->get();
         if ( $randomList ) {

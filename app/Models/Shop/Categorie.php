@@ -11,7 +11,7 @@ use Session;
 class Categorie extends Model {
 
     public function products() {
-        return $this->hasMany( 'App\Models\Shop\Product' )->with( 'sale' );
+        return $this->hasMany( 'App\Models\Shop\Product' );
     }
 
     public static function showCat( &$data, &$cat, &$request ) {

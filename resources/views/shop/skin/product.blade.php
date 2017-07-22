@@ -3,13 +3,13 @@
 @endphp
 <div class="img-wrapper">
     <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
-        <img alt="Product" src="{{asset("images/up/{$product['image']}")}}">
+        <img alt="{{$product['title']}}" src="{{asset("images/up/{$product['image']}")}}" height="150">
     </a>
-    @if(!empty($product['sale']))
+    @if(!empty((float) $product['sale']))
     <div class="tags">
         <span class="label-tags">
             <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
-                <span class="label label-default arrowed">-{{$product['sale']['discount']}}%</span>
+                <span class="label label-default arrowed">-{{$product['sale']}}%</span>
             </a>
         </span>
     </div>
@@ -29,14 +29,14 @@
     </div>
 </div>
 <h6><a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">{{$product['title']}}</a></h6>
-@if(empty($product['sale']))
+@if(empty((float) $product['sale']))
 <div>${{$product['price']}} </div>
 @else
 <div class="price">
     <div>
-        ${{$product['price']*(1-$product['sale']['discount']/100)}} 
+        ${{$product['price']*(1-$product['sale']/100)}} 
         <span class="label-tags">
-            <span class="label label-default">-{{$product['sale']['discount']}}%</span>
+            <span class="label label-default">-{{$product['sale']}}%</span>
         </span>
     </div>
     <span class="price-old">${{$product['price']}}</span>
