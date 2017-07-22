@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard\Shop;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseDashboardController;
 use App\Models\Shop\Product;
+use Session;
 
 //use App\Http\Requests\CategoryRequest;
 
@@ -12,7 +13,7 @@ class ManageProductController extends BaseDashboardController {
 
     public function __construct( Request $request ) {
         parent::__construct( $request );
-        self::$data[ 'page' ] = 'Categories Manager';
+        self::$data[ 'page' ] = 'Products Manager';
     }
 
     /**

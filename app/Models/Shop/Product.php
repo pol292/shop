@@ -103,11 +103,14 @@ class Product extends Model {
         $page                             = $data[ 'pagination' ][ 'active' ] - 1;
         $offset                           = $limit * $page;
 
-        $data[ 'products' ]            = self::all();
-        $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'products' ]->count() / $limit );
-
-        $data[ 'products' ] = self::offset( $offset )->limit( $limit )->get()->toArray();
-        
+        if ( empty( $request[ 'find' ] ) ) {
+            $data[ 'pagination' ][ 'count' ] = ( int ) ceil( self::count() / $limit );
+            $data[ 'products' ] = self::offset( $offset )->limit( $limit )->get()->toArray();
+        } else {
+            $data[ 'products' ] = self::where( 'title', 'LIKE', "%{$request[ 'find' ]}%" );
+            $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'products' ]->count() / $limit );
+            $data[ 'products' ] = $data[ 'products' ]->offset( $offset )->limit( $limit )->get()->toArray();
+        }
     }
 
 }
