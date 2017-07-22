@@ -24,6 +24,7 @@
                     <ul>
                         <li>
                             <select name="spg" class="selectpicker" data-width="100%">
+                                <option @if($request['spg'] == 4) selected="selected" @endif value="4">4</option>
                                 <option @if($request['spg'] == 8) selected="selected" @endif value="8">8</option>
                                 <option @if($request['spg'] == 12) selected="selected" @endif value="12">12</option>
                                 <option @if($request['spg'] == 16) selected="selected" @endif value="16">16</option>

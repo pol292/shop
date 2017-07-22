@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 19, 2017 at 03:18 AM
+-- Generation Time: Jul 21, 2017 at 07:41 PM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 7.0.9
 
@@ -439,9 +439,21 @@ INSERT INTO `product_images` (`id`, `product_id`, `image`) VALUES
 CREATE TABLE `sales` (
   `id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
-  `discount` decimal(8,2) NOT NULL,
-  `color` varchar(255) NOT NULL DEFAULT 'danger'
+  `discount` decimal(8,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `sales`
+--
+
+INSERT INTO `sales` (`id`, `product_id`, `discount`) VALUES
+(1, 16, '5.00'),
+(2, 2, '16.00'),
+(3, 6, '4.00'),
+(4, 8, '2.00'),
+(5, 9, '11.00'),
+(6, 12, '1.00'),
+(7, 4, '7.00');
 
 --
 -- Indexes for dumped tables
@@ -541,7 +553,7 @@ ALTER TABLE `product_images`
 -- AUTO_INCREMENT for table `sales`
 --
 ALTER TABLE `sales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -49,7 +49,7 @@
             @each('shop.skin.product_list', $sale_product, 'product')
 
             <!-- End Featured -->
-            <div class="clearfix @if(!empty($sale_product) && count($sale_product) == 4) visible-sm visible-xs @endif"></div>
+            <div class="clearfix"></div>
 
             <!-- Collection -->
             <div class="title m-t-2"><span>Random Items</span></div>

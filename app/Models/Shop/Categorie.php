@@ -17,7 +17,7 @@ class Categorie extends Model {
     public static function showCat( &$data, &$cat, &$request ) {
         $data[ 'range' ] = true;
 
-        $limit  = empty( $request[ 'spg' ] ) ? 8 : $request[ 'spg' ];
+        $limit  = empty( $request[ 'spg' ] ) ? 4 : $request[ 'spg' ];
         $offset = empty( $request[ 'page' ] ) ? 0 : ($request[ 'page' ] - 1) * $limit;
 
         if ( $cat == 'sale' ) {

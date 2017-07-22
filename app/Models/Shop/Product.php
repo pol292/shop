@@ -78,16 +78,7 @@ class Product extends Model {
             $data[ 'new_product' ] = $new->toArray();
         }
 
-        $randomList = self::inRandomOrder()
-                ->limit( 8 )
-                ->with( 'sale' )
-                ->with( 'category' )
-                ->get();
-        if ( $randomList ) {
-            $data[ 'random_list_product' ] = $randomList->toArray();
-        }
-        
-        $sale = self::has('sale')
+        $sale = self::has( 'sale' )
                 ->inRandomOrder()
                 ->limit( 4 )
                 ->with( 'sale' )
@@ -95,6 +86,19 @@ class Product extends Model {
                 ->get();
         if ( $sale ) {
             $data[ 'sale_product' ] = $sale->toArray();
+        }
+
+        self::randomItems( $data );
+    }
+
+    public static function randomItems( &$data ) {
+        $randomList = self::inRandomOrder()
+                ->limit( 8 )
+                ->with( 'sale' )
+                ->with( 'category' )
+                ->get();
+        if ( $randomList ) {
+            $data[ 'random_list_product' ] = $randomList->toArray();
         }
     }
 

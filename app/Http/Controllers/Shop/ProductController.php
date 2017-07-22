@@ -11,6 +11,7 @@ class ProductController extends MainController {
 
 
     public function show( $cat,$product ) {
+        Product::randomItems(self::$data);
         Product::getProduct($product, self::$data);
         return view( 'shop.product', self::$data );
     }
