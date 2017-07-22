@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Dashboard\Shop;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseDashboardController;
-use App\Models\Shop\Categorie;
-use App\Http\Requests\CategoryRequest;
+use App\Models\Shop\Product;
 
-class ManageCategoriesController extends BaseDashboardController {
+//use App\Http\Requests\CategoryRequest;
+
+class ManageProductController extends BaseDashboardController {
 
     public function __construct( Request $request ) {
         parent::__construct( $request );
@@ -20,13 +21,13 @@ class ManageCategoriesController extends BaseDashboardController {
      * @return \Illuminate\Http\Response
      */
     public function index( Request $request ) {
-        Categorie::getCategories( $request, self::$data );
-        if ( self::$data[ 'pagination' ][ 'count' ] !== 1 && empty( self::$data[ 'categories' ] ) ) {
+        Product::getProducts( $request, self::$data );
+        if ( self::$data[ 'pagination' ][ 'count' ] !== 1 && empty( self::$data[ 'products' ] ) ) {
             if ( !empty( $request[ 'find' ] ) )
                 Session::flash( 'wm', 'You are search for: "' . $request->find . '" you are get 0 resualts.' );
-            return redirect( 'dashboard/shop/category?page=' . self::$data[ 'pagination' ][ 'count' ] );
+            return redirect( 'dashboard/shop/product?page=' . self::$data[ 'pagination' ][ 'count' ] );
         }
-        return view( 'dashboard.shop.category.view_all', self::$data );
+        return view( 'dashboard.shop.product.view_all', self::$data );
     }
 
     /**
@@ -35,7 +36,7 @@ class ManageCategoriesController extends BaseDashboardController {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return view( 'dashboard.shop.category.add', self::$data );
+        return view( 'dashboard.shop.product.add', self::$data );
     }
 
     /**
@@ -44,9 +45,9 @@ class ManageCategoriesController extends BaseDashboardController {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store( CategoryRequest $request ) {
+    public function store( Request $request ) {
         Categorie::addCategory( $request );
-        return redirect( url( "dashboard/shop/category/" ) );
+        return redirect( url( "dashboard/shop/product/" ) );
     }
 
     /**
@@ -68,10 +69,10 @@ class ManageCategoriesController extends BaseDashboardController {
     public function edit( $id ) {
         Categorie::getContentsById( $id, self::$data );
         if ( !empty( self::$data[ 'category' ] ) ) {
-            self::$data[ 'subtitle' ] = 'Edit: ' . self::$data[ 'category' ][ 'title' ];
-            return view( 'dashboard.shop.category.edit', self::$data );
+            self::$data[ 'subtitle' ] = 'Edit: ' . self::$data[ 'product' ][ 'title' ];
+            return view( 'dashboard.shop.product.edit', self::$data );
         } else {
-            return redirect( url( 'dashboard/shop/category' ) );
+            return redirect( url( 'dashboard/shop/product' ) );
         }
     }
 
@@ -82,7 +83,7 @@ class ManageCategoriesController extends BaseDashboardController {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update( CategoryRequest $request, $id ) {
+    public function update( Request $request, $id ) {
         return;
     }
 
@@ -94,7 +95,7 @@ class ManageCategoriesController extends BaseDashboardController {
      */
     public function destroy( Request $request, $id ) {
         Categorie::deleteCategory( $id );
-        return response()->json( ($request[ 'redirect' ] ? [ 'redirect' => 'dashboard/shop/category' ] : [] ) );
+        return response()->json( ($request[ 'redirect' ] ? [ 'redirect' => 'dashboard/shop/product' ] : [] ) );
     }
 
 }

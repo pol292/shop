@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\BaseDashboardController;
 use App\Models\CMS\Pages;
 use App\Http\Requests\PageRequest;
+use Session;
 
 class ManagePageController extends BaseDashboardController {
 
@@ -21,7 +22,9 @@ class ManagePageController extends BaseDashboardController {
      */
     public function index( Request $request ) {
         Pages::getPages( $request, self::$data );
-        if ( empty( self::$data[ 'cms_pages' ] ) ) {
+        if ( self::$data[ 'pagination' ][ 'count' ] !== 1 && empty( self::$data[ 'cms_pages' ] ) ) {
+            if ( !empty( $request[ 'find' ] ) )
+                Session::flash( 'wm', 'You are search for: "' . $request->find . '" you are get 0 resualts.' );
             return redirect( 'dashboard/CMS/page?page=' . self::$data[ 'pagination' ][ 'count' ] );
         }
         return view( 'dashboard.cms.page.view_all', self::$data );

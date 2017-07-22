@@ -94,5 +94,20 @@ class Product extends Model {
             $data[ 'random_list_product' ] = $randomList->toArray();
         }
     }
+    
+    public static function getProducts( &$request, &$data ) {
+        $data[ 'pagination' ][ 'url' ] = url( "dashboard/shop/product?page=" );
+
+        $limit                            = 5;
+        $data[ 'pagination' ][ 'active' ] = !empty( $request[ 'page' ] ) ? $request[ 'page' ] : 1;
+        $page                             = $data[ 'pagination' ][ 'active' ] - 1;
+        $offset                           = $limit * $page;
+
+        $data[ 'products' ]            = self::all();
+        $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'products' ]->count() / $limit );
+
+        $data[ 'products' ] = self::offset( $offset )->limit( $limit )->get()->toArray();
+        
+    }
 
 }

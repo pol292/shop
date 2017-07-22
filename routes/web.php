@@ -43,8 +43,12 @@ Route::group( [ 'prefix' => 'dashboard' ], function () {
 
     Route::group( [ 'prefix' => 'shop' ], function () {
 
-#   Dashboard/Shop:
+#   Dashboard/Shop/Category:
         Route::resource( 'category', 'Dashboard\Shop\ManageCategoriesController', [ 'except' => [ 'show' ] ] );
+    
+#   Dashboard/Shop/Product:
+        Route::resource( 'product', 'Dashboard\Shop\ManageProductController', [ 'except' => [ 'show' ] ] );
+        
     } );
 
 #   Dashboard/restore:

@@ -10,17 +10,21 @@ use Session;
 class Pages extends Model {
 
     public static function getPages( $request, &$data ) {
-        $data[ 'pagination' ][ 'url' ]   = url( "dashboard/CMS/page?page=" );
-        
+        $data[ 'pagination' ][ 'url' ] = url( "dashboard/CMS/page?page=" );
+
         $limit                            = 5;
         $data[ 'pagination' ][ 'active' ] = !empty( $request[ 'page' ] ) ? $request[ 'page' ] : 1;
         $page                             = $data[ 'pagination' ][ 'active' ] - 1;
         $offset                           = $limit * $page;
 
-        $data[ 'cms_pages' ]             = self::all();
-        $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'cms_pages' ]->count() / $limit );
-        
-        $data[ 'cms_pages' ] = self::offset( $offset )->limit( $limit )->get()->toArray();
+        if ( empty( $request[ 'find' ] ) ) {
+            $data[ 'pagination' ][ 'count' ] = ( int ) ceil( self::count() / $limit );
+            $data[ 'cms_pages' ]             = self::offset( $offset )->limit( $limit )->get()->toArray();
+        } else {
+            $data[ 'cms_pages' ]            = self::where( 'title', 'LIKE', "%{$request[ 'find' ]}%" );
+            $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'cms_pages' ]->count() / $limit );
+            $data[ 'cms_pages' ]            = $data[ 'cms_pages' ]->offset( $offset )->limit( $limit )->get()->toArray();
+        }
     }
 
     public static function getContents( $url, &$data, &$active ) {

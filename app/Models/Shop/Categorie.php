@@ -73,19 +73,22 @@ class Categorie extends Model {
         $data[ 'breadcrumb' ][ 'active' ] = $data[ 'cat' ][ 'title' ];
     }
 
-    public static function getCategories( $request, &$data ) {
+    public static function getCategories( &$request, &$data ) {
         $data[ 'pagination' ][ 'url' ] = url( "dashboard/shop/category?page=" );
 
         $limit                            = 5;
         $data[ 'pagination' ][ 'active' ] = !empty( $request[ 'page' ] ) ? $request[ 'page' ] : 1;
         $page                             = $data[ 'pagination' ][ 'active' ] - 1;
         $offset                           = $limit * $page;
+        if ( empty( $request[ 'find' ] ) ) {
+            $data[ 'pagination' ][ 'count' ] = ( int ) ceil( self::count() / $limit );
+            $data[ 'categories' ] = self::offset( $offset )->limit( $limit )->get()->toArray();
+        } else {
+            $data[ 'categories' ] = self::where( 'title', 'LIKE', "%{$request[ 'find' ]}%" );
+            $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'categories' ]->count() / $limit );
+            $data[ 'categories' ] = $data[ 'categories' ]->offset( $offset )->limit( $limit )->get()->toArray();
+        }
 
-        $data[ 'categories' ]            = self::all();
-        $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'categories' ]->count() / $limit );
-
-        $data[ 'categories' ] = self::offset( $offset )->limit( $limit )->get()->toArray();
-        
     }
 
     public static function getContentsById( &$id, &$data ) {
