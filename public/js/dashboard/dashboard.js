@@ -22,12 +22,10 @@ var createTree = function tree(data, level) {
                     '<button class="btn btn-primary pull-right save-content">Save</button>' +
                     '<div class="clearfix"></div>' +
                     '</div>';
-
             if (data[i].childs) {
                 ret += '<ol class="dd-list">' + tree(data[i].childs, (level + 1)) + '</ol>';
             }
             ret += '</li>';
-
         } else if (data[i].childs) {
             var data = tree(data[i].childs, (level));
             if (data)
@@ -36,8 +34,6 @@ var createTree = function tree(data, level) {
     }
     return ret;
 };
-
-
 $(function () {
 
     $.ajaxSetup({
@@ -46,7 +42,7 @@ $(function () {
         }
     });
     if (typeof page_data !== 'undefined') {
-        page_content = createTree(page_data,2);
+        page_content = createTree(page_data, 2);
         if (!page_content) {
             page_content = '<div class="alert alert-warning">No Content in this page</div>';
         }
@@ -133,7 +129,6 @@ $(function () {
         ol.find('li').hide();
         ol.find('li:contains(' + $(this).val() + ')').fadeIn();
     });
-
     $('#delete').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var modal = $(this);
@@ -158,8 +153,6 @@ $(function () {
             });
         });
     });
-
-
     /*
      * menu js
      */
@@ -178,7 +171,6 @@ $(function () {
                         'menu_id': (parent) ? parent : 0,
                         'sort': i
                     };
-
                     if (typeof arr[i]['children'] !== 'undefined' && arr[i]['children'] !== null) {
                         rec(arr[i]['children'], data, arr[i]['id']);
                     }
@@ -197,17 +189,78 @@ $(function () {
             });
         }
     };
-
 // activate Nestable for list 1
     $('#nestable').nestable({
         group: 1,
         maxDepth: 2
     }).on('change', updateMenu);
-
 // activate Nestable for list 2
     $('#nestable2').nestable({
         group: 1,
         maxDepth: 1
     }).on('change', updateMenu);
+});
+$('.next').click(function () {
+
+    var nextId = $(this).parents('.tab-pane').next().attr("id");
+    $('[href=#' + nextId + ']').tab('show');
+    return false;
+})
+
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+//update progress
+    var step = $(e.target).data('step');
+    var percent = (parseInt(step) / 5) * 100;
+    $('.progress-bar').css({width: percent + '%'});
+    $('.progress-bar').text("Step " + step + " of 5");
+    //e.relatedTarget // previous tab
 
 });
+$('.first').click(function () {
+
+    $('#stepBar a:first').tab('show')
+
+});
+
+var addedImages = [],
+        removedImages = [];
+
+if ($('#myDropzone').length) {
+    Dropzone.autoDiscover = false;
+    var myDropzone = new Dropzone("#myDropzone", {
+        url: URL + "ajax/up",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        renameFile: true,
+        addRemoveLinks: true,
+        success: function (file, response) {
+            addedImages.push(response);
+            file.serverFileName = response;
+            $('#addedImages').val(JSON.stringify(addedImages)); //store array
+            console.log($('#addedImages').val());
+        }
+    });
+
+
+    myDropzone.on("addedfile", function (file) {
+        file.previewElement.addEventListener("click", function () {
+            var image = $('.dz-image > img[alt="' + file.name + '"]').parents('.dz-preview');
+            $('.main-img').remove();
+            $(image).prepend('<div class="label label-primary main-img">Default</div>');
+            $('#def-img').val(file.name);
+        });
+    }).on("removedfile", function (file) {
+        removedImages.push(file.serverFileName);
+        $('#removedImages').val(JSON.stringify(removedImages)); //store array
+        console.log($('#removedImages').val());
+    });
+    for (i = 0; i < existingFiles.length; i++) {
+        myDropzone.emit("addedfile", existingFiles[i]);
+        myDropzone.emit("thumbnail", existingFiles[i], URL + "images/up/" + existingFiles[i].name);
+        myDropzone.emit("complete", existingFiles[i]);
+    }
+    var def = $('.dz-image > img[alt="' + def_img + '"]').parents('.dz-preview');
+    $(def).prepend('<div class="label label-primary main-img">Default</div>');
+}

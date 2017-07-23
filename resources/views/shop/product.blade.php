@@ -14,20 +14,20 @@
             <div class="image-detail">
                 <img src="{{asset("images/up/{$product['image']}")}}" data-zoom-image="{{asset("images/up/{$product['image']}")}}" alt="{{$product['title']}}">
             </div>
-            @if(count($product['images']) > 1)
-            <div class="products-slider-detail owl-carousel owl-theme m-b-2">
-                <a href="#">
-                    <img src="{{asset("images/up/{$product['image']}")}}" data-zoom-image="{{asset("images/up/{$product['image']}")}}" alt="{{$product['title']}}" class="img-thumbnail">
-                </a>
-                @foreach($product['images'] as $image)
-                @if($image['image'] != $product['image'] )
-                <a href="#">
-                    <img src="{{asset("images/up/{$image['image']}")}}" data-zoom-image="{{asset("images/up/{$image['image']}")}}" alt="{{$product['title']}}" class="img-thumbnail">
-                </a>
+                @if(count($product['images']) > 1)
+                <div class="products-slider-detail owl-carousel owl-theme m-b-2">
+                    <a href="#">
+                        <img src="{{asset("images/up/{$product['image']}")}}" data-zoom-image="{{asset("images/up/{$product['image']}")}}" alt="{{$product['title']}}" class="img-thumbnail">
+                    </a>
+                    @foreach($product['images'] as $image)
+                        @if($image != $product['image'] )
+                            <a href="#">
+                                <img src="{{asset("images/up/{$image}")}}"  data-zoom-image="{{asset("images/up/{$image}")}}" alt="{{$product['title']}}" class="img-thumbnail">
+                            </a>
+                        @endif
+                    @endforeach
+                </div>
                 @endif
-                @endforeach
-            </div>
-            @endif
             @endif
 
             <div class="title"><span>Share to</span></div>
@@ -198,12 +198,7 @@
     </div>
     <!-- End Related Products -->
     <script>
-        var max_qty = {
-            {
-                $product['stock']
-            }
-        }
-        ;
+        var max_qty = {{$product['stock']}};
     </script>
 </div>
 

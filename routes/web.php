@@ -2,6 +2,7 @@
 
 Route::group( [ 'prefix' => 'ajax' ], function () {
     Route::get( 'product-list', 'Site\AjaxController@getProductList' );
+    Route::post( 'up', 'Site\AjaxController@up' );
 } );
 Route::group( [ 'prefix' => 'shop' ], function () {
     Route::get( '{cat}', 'Shop\CategorieController@show' );

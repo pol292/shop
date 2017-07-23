@@ -68,8 +68,8 @@ class ManageProductController extends BaseDashboardController {
      * @return \Illuminate\Http\Response
      */
     public function edit( $id ) {
-        Categorie::getContentsById( $id, self::$data );
-        if ( !empty( self::$data[ 'category' ] ) ) {
+        Product::getContentsById( $id, self::$data );
+        if ( !empty( self::$data[ 'product' ] ) ) {
             self::$data[ 'subtitle' ] = 'Edit: ' . self::$data[ 'product' ][ 'title' ];
             return view( 'dashboard.shop.product.edit', self::$data );
         } else {

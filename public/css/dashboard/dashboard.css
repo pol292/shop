@@ -35,3 +35,19 @@ small.header{
 small.header span{
     font-style: italic;
 }
+
+.dz-image img{
+    max-width: 120px;
+    max-height: 120px;
+}
+.dz-size,.dz-details{
+    display: none;
+}
+
+.main-img{
+    z-index: 10000;
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}

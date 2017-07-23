@@ -11,23 +11,25 @@ class Product extends Model {
 
     public static function getProduct( &$product, &$data ) {
         $product = self::where( 'url', $product );
-        $product = $product->with( 'images' )->first();
+        $product = $product->first();
 
-        $data[ 'product' ] = ($product) ? $product->toArray() : '';
-        $cat               = Categorie::find( $data[ 'product' ][ 'categorie_id' ] );
-        if ( $cat ) {
-            $cat                    = $cat->toArray();
-            $data[ 'breadcrumb' ][] = [ 'title' => $cat[ 'title' ], 'url' => url( "shop/{$cat[ 'url' ]}" ) ];
+        if ( $product ) {
+            $data[ 'product' ] =  $product->toArray();
+            $data[ 'product' ]['images'] = unserialize( $data[ 'product' ]['images']);
+
+            $cat = Categorie::find( $data[ 'product' ][ 'categorie_id' ] );
+            if ( $cat ) {
+                $cat                    = $cat->toArray();
+                $data[ 'breadcrumb' ][] = [ 'title' => $cat[ 'title' ], 'url' => url( "shop/{$cat[ 'url' ]}" ) ];
+            }
+            $data[ 'breadcrumb' ][ 'active' ] = $data[ 'product' ][ 'title' ];
+        }else{
+            //TODO: 404
         }
-        $data[ 'breadcrumb' ][ 'active' ] = $data[ 'product' ][ 'title' ];
     }
 
     public function category() {
         return $this->hasOne( 'App\Models\Shop\Categorie', 'id', 'categorie_id' );
-    }
-
-    public function images() {
-        return $this->hasMany( 'App\Models\Shop\ProductImage' );
     }
 
     public static function getProductList( &$products ) {
@@ -65,7 +67,7 @@ class Product extends Model {
 
     public static function getIndexProducts( &$data ) {
         $data[ 'max_discount' ] = self::max( 'sale' );
-        $new = self::orderBy( 'created_at', 'DESC' )
+        $new                    = self::orderBy( 'created_at', 'DESC' )
                 ->where( 'stock', '>', '0' )
                 ->limit( 5 )
                 ->with( 'category' )
@@ -94,7 +96,7 @@ class Product extends Model {
             $data[ 'random_list_product' ] = $randomList->toArray();
         }
     }
-    
+
     public static function getProducts( &$request, &$data ) {
         $data[ 'pagination' ][ 'url' ] = url( "dashboard/shop/product?page=" );
 
@@ -105,11 +107,24 @@ class Product extends Model {
 
         if ( empty( $request[ 'find' ] ) ) {
             $data[ 'pagination' ][ 'count' ] = ( int ) ceil( self::count() / $limit );
-            $data[ 'products' ] = self::offset( $offset )->limit( $limit )->get()->toArray();
+            $data[ 'products' ]              = self::offset( $offset )->limit( $limit )->get()->toArray();
         } else {
-            $data[ 'products' ] = self::where( 'title', 'LIKE', "%{$request[ 'find' ]}%" );
+            $data[ 'products' ]              = self::where( 'title', 'LIKE', "%{$request[ 'find' ]}%" );
             $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'products' ]->count() / $limit );
-            $data[ 'products' ] = $data[ 'products' ]->offset( $offset )->limit( $limit )->get()->toArray();
+            $data[ 'products' ]              = $data[ 'products' ]->offset( $offset )->limit( $limit )->get()->toArray();
+        }
+    }
+
+    public static function getContentsById( &$id, &$data ) {
+        if ( $product = self::find( $id ) ) {
+            $data[ 'product' ] = $product->toArray();
+            $data[ 'product' ]['images'] = unserialize($data[ 'product' ]['images']);
+            $images            = [];
+            foreach ( $data[ 'product' ][ 'images' ] as $image ) {
+                $current                      = count( $images );
+                $images[ $current ][ 'name' ] = $image;
+            }
+            $data[ 'images_json' ] = json_encode( $images );
         }
     }
 
