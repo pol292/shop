@@ -49,7 +49,9 @@ $(function () {
         var drag = $('#drag_content');
         $(drag).html(drag.html() + page_content);
     }
-    $('.summernote').summernote();
+    $('.summernote').summernote({
+        height: 100,
+    });
     $('[data-toggle="tooltip"]').tooltip();
     $('#sm').delay(5000).fadeOut(500);
     var updateSortContent = function (e)
@@ -121,14 +123,31 @@ $(function () {
                 location.reload();
             }
         });
-    }).on('keyup', '.friendly-url', function () {
-        var friendly_url = $(this).val().trim().toLowerCase().replace(/[^a-z\d\s\-]/g, '').replace(/[\s]+/g, '-');
+    }).on('keyup', '.friendly-url, .friendly-url-paste', function () {
+        var friendly_url = $(this).val().toLowerCase().replace(/[^a-z\d\s\-]/g, '').replace(/[\s-]+/g, '-').trim();
         $('.friendly-url-paste').val(friendly_url);
+        if ($('.friendly-url-full').length) {
+            $('.friendly-url-full').text(URL + $('.friendly-url-paste').val());
+        }
     }).on('keyup', '.search-page', function () {
         var ol = $(this).parent('ol');
         ol.find('li').hide();
         ol.find('li:contains(' + $(this).val() + ')').fadeIn();
+    }).on('keyup', '', function () {
+        if ($('.friendly-url-full').length) {
+            $('.friendly-url-full').text(URL + $('.friendly-url-paste').val());
+        }
+    }).on('change', '.friendly-url-paste', function () {
+        var friendly_url = $(this).val();
+        friendly_url = friendly_url[friendly_url.length - 1] == '-' ? friendly_url.slice(0, friendly_url.length - 1) : friendly_url;
+        $(this).val(friendly_url);
     });
+
+    if ($('.friendly-url-full').length) {
+        $('.friendly-url-full').text(URL + $('.friendly-url-paste').val());
+    }
+
+
     $('#delete').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var modal = $(this);
@@ -223,8 +242,7 @@ $('.first').click(function () {
 
 });
 
-var addedImages = [],
-        removedImages = [];
+var addedImages = [];
 
 if ($('#myDropzone').length) {
     Dropzone.autoDiscover = false;
@@ -236,10 +254,9 @@ if ($('#myDropzone').length) {
         renameFile: true,
         addRemoveLinks: true,
         success: function (file, response) {
-            addedImages.push(response);
             file.serverFileName = response;
+            addedImages.push(file.serverFileName);
             $('#addedImages').val(JSON.stringify(addedImages)); //store array
-            console.log($('#addedImages').val());
         }
     });
 
@@ -250,17 +267,82 @@ if ($('#myDropzone').length) {
             $('.main-img').remove();
             $(image).prepend('<div class="label label-primary main-img">Default</div>');
             $('#def-img').val(file.name);
+            $('#main_image').attr('src', URL + 'images/up/' + file.serverFileName);
         });
     }).on("removedfile", function (file) {
-        removedImages.push(file.serverFileName);
-        $('#removedImages').val(JSON.stringify(removedImages)); //store array
-        console.log($('#removedImages').val());
+        for (var i = 0, end = addedImages.length, run = true; run && i < end; i++) {
+            if (addedImages[i] == file.serverFileName) {
+                addedImages.splice(i, 1);
+            }
+        }
+        $('#addedImages').val(JSON.stringify(addedImages)); //store array
     });
+
+    $('.add-to-images').on('click', function () {
+        var img = {name: this.alt};
+        myDropzone.emit("addedfile", img);
+        myDropzone.emit("thumbnail", img, this.src);
+        myDropzone.emit("complete", img);
+        addedImages.push(this.alt);
+        console.log(addedImages);
+    });
+
+
     for (i = 0; i < existingFiles.length; i++) {
         myDropzone.emit("addedfile", existingFiles[i]);
         myDropzone.emit("thumbnail", existingFiles[i], URL + "images/up/" + existingFiles[i].name);
         myDropzone.emit("complete", existingFiles[i]);
+        addedImages.push(existingFiles[i].serverFileName);
     }
+    $('#addedImages').val(JSON.stringify(addedImages)); //store array
     var def = $('.dz-image > img[alt="' + def_img + '"]').parents('.dz-preview');
     $(def).prepend('<div class="label label-primary main-img">Default</div>');
+
+    $('.show-images-btn').on('click', function () {
+        $('.show-images').toggleClass('hidden');
+        $(this).children('span').toggleClass('fa-plus-circle fa-minus-circle');
+    });
+}
+
+if ($('#stock').length) {
+    $('#stock').TouchSpin({
+        verticalbuttons: true,
+        prefix: 'qty',
+        min: 1,
+        max: 1000
+    });
+}
+if ($('#price').length) {
+    $('#price').TouchSpin({
+        verticalbuttons: true,
+        prefix: '$',
+        step: 0.1,
+        decimals: 2,
+        boostat: 5,
+        min: 1,
+        max: 100000
+    });
+}
+if ($('#sale').length) {
+    $('#sale').TouchSpin({
+        verticalbuttons: true,
+        postfix: '%',
+        step: 0.1,
+        decimals: 2,
+        boostat: 5,
+        min: 0.1,
+        max: 99
+    });
+}
+
+if ($('.calc-price , .calc-sale').length) {
+    $('.calc-price , .calc-sale').on('keyup', function () {
+        var num = $('.calc-price').val() * (1 - ($('.calc-sale').val()) / 100);
+        $('.calc-total').text('$' + num.toFixed(2));
+    }).on('change',function(){
+        var num = $('.calc-price').val() * (1 - ($('.calc-sale').val()) / 100);
+        $('.calc-total').text('$' + num.toFixed(2));
+    });
+    var num = $('.calc-price').val() * (1 - ($('.calc-sale').val()) / 100);
+    $('.calc-total').text('$' + num.toFixed(2));
 }

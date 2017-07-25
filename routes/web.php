@@ -1,5 +1,10 @@
 <?php
 
+Route::get( 'test', function() {
+    $files = File::allFiles( public_path().DIRECTORY_SEPARATOR .'images'.DIRECTORY_SEPARATOR.'up' );
+    dd($files[0]->getFilename());
+} );
+
 Route::group( [ 'prefix' => 'ajax' ], function () {
     Route::get( 'product-list', 'Site\AjaxController@getProductList' );
     Route::post( 'up', 'Site\AjaxController@up' );
@@ -46,10 +51,9 @@ Route::group( [ 'prefix' => 'dashboard' ], function () {
 
 #   Dashboard/Shop/Category:
         Route::resource( 'category', 'Dashboard\Shop\ManageCategoriesController', [ 'except' => [ 'show' ] ] );
-    
+
 #   Dashboard/Shop/Product:
         Route::resource( 'product', 'Dashboard\Shop\ManageProductController', [ 'except' => [ 'show' ] ] );
-        
     } );
 
 #   Dashboard/restore:

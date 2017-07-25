@@ -1,10 +1,17 @@
 @php
-    $color = ['danger', 'success', 'info', 'primary'];
+$color = ['danger', 'success', 'info', 'primary'];
 @endphp
 <div class="img-wrapper">
-    <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
-        <img alt="{{$product['title']}}" src="{{asset("images/up/{$product['image']}")}}" height="150">
-    </a>
+
+    @if(empty($product['image']))
+        <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
+            <img src="{{asset('images/empty.png')}}" alt="Empty image">
+        </a>
+    @else
+        <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
+            <img alt="{{$product['title']}}" src="{{asset("images/up/{$product['image']}")}}" height="150">
+        </a>
+    @endif
     @if(!empty((float) $product['sale']))
     <div class="tags">
         <span class="label-tags">
@@ -21,7 +28,7 @@
         </span>
     </div>
     @endif
-    
+
     <div class="option">
         <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
         <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard\Shop;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseDashboardController;
+use App\Models\Shop\Categorie;
 use App\Models\Shop\Product;
 use Session;
 
@@ -68,6 +69,7 @@ class ManageProductController extends BaseDashboardController {
      * @return \Illuminate\Http\Response
      */
     public function edit( $id ) {
+        Product::getImagesUploaded(self::$data);
         Product::getContentsById( $id, self::$data );
         if ( !empty( self::$data[ 'product' ] ) ) {
             self::$data[ 'subtitle' ] = 'Edit: ' . self::$data[ 'product' ][ 'title' ];

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Backup;
 use Session;
+use App\Models\Shop\Categorie;
 
 class Product extends Model {
 
@@ -14,8 +15,8 @@ class Product extends Model {
         $product = $product->first();
 
         if ( $product ) {
-            $data[ 'product' ] =  $product->toArray();
-            $data[ 'product' ]['images'] = unserialize( $data[ 'product' ]['images']);
+            $data[ 'product' ]           = $product->toArray();
+            $data[ 'product' ][ 'images' ] = unserialize( $data[ 'product' ][ 'images' ] );
 
             $cat = Categorie::find( $data[ 'product' ][ 'categorie_id' ] );
             if ( $cat ) {
@@ -23,7 +24,7 @@ class Product extends Model {
                 $data[ 'breadcrumb' ][] = [ 'title' => $cat[ 'title' ], 'url' => url( "shop/{$cat[ 'url' ]}" ) ];
             }
             $data[ 'breadcrumb' ][ 'active' ] = $data[ 'product' ][ 'title' ];
-        }else{
+        } else {
             //TODO: 404
         }
     }
@@ -117,15 +118,29 @@ class Product extends Model {
 
     public static function getContentsById( &$id, &$data ) {
         if ( $product = self::find( $id ) ) {
-            $data[ 'product' ] = $product->toArray();
-            $data[ 'product' ]['images'] = unserialize($data[ 'product' ]['images']);
-            $images            = [];
+            $data[ 'product' ]           = $product->toArray();
+            $data[ 'product' ][ 'images' ] = unserialize( $data[ 'product' ][ 'images' ] );
+            $images                      = [];
             foreach ( $data[ 'product' ][ 'images' ] as $image ) {
-                $current                      = count( $images );
-                $images[ $current ][ 'name' ] = $image;
+                $current                                = count( $images );
+                $images[ $current ][ 'name' ]           = $image;
+                $images[ $current ][ 'serverFileName' ] = $image;
             }
             $data[ 'images_json' ] = json_encode( $images );
+            $cat = Categorie::orderBy( 'title' )->get();
+            if ($cat){
+                $data['cats'] = $cat->toArray();
+            }
         }
+    }
+
+    public static function getImagesUploaded( &$data ) {
+        $files = \File::allFiles( public_path() . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'up' );
+        $images = [];
+        foreach ($files as $file){
+            $images[] = $file->getFilename();
+        }
+        $data['uploaded_images'] = &$images;
     }
 
 }

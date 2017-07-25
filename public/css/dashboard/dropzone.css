@@ -175,9 +175,14 @@
 
 .dropzone {
     min-height: 150px;
-    border: 2px solid rgba(0, 0, 0, 0.3);
+    border: 1px solid #ccc;
+    border-radius: 4px;
     background: white;
     padding: 20px 20px; }
+.dropzone:hover{
+    transition: 1s all;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+}
 .dropzone.dz-clickable {
     cursor: pointer; }
 .dropzone.dz-clickable * {
@@ -258,11 +263,12 @@
     padding: 0 0.4em;
     border-radius: 3px; }
 .dropzone .dz-preview:hover .dz-image img {
-    -webkit-transform: scale(1.05, 1.05);
-    -moz-transform: scale(1.05, 1.05);
-    -ms-transform: scale(1.05, 1.05);
-    -o-transform: scale(1.05, 1.05);
-    transform: scale(1.05, 1.05);
+    -webkit-transform: scale(1.2, 1.2);
+    -moz-transform: scale(1.2, 1.2);
+    -ms-transform: scale(1.2, 1.2);
+    -o-transform: scale(1.2, 1.2);
+    transform: scale(1.2, 1.2);
+    transition: 1s all;
 }
 .dropzone .dz-preview .dz-image {
     border-radius: 20px;

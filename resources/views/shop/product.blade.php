@@ -8,7 +8,7 @@
         <div class="col-sm-4">
             @if(empty($product['image']))
             <div class="image-detail">
-                <img src="{{asset('images/up/empty.png')}}" alt="Empty image">
+                <img src="{{asset('images/empty.png')}}" alt="Empty image">
             </div>
             @else
             <div class="image-detail">
