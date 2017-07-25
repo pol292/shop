@@ -49,7 +49,7 @@ small.header span{
     position: absolute;
     right: 0;
     left: 0;
-    bottom: 0;
+    bottom: 20px;
 }
 
 div.img-default{
@@ -72,4 +72,26 @@ div.img-default img{
 .uploaded-img img{ 
     max-height: 100px;
     max-width: 100px;
+}
+.dropzone .dz-preview .dz-remove{
+    background-color: #d9534f;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+
+.dz-message{
+    margin: 0;
+    padding: 0;
+    background-color: rgba(91, 192, 222, 0.1);
+    height: 100px;
+    line-height: 100px;
+    border-radius: 4px;
+    border: 2px dotted rgba(91, 192, 222, 1);
 }

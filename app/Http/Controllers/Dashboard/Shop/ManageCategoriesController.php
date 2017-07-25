@@ -83,7 +83,10 @@ class ManageCategoriesController extends BaseDashboardController {
      * @return \Illuminate\Http\Response
      */
     public function update( CategoryRequest $request, $id ) {
-        return;
+        if ( $request[ 'id' ] == $id ) {
+            Categorie::updateCategory( $request );
+        }
+        return redirect( $request->path() . '/edit' );
     }
 
     /**

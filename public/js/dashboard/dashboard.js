@@ -253,15 +253,30 @@ if ($('#myDropzone').length) {
         },
         renameFile: true,
         addRemoveLinks: true,
+        acceptedFiles: 'image/*',
         success: function (file, response) {
             file.serverFileName = response;
-            addedImages.push(file.serverFileName);
+            addedImages.push(response);
+            if (addedImages.length == 1) {
+                var def = $('.dz-image > img[alt="' + file.name + '"]').parents('.dz-preview');
+                $(def).prepend('<div class="label label-primary main-img">Default</div>');
+                $('#def-img').val(file.name);
+                $('#main_image').attr('src', URL + 'images/up/' + file.serverFileName);
+            }
             $('#addedImages').val(JSON.stringify(addedImages)); //store array
         }
     });
 
 
     myDropzone.on("addedfile", function (file) {
+        if ($('.dz-message').length) {
+            $('.dz-message').hide();
+        }
+        if (file.serverFileName != null && file.serverFileName != undefined) {
+            addedImages.push(file.serverFileName);
+            $('#addedImages').val(JSON.stringify(addedImages)); //store array
+        }
+        $('.uploaded-img div.col-md-3').children('img[alt="' + file.serverFileName + '"]').remove();
         file.previewElement.addEventListener("click", function () {
             var image = $('.dz-image > img[alt="' + file.name + '"]').parents('.dz-preview');
             $('.main-img').remove();
@@ -275,29 +290,38 @@ if ($('#myDropzone').length) {
                 addedImages.splice(i, 1);
             }
         }
+        if (addedImages.length == 0) {
+            $('.dz-message').show();
+            $('#def-img').val('');
+            $('#main_image').attr('src', URL + 'images/empty.png');
+        }
         $('#addedImages').val(JSON.stringify(addedImages)); //store array
     });
 
     $('.add-to-images').on('click', function () {
-        var img = {name: this.alt};
-        myDropzone.emit("addedfile", img);
-        myDropzone.emit("thumbnail", img, this.src);
-        myDropzone.emit("complete", img);
-        addedImages.push(this.alt);
-        console.log(addedImages);
-    });
+        if (addedImages.indexOf(this.alt) == -1) {
+            var img = {name: this.alt, serverFileName: this.alt};
+            myDropzone.emit("addedfile", img);
+            myDropzone.emit("thumbnail", img, this.src);
+            myDropzone.emit("complete", img);
 
+            if (addedImages.length == 1) {
+                var def = $('.dz-image > img[alt="' + this.alt + '"]').parents('.dz-preview');
+                $(def).prepend('<div class="label label-primary main-img">Default</div>');
+                $('#def-img').val(this.alt);
+                $('#main_image').attr('src', URL + 'images/up/' + this.alt);
+            }
+        }
+    });
 
     for (i = 0; i < existingFiles.length; i++) {
         myDropzone.emit("addedfile", existingFiles[i]);
         myDropzone.emit("thumbnail", existingFiles[i], URL + "images/up/" + existingFiles[i].name);
         myDropzone.emit("complete", existingFiles[i]);
-        addedImages.push(existingFiles[i].serverFileName);
     }
-    $('#addedImages').val(JSON.stringify(addedImages)); //store array
+
     var def = $('.dz-image > img[alt="' + def_img + '"]').parents('.dz-preview');
     $(def).prepend('<div class="label label-primary main-img">Default</div>');
-
     $('.show-images-btn').on('click', function () {
         $('.show-images').toggleClass('hidden');
         $(this).children('span').toggleClass('fa-plus-circle fa-minus-circle');
@@ -308,7 +332,7 @@ if ($('#stock').length) {
     $('#stock').TouchSpin({
         verticalbuttons: true,
         prefix: 'qty',
-        min: 1,
+        min: 0,
         max: 1000
     });
 }
@@ -323,6 +347,7 @@ if ($('#price').length) {
         max: 100000
     });
 }
+
 if ($('#sale').length) {
     $('#sale').TouchSpin({
         verticalbuttons: true,
@@ -330,7 +355,7 @@ if ($('#sale').length) {
         step: 0.1,
         decimals: 2,
         boostat: 5,
-        min: 0.1,
+        min: 0,
         max: 99
     });
 }
@@ -339,7 +364,7 @@ if ($('.calc-price , .calc-sale').length) {
     $('.calc-price , .calc-sale').on('keyup', function () {
         var num = $('.calc-price').val() * (1 - ($('.calc-sale').val()) / 100);
         $('.calc-total').text('$' + num.toFixed(2));
-    }).on('change',function(){
+    }).on('change', function () {
         var num = $('.calc-price').val() * (1 - ($('.calc-sale').val()) / 100);
         $('.calc-total').text('$' + num.toFixed(2));
     });

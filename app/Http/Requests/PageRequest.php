@@ -28,5 +28,11 @@ class PageRequest extends FormRequest {
             'url'   => 'required|regex:/^[a-z\d\-]+$/|unique:pages,url' . $ignore,
         ];
     }
+    
+    public function messages() {
+        return [
+            'url.regex' => 'Illgal url, its must be only with Letters and Numbers and minus sign (-).',
+        ];
+    }
 
 }

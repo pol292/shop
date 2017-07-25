@@ -32,7 +32,11 @@
     </tr>
     @foreach($products as $product)
     <tr>
-        <td><img src="{{asset("images/up/{$product['image']}")}}" height="50" alt="{{$product['title']}}"></td>
+        @if(empty($product['image']))
+            <td><img src="{{asset("images/empty.png")}}" height="50" alt="{{$product['title']}}"></td>
+        @else
+            <td><img src="{{asset("images/up/{$product['image']}")}}" height="50" alt="{{$product['title']}}"></td>
+        @endif
         <td  style="vertical-align: middle;">{{$product['title']}}</td>
         <td  style="vertical-align: middle;">
             @if(empty((float)$product['sale']))

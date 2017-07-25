@@ -82,13 +82,12 @@ class Categorie extends Model {
         $offset                           = $limit * $page;
         if ( empty( $request[ 'find' ] ) ) {
             $data[ 'pagination' ][ 'count' ] = ( int ) ceil( self::count() / $limit );
-            $data[ 'categories' ] = self::offset( $offset )->limit( $limit )->get()->toArray();
+            $data[ 'categories' ]            = self::offset( $offset )->limit( $limit )->get()->toArray();
         } else {
-            $data[ 'categories' ] = self::where( 'title', 'LIKE', "%{$request[ 'find' ]}%" );
+            $data[ 'categories' ]            = self::where( 'title', 'LIKE', "%{$request[ 'find' ]}%" );
             $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'categories' ]->count() / $limit );
-            $data[ 'categories' ] = $data[ 'categories' ]->offset( $offset )->limit( $limit )->get()->toArray();
+            $data[ 'categories' ]            = $data[ 'categories' ]->offset( $offset )->limit( $limit )->get()->toArray();
         }
-
     }
 
     public static function getContentsById( &$id, &$data ) {
@@ -137,7 +136,30 @@ class Categorie extends Model {
             }
         } catch ( \Exception $e ) {
             DB::rollback();
-            Session::flash( 'wm', 'Can\'t delete page now please try after' );
+            Session::flash( 'wm', 'Can\'t delete category now please try after' );
+        }
+    }
+
+    public static function updateCategory( &$request ) {
+        DB::beginTransaction();
+        try {
+
+            $category = self::find($request['id']);
+
+            $category[ 'title' ]   = $request[ 'title' ];
+            $category[ 'url' ]     = $request[ 'url' ];
+            $category[ 'article' ] = $request[ 'article' ] ? $request[ 'article' ] : '';
+
+            $category->save();
+//            $backup = [
+//                'pages' => [ 'id' => $page[ 'id' ] ],
+//            ];
+            DB::commit();
+//            Backup::set( 'create', 'page', "Create page: {$category[ 'title' ]}", $backup, 'plus' );
+            Session::flash( 'sm', "You are update successfull (  {$request[ 'title' ]} ) product." );
+        } catch ( \Exception $e ) {
+            DB::rollback();
+            Session::flash( 'wm', 'Can\'t add update product now please try after' );
         }
     }
 

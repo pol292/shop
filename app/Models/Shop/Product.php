@@ -10,12 +10,48 @@ use App\Models\Shop\Categorie;
 
 class Product extends Model {
 
+    public static function addProduct( &$request ) {
+        DB::beginTransaction();
+        try {
+
+            $product = new self;
+
+            $product[ 'categorie_id' ] = $request->category;
+            $product[ 'title' ]        = $request[ 'title' ];
+            $product[ 'article' ]      = $request[ 'article' ] ? $request[ 'article' ] : '';
+            $product[ 'url' ]          = $request[ 'url' ];
+
+            if ( empty( $request[ 'image' ] ) ) {
+                $product[ 'image' ]  = $product[ 'images' ] = '';
+            } else {
+                $product[ 'image' ]  = $request[ 'image' ];
+                $product[ 'images' ] = serialize( json_decode( $request[ 'images' ] ) );
+            }
+
+            $product[ 'price' ] = $request[ 'price' ];
+            $product[ 'sale' ]  = $request[ 'sale' ];
+            $product[ 'stock' ] = $request[ 'stock' ];
+
+            $product->save();
+//            $backup = [
+//                'pages' => [ 'id' => $page[ 'id' ] ],
+//            ];
+            DB::commit();
+//            Backup::set( 'create', 'page', "Create page: {$category[ 'title' ]}", $backup, 'plus' );
+            Session::flash( 'sm', "You are update successfull (  {$request[ 'title' ]} ) product." );
+        } catch ( \Exception $e ) {
+            DB::rollback();
+            Session::flash( 'wm', 'Can\'t update product now please try after' );
+            Session::flash( 'wm', $e->getMessage() );
+        }
+    }
+
     public static function getProduct( &$product, &$data ) {
         $product = self::where( 'url', $product );
         $product = $product->first();
 
         if ( $product ) {
-            $data[ 'product' ]           = $product->toArray();
+            $data[ 'product' ]             = $product->toArray();
             $data[ 'product' ][ 'images' ] = unserialize( $data[ 'product' ][ 'images' ] );
 
             $cat = Categorie::find( $data[ 'product' ][ 'categorie_id' ] );
@@ -118,29 +154,101 @@ class Product extends Model {
 
     public static function getContentsById( &$id, &$data ) {
         if ( $product = self::find( $id ) ) {
-            $data[ 'product' ]           = $product->toArray();
+            $data[ 'product' ]             = $product->toArray();
             $data[ 'product' ][ 'images' ] = unserialize( $data[ 'product' ][ 'images' ] );
-            $images                      = [];
-            foreach ( $data[ 'product' ][ 'images' ] as $image ) {
+
+            $images   = [];
+            $meny_img = old( 'images' ) ? json_decode( old( 'images' ) ) : $data[ 'product' ][ 'images' ];
+            self::imageForDropZone( $meny_img, $images );
+
+            $data[ 'images_json' ] = json_encode( $images );
+        }
+    }
+
+    public static function getImagesAndCat( &$data ) {
+        $files  = \File::allFiles( public_path() . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'up' );
+        $images = [];
+        foreach ( $files as $file ) {
+            $images[] = $file->getFilename();
+        }
+        $data[ 'uploaded_images' ] = &$images;
+        $cat                       = Categorie::orderBy( 'title' )->get();
+        if ( $cat ) {
+            $data[ 'cats' ] = $cat->toArray();
+        }
+    }
+
+    public static function updateProduct( &$request ) {
+        DB::beginTransaction();
+        try {
+
+            $product = self::find( $request[ 'id' ] );
+
+            $product[ 'categorie_id' ] = $request->category;
+            $product[ 'title' ]        = $request[ 'title' ];
+            $product[ 'article' ]      = $request[ 'article' ] ? $request[ 'article' ] : '';
+            $product[ 'url' ]          = $request[ 'url' ];
+
+            if ( empty( $request[ 'image' ] ) ) {
+                $product[ 'image' ]  = $product[ 'images' ] = '';
+            } else {
+                $product[ 'image' ]  = $request[ 'image' ];
+                $product[ 'images' ] = serialize( json_decode( $request[ 'images' ] ) );
+            }
+
+            $product[ 'price' ] = $request[ 'price' ];
+            $product[ 'sale' ]  = $request[ 'sale' ];
+            $product[ 'stock' ] = $request[ 'stock' ];
+
+            $product->save();
+//            $backup = [
+//                'pages' => [ 'id' => $page[ 'id' ] ],
+//            ];
+            DB::commit();
+//            Backup::set( 'create', 'page', "Create page: {$category[ 'title' ]}", $backup, 'plus' );
+            Session::flash( 'sm', "You are update successfull (  {$request[ 'title' ]} ) product." );
+        } catch ( \Exception $e ) {
+            DB::rollback();
+            Session::flash( 'wm', 'Can\'t update product now please try after' );
+            Session::flash( 'wm', $e->getMessage() );
+        }
+    }
+
+    private static function imageForDropZone( $meny_img, &$images ) {
+        if ( !empty( $meny_img ) ) {
+            foreach ( $meny_img as $image ) {
                 $current                                = count( $images );
                 $images[ $current ][ 'name' ]           = $image;
                 $images[ $current ][ 'serverFileName' ] = $image;
             }
-            $data[ 'images_json' ] = json_encode( $images );
-            $cat = Categorie::orderBy( 'title' )->get();
-            if ($cat){
-                $data['cats'] = $cat->toArray();
-            }
         }
     }
 
-    public static function getImagesUploaded( &$data ) {
-        $files = \File::allFiles( public_path() . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'up' );
-        $images = [];
-        foreach ($files as $file){
-            $images[] = $file->getFilename();
+    public static function getOldImages( &$data ) {
+        $images                = [];
+        self::imageForDropZone( old( 'images' ), $images );
+        $data[ 'images_json' ] = json_encode( $images );
+    }
+
+    public static function deleteProduct( $id ) {
+        DB::beginTransaction();
+        try {
+
+            $product = self::find( $id );
+            $title    = $product[ 'title' ];
+            if ( $product ) {
+//                self::pageBackup( 'delete', $category, 'trash-o' );
+                $product->delete();
+
+                DB::commit();
+                Session::flash( 'sm', "You are successfull delete product ($title)" );
+            } else {
+                
+            }
+        } catch ( \Exception $e ) {
+            DB::rollback();
+            Session::flash( 'wm', 'Can\'t delete product now please try after' );
         }
-        $data['uploaded_images'] = &$images;
     }
 
 }

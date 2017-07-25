@@ -4,11 +4,9 @@ namespace App\Http\Controllers\Dashboard\Shop;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseDashboardController;
-use App\Models\Shop\Categorie;
 use App\Models\Shop\Product;
 use Session;
-
-//use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\ProductRequest;
 
 class ManageProductController extends BaseDashboardController {
 
@@ -38,6 +36,8 @@ class ManageProductController extends BaseDashboardController {
      * @return \Illuminate\Http\Response
      */
     public function create() {
+        Product::getImagesAndCat( self::$data );
+        Product::getOldImages(self::$data);
         return view( 'dashboard.shop.product.add', self::$data );
     }
 
@@ -47,8 +47,8 @@ class ManageProductController extends BaseDashboardController {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store( Request $request ) {
-        Categorie::addCategory( $request );
+    public function store( ProductRequest $request ) {
+        Product::addProduct( $request );
         return redirect( url( "dashboard/shop/product/" ) );
     }
 
@@ -69,7 +69,7 @@ class ManageProductController extends BaseDashboardController {
      * @return \Illuminate\Http\Response
      */
     public function edit( $id ) {
-        Product::getImagesUploaded(self::$data);
+        Product::getImagesAndCat( self::$data );
         Product::getContentsById( $id, self::$data );
         if ( !empty( self::$data[ 'product' ] ) ) {
             self::$data[ 'subtitle' ] = 'Edit: ' . self::$data[ 'product' ][ 'title' ];
@@ -86,8 +86,11 @@ class ManageProductController extends BaseDashboardController {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update( Request $request, $id ) {
-        return;
+    public function update( ProductRequest $request, $id ) {
+        if ( $request[ 'id' ] == $id ) {
+            Product::updateProduct( $request );
+        }
+        return redirect( $request->path() . '/edit' );
     }
 
     /**
@@ -97,7 +100,7 @@ class ManageProductController extends BaseDashboardController {
      * @return \Illuminate\Http\Response
      */
     public function destroy( Request $request, $id ) {
-        Categorie::deleteCategory( $id );
+        Product::deleteProduct( $id );
         return response()->json( ($request[ 'redirect' ] ? [ 'redirect' => 'dashboard/shop/product' ] : [] ) );
     }
 
