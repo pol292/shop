@@ -155,7 +155,56 @@
             </div>
         </nav>
         <!-- End Navigation Bar -->
-
+        @if($title === 'iDiver')
+        <!-- Full Slider -->
+        <style>
+            .owl-carousel .item img{
+                max-height: 50vh;
+            }
+            .text-carousel{
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                max-height: 150px;
+                /*                background: rgba(0,0,0,0.5);*/
+                background: linear-gradient(
+                    to bottom,
+                    rgba(0,0,0,0),
+                    #000
+                    );
+                color: #fff;
+                border-radius: 10px 10px 0 0;
+                padding: 10px;
+                padding-top: 20px;
+                word-wrap: break-word;
+            }
+            .text-carousel a{
+                color: #fff;
+            }
+        </style>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="owl-carousel owl-theme home-slider">
+                    @foreach($advs as $adv)
+                    <div class="item">
+                        <a href="{{url($adv['url'])}}">
+                            <div class="text-carousel">
+                                <h4>{{$adv['title']}}</h4>
+                                <p>
+                                    {{$adv['article']}}
+                                </p>
+                            </div>
+                        </a>
+                        <a href="{{url($adv['url'])}}" class="hidden-xs"><img src="{{asset("images/demo/{$adv['image']}")}}" alt="Slider"></a>
+                        <a href="{{url($adv['url'])}}" class="visible-xs"><img src="{{asset("images/demo/{$adv['image']}")}}" alt="Slider"></a>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        <!-- End Full Slider -->
+        @else
         <!-- Breadcrumbs -->
         <div class="breadcrumb-container">
             <div class="container">
@@ -178,7 +227,7 @@
             </div>
         </div>
         <!-- End Breadcrumbs -->
-
+        @endif
 
         <!-- Main Content -->
         <div class="container m-t-2">

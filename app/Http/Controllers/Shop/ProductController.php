@@ -13,6 +13,7 @@ class ProductController extends MainController {
     public function show( $cat,$product ) {
         Product::randomItems(self::$data);
         Product::getProduct($product, self::$data);
+        self::setTitle(self::$data['product']['title'] . ' - ' . self::$data['breadcrumb'][1]['title']);
         return view( 'shop.product', self::$data );
     }
 

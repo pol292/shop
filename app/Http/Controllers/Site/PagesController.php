@@ -7,6 +7,7 @@ use App\Http\Controllers\MainController;
 use App\Models\CMS\Pages;
 use App\Models\Shop\Categorie;
 use App\Models\Shop\Product;
+use App\Models\Advertising;
 
 class PagesController extends MainController {
 
@@ -25,6 +26,7 @@ class PagesController extends MainController {
 
     public function index() {
         self::$data[ 'page_url' ]   = 'index';
+        Advertising::get(self::$data);
         self::$data[ 'categories' ] = Categorie::orderBy( 'title' )->get()->toArray();
         self::$data[ 'breadcrumb' ] = [ 'active' => 'home' ];
         Product::getIndexProducts( self::$data );

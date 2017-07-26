@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 22, 2017 at 01:45 PM
+-- Generation Time: Jul 25, 2017 at 03:55 PM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 7.0.9
 
@@ -342,9 +342,10 @@ CREATE TABLE `products` (
   `id` int(11) NOT NULL,
   `categorie_id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
-  `article` text NOT NULL,
+  `article` varchar(255) NOT NULL,
   `url` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL,
+  `images` text NOT NULL,
   `price` decimal(8,2) NOT NULL,
   `sale` decimal(8,2) NOT NULL DEFAULT '0.00',
   `stock` int(11) NOT NULL DEFAULT '0',
@@ -356,81 +357,24 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `categorie_id`, `title`, `article`, `url`, `image`, `price`, `sale`, `stock`, `updated_at`, `created_at`) VALUES
-(1, 1, 'IST Talaria Split Fin', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam imperdiet faucibus est sit amet sollicitudin. Nullam tincidunt erat a sodales ornare. Aenean tempus hendrerit lectus eu auctor. Donec magna lectus, hendrerit non lorem nec, malesuada fringilla orci. Nullam mattis ipsum id risus venenatis dignissim. Curabitur mollis nunc at nisi venenatis, eget mattis mi semper. Ut venenatis ligula euismod lorem tincidunt viverra. Quisque at sodales turpis. Donec ut feugiat dolor. Sed maximus imperdiet purus a mollis. Praesent ultricies ligula in sapien vulputate accumsan. Nulla rutrum tellus sem. Curabitur eleifend sem libero, a convallis lectus faucibus ut. Maecenas euismod id mi quis pellentesque.\r\n\r\n', 'ist-talaria-split-fin', 'IMG_1695.JPG', '65.20', '12.50', 7, '2017-07-18 19:51:53', '2017-07-18 19:51:53'),
-(2, 1, 'Diving Shoes', 'Ut est ante, sagittis vel elit vitae, imperdiet placerat leo. Donec vel porta metus. Fusce fringilla pretium massa, sed lacinia arcu rhoncus eget. Donec accumsan congue augue vulputate gravida. Cras viverra dui non gravida aliquam. Phasellus eu interdum purus. In elementum, lorem ut congue congue, nisi augue lobortis tortor, ut commodo diam elit sed orci. Vivamus sit amet est ut eros euismod convallis at hendrerit nisl. Praesent blandit gravida hendrerit. Vivamus ac mauris facilisis, bibendum tortor vitae, laoreet leo. Quisque efficitur facilisis sagittis. Nunc pretium nec eros eget condimentum. Sed eleifend enim eget velit volutpat porttitor. Aliquam erat volutpat.\r\n\r\n', 'diving-shoes', 'IMG_1713.JPG', '19.99', '0.00', 1, '2017-07-18 19:51:53', '2017-07-18 19:51:53'),
-(3, 2, 'Oceanic Mask', '', 'oceanic-mask', 'IMG_1702.JPG', '65.50', '0.00', 1, '2017-07-19 03:22:44', '2017-07-19 03:22:44'),
-(4, 2, 'Sepa Mask', 'Aenean libero nibh, porta at sagittis sit amet, viverra a eros. Etiam vel erat imperdiet est dapibus pulvinar. Curabitur eget libero bibendum, ultrices felis a, egestas mauris. Nunc malesuada nisi id purus maximus posuere. Integer dignissim volutpat augue. Morbi blandit ligula a blandit interdum. Curabitur cursus nisi quis sapien auctor laoreet. Fusce eget sollicitudin ante, eget consectetur augue. Ut hendrerit sed nunc at aliquet. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nam eget sodales lectus, at congue quam. Curabitur consequat, dolor blandit feugiat pellentesque, purus justo varius lacus, nec malesuada augue nibh et sem. Nulla facilisi. Nulla accumsan mattis lectus, fringilla venenatis diam maximus sit amet.\r\n\r\n', 'sepa-mask', 'IMG_1709.JPG', '45.00', '7.00', 0, '2017-07-19 03:22:44', '2017-07-19 03:22:44'),
-(5, 2, 'Oceanic ULTRA DRY snorkel', 'Nulla rhoncus dapibus gravida. Phasellus maximus nunc quis quam pretium, a commodo ligula dapibus. Quisque quam leo, consequat consequat rutrum non, posuere in justo. Suspendisse iaculis ex eget purus placerat laoreet. Morbi vitae tellus sed nunc placerat aliquam nec quis tortor. Aenean hendrerit quis sapien non laoreet. Donec eget varius risus. Donec hendrerit neque purus, et elementum erat dictum sed. Aliquam laoreet, justo id maximus dapibus, tellus nunc laoreet sapien, id commodo eros lorem eu leo. Fusce non mi ultricies, rutrum magna bibendum, faucibus enim. Sed cursus sem mauris, id ultricies erat vestibulum vitae. Etiam dui lectus, fringilla vitae posuere a, pulvinar nec nisl. Vestibulum porttitor metus a euismod pharetra. Nunc vulputate nulla faucibus, blandit lorem non, egestas massa. Curabitur aliquam arcu a risus volutpat mattis. Suspendisse ut fringilla lorem.\r\n\r\n', 'Oceanic-ultra-dry', 'IMG_1742.JPG', '49.50', '0.00', 10, '2017-07-19 03:31:41', '2017-07-19 03:31:41'),
-(6, 2, 'Sepa Snorkel', 'Duis sodales erat urna, et dictum augue condimentum vel. Maecenas vitae pulvinar odio. Donec dignissim gravida sollicitudin. Cras sed placerat ligula. Sed vestibulum egestas sem, quis bibendum ipsum aliquet quis. Aenean maximus sodales odio nec varius. Aliquam consectetur metus vitae turpis ornare, quis laoreet mauris bibendum. Cras vitae dui commodo, efficitur odio ut, venenatis odio. Pellentesque hendrerit, nisl in vehicula porta, ligula elit posuere dolor, in egestas dui tortor sit amet ipsum. Pellentesque et elit vel orci pulvinar ultricies vel id augue. Integer ultricies iaculis mauris, quis aliquam nunc fermentum id. Mauris laoreet ipsum purus, eget elementum nunc aliquet ut. In quis urna nulla. Ut ultrices felis ut odio ullamcorper, id tincidunt sem laoreet. Cras ac consequat massa. Sed fermentum lacus vel dignissim tincidunt.\r\n\r\n', 'sepa-snorkel', 'IMG_1723.JPG', '25.90', '0.00', 1, '2017-07-19 03:31:41', '2017-07-19 03:31:41'),
-(7, 5, 'Camera 360', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra magna vel libero vehicula, eu facilisis arcu bibendum. Vivamus ut interdum arcu, non pulvinar est. Vestibulum at tempor libero. Mauris sit amet malesuada tellus. Donec auctor, mi sed viverra interdum, sem nisi ultrices justo, a mattis ligula felis quis leo. Proin porta, elit a viverra rutrum, leo mi tempor diam, sed pellentesque justo velit eu augue. Curabitur sollicitudin accumsan enim, vitae blandit libero sollicitudin nec. Sed porttitor dui justo, tristique luctus justo elementum in. Ut volutpat dolor ac mi porttitor, quis egestas ipsum aliquet. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas euismod ligula vitae est fermentum sollicitudin. Proin pulvinar fringilla nisi. Suspendisse vitae purus tincidunt lectus posuere scelerisque nec vel risus. Nulla dictum ligula id enim cursus, accumsan porttitor eros tincidunt.\r\n\r\n', 'camera-360', 'IMG_1715.JPG', '49.90', '0.00', 3, '2017-07-19 03:45:05', '2017-07-19 03:45:05'),
-(8, 5, 'SJCAM SJ-4000', 'Nullam eu dictum tellus. Maecenas nec pulvinar velit, quis porttitor nisi. Nam et pretium nibh. Sed est turpis, mattis at lorem ac, aliquam lobortis felis. Fusce tempor, odio ut ultrices pulvinar, orci nulla scelerisque dolor, eu interdum sapien tortor nec tellus. Ut sed luctus tellus. Nulla eleifend enim non odio iaculis luctus. Quisque a orci accumsan, posuere ante vitae, imperdiet nibh. Aenean tempus risus ut aliquam commodo. Sed egestas faucibus placerat. Nam ullamcorper orci at egestas porttitor. Cras varius lobortis tincidunt. Curabitur efficitur mattis mi ac pharetra.\r\n\r\n', 'sjcam-sj-4000', 'IMG_1750.JPG', '40.55', '0.00', 3, '2017-07-19 03:45:05', '2017-07-19 03:45:05'),
-(9, 5, 'Canon A4000', 'Nunc metus quam, finibus blandit lectus in, consequat tristique nibh. Sed dignissim, nisi id aliquet volutpat, neque purus ullamcorper arcu, et fringilla nibh neque id leo. Maecenas posuere elit dolor, a pretium eros egestas at. Etiam auctor interdum diam tincidunt pharetra. Praesent tristique lectus vitae est condimentum sagittis. Proin quis dui quis turpis volutpat accumsan. Etiam ultricies aliquam sapien, a porta nisl aliquam ut. Nam fermentum facilisis vestibulum. Proin non finibus lectus, sed posuere nulla. Proin iaculis gravida dui. Fusce elementum mi a lacinia faucibus.\r\n\r\n', 'canon-a4000', 'IMG_1744.JPG', '600.00', '7.00', 3, '2017-07-19 03:47:35', '2017-07-19 03:47:35'),
-(10, 5, 'Red filter for ikelite 3"', 'Donec vel nisi vel lorem faucibus ullamcorper at et risus. Suspendisse et porttitor diam, sed euismod risus. Aliquam vehicula imperdiet tempor. Proin dignissim vulputate sem, nec pulvinar felis vulputate non. Nulla arcu ante, vehicula vitae mi quis, eleifend dictum ligula. Pellentesque suscipit lectus dolor, in fringilla sapien sollicitudin vel. Integer eget scelerisque lorem. Morbi dignissim enim id augue aliquam, eu molestie diam ullamcorper. Vivamus semper, metus a venenatis dictum, dui erat suscipit ligula, sed dignissim orci risus et felis. Donec faucibus tortor ultrices lacinia ullamcorper.\r\n\r\n', 'red-filter-iklite', 'IMG_1745.JPG', '80.50', '0.00', 2, '2017-07-19 03:47:35', '2017-07-19 03:47:35'),
-(11, 5, 'Extreme Camera Floating Stick', 'Quisque tempor, tellus tincidunt venenatis tristique, massa lectus viverra tortor, ac dignissim dolor nulla non sapien. Suspendisse id quam tristique metus consectetur congue. Etiam eu justo diam. Vestibulum nunc neque, porta in condimentum sed, ultricies a turpis. Proin maximus, odio eu venenatis pretium, mi sem malesuada tortor, id ultricies turpis purus eget odio. Fusce vel sagittis nibh, sed efficitur nisi. Duis scelerisque elementum tempus. Aliquam accumsan lectus eget lectus elementum vulputate. Proin tristique metus lorem, quis faucibus ligula aliquet ac.\r\n\r\n', 'extreme-camera-floating-stick', 'IMG_1732.JPG', '12.30', '0.00', 0, '2017-07-19 03:54:58', '2017-07-19 03:54:58'),
-(12, 5, 'Extreme Camera Long Stick', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ex massa, cursus sed dolor id, vehicula scelerisque turpis. Vivamus eu arcu eros. Cras finibus neque ut nisl elementum, ac vulputate nunc vehicula. Nullam id maximus tellus, eget ultricies purus. Integer elementum quam tortor, at sagittis leo dapibus nec. Sed in aliquet odio. Maecenas at lectus odio. Etiam nisl eros, sollicitudin ac felis non, convallis vehicula leo. Praesent vitae ante nec nisl convallis finibus vel ut magna. Sed ac eros et enim vestibulum lobortis et eu ipsum. Phasellus ac ante mi. Maecenas suscipit bibendum metus eget fringilla. Vestibulum condimentum ullamcorper cursus. Phasellus egestas, felis ac iaculis eleifend, metus nisi viverra dui, a dapibus sapien lacus congue tellus. Pellentesque finibus molestie nisi quis commodo.\r\n\r\n', 'extreme-camera-long-stick', 'IMG_1719.JPG', '26.90', '3.00', 3, '2017-07-19 03:54:58', '2017-07-19 03:54:58'),
-(13, 3, 'Sepa Diving Likra Suit', 'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque laoreet elit vitae risus posuere pulvinar. Duis interdum ex mi, ac consequat nisi ornare eget. Pellentesque sed nunc id magna sollicitudin tincidunt. Praesent facilisis laoreet tellus sed facilisis. Fusce euismod mauris et finibus porta. Vestibulum congue dapibus ornare. Integer elementum diam sapien, quis condimentum lacus volutpat ac. In vulputate venenatis volutpat. Morbi lorem erat, congue vel consequat a, tincidunt vitae purus. Vivamus sem sem, aliquet id viverra at, euismod vitae augue. Morbi eget augue facilisis arcu facilisis fringilla. Morbi lobortis ipsum diam, ut imperdiet ex feugiat eget. Sed pretium massa imperdiet sapien auctor, eu vestibulum ante mattis.\r\n\r\n', 'sepa-diving-likra-suit', 'IMG_1734.JPG', '39.00', '0.00', 3, '2017-07-19 04:02:56', '2017-07-19 04:02:56'),
-(14, 4, 'EezyCut', 'In laoreet malesuada felis, commodo maximus urna facilisis eget. Nunc aliquam lacus ut vestibulum suscipit. Nam at quam vitae nulla mattis ornare. Aliquam dictum augue eu sem consectetur aliquet. Proin non accumsan turpis, sit amet aliquam ex. Donec mi nisl, ornare a dolor eu, egestas fermentum ex. Nullam nibh arcu, faucibus eu mattis cursus, euismod at dolor. Mauris et nisi eget risus pharetra lacinia. Proin vitae eleifend nulla, eu lacinia ipsum. Suspendisse potenti. Ut sodales erat quis leo aliquet iaculis. Cras feugiat dapibus ornare.\r\n\r\n', 'eezycut', 'IMG_1729_2.jpg', '49.00', '5.35', 1, '2017-07-19 04:08:26', '2017-07-19 04:08:26'),
-(15, 4, 'Diving Flashlight\r\n', 'In nec risus tincidunt, maximus neque eget, euismod mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque ut enim et odio porta sagittis vel sit amet metus. Proin pulvinar neque vitae sapien tristique, id porttitor nibh consequat. Donec sed scelerisque dolor. Sed a tempor nisl. Mauris dolor risus, accumsan non ante blandit, gravida imperdiet dolor. Nullam efficitur facilisis urna, volutpat egestas nulla fermentum sed. Donec facilisis ante vitae sollicitudin vestibulum.\r\n\r\n', 'diving-flashlight', 'IMG_1739.JPG', '23.00', '0.00', 2, '2017-07-19 04:08:26', '2017-07-19 04:08:26'),
-(16, 4, 'Scuba Whistle', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a tempus dolor, vel volutpat quam. In ex purus, consequat ac mollis eu, pellentesque ac dui. Donec at semper lacus. Quisque vehicula, metus ut vulputate dapibus, risus dui dapibus dui, sed laoreet tortor ligula eget massa. Nullam sed varius libero. Aliquam erat volutpat. Suspendisse potenti. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Quisque quis orci diam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec fringilla nunc diam, ac suscipit sem luctus sit amet. Nullam eget neque a metus lacinia interdum vulputate ut ligula. Ut sollicitudin lorem sed est tristique, eget lobortis augue pulvinar.\r\n\r\n', 'scuba-whistle', 'IMG_1736.JPG', '9.50', '2.00', 1, '2017-07-19 04:10:19', '2017-07-19 04:10:19'),
-(17, 4, 'Dive Log', 'Integer rhoncus, neque elementum vestibulum mollis, nunc tellus congue eros, non tincidunt erat diam vitae nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque hendrerit ornare est, ut mollis est. Vivamus ut turpis risus. Aenean pharetra augue id nibh aliquam tempor. Cras non faucibus lectus. Cras eget tortor vitae nisi efficitur iaculis in quis velit. In blandit convallis interdum. Curabitur semper dui massa, at dapibus mi imperdiet ac. Vivamus sodales elit in justo euismod mollis. Nulla eget odio sit amet nisi egestas consectetur. Integer vitae pharetra ante, id suscipit odio. Aenean metus enim, dapibus ut justo at, laoreet aliquet nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'dive-log', 'IMG_1740.JPG', '23.90', '0.00', 0, '2017-07-19 04:10:19', '2017-07-19 04:10:19');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `product_images`
---
-
-CREATE TABLE `product_images` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `image` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `product_images`
---
-
-INSERT INTO `product_images` (`id`, `product_id`, `image`) VALUES
-(1, 1, 'IMG_1695.JPG'),
-(2, 1, 'IMG_1696.JPG'),
-(3, 1, 'IMG_1697.JPG'),
-(4, 1, 'IMG_1698.JPG'),
-(5, 2, 'IMG_1713.JPG'),
-(6, 2, 'IMG_1714.JPG'),
-(7, 3, 'IMG_1701.JPG'),
-(8, 3, 'IMG_1702.JPG'),
-(9, 3, 'IMG_1707.JPG'),
-(10, 4, 'IMG_1709.JPG'),
-(11, 4, 'IMG_1710.JPG'),
-(12, 6, 'IMG_1723.JPG'),
-(13, 5, 'IMG_1742.JPG'),
-(14, 5, 'IMG_1743.JPG'),
-(15, 7, 'IMG_1715.JPG'),
-(16, 7, 'IMG_1717.JPG'),
-(17, 7, 'IMG_1718.JPG'),
-(18, 9, 'IMG_1744.JPG'),
-(19, 10, 'IMG_1745.JPG'),
-(20, 8, 'IMG_1749.JPG'),
-(21, 8, 'IMG_1749_1.jpg'),
-(22, 8, 'IMG_1749_2.jpg'),
-(23, 8, 'IMG_1750.JPG'),
-(24, 8, 'IMG_1751.JPG'),
-(25, 8, 'IMG_1752.JPG'),
-(26, 11, 'IMG_1732.JPG'),
-(27, 11, 'IMG_1733.JPG'),
-(28, 12, 'IMG_1719.JPG'),
-(29, 12, 'IMG_1720.JPG'),
-(30, 13, 'IMG_1734.JPG'),
-(31, 13, 'IMG_1735.JPG'),
-(32, 14, 'IMG_1727.JPG'),
-(33, 14, 'IMG_1729.JPG'),
-(34, 14, 'IMG_1729_1.jpg'),
-(35, 14, 'IMG_1729_2.jpg'),
-(36, 15, 'IMG_1739.JPG'),
-(37, 16, 'IMG_1736.JPG'),
-(38, 17, 'IMG_1740.JPG'),
-(39, 17, 'IMG_1741.JPG');
+INSERT INTO `products` (`id`, `categorie_id`, `title`, `article`, `url`, `image`, `images`, `price`, `sale`, `stock`, `updated_at`, `created_at`) VALUES
+(1, 1, 'IST Talaria Split Fin', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam imperdiet faucibus est sit amet sollicitudin. Nullam tincidunt erat a sodales ornare. Aenean tempus hendrerit lectus eu auctor. Donec magna lectus, hendrerit non lorem nec, malesuada fringilla', 'ist-talaria-split-fin', 'IMG_1695.JPG', 'a:4:{i:0;s:12:"IMG_1695.JPG";i:1;s:12:"IMG_1696.JPG";i:2;s:12:"IMG_1697.JPG";i:3;s:12:"IMG_1698.JPG";}', '65.20', '12.50', 7, '2017-07-23 20:17:11', '2017-07-18 19:51:53'),
+(2, 1, 'Diving Shoes', 'Ut est ante, sagittis vel elit vitae, imperdiet placerat leo. Donec vel porta metus. Fusce fringilla pretium massa, sed lacinia arcu rhoncus eget. Donec accumsan congue augue vulputate gravida. Cras viverra dui non gravida aliquam. Phasellus eu interdum p', 'diving-shoes', 'IMG_1713.JPG', 'a:2:{i:0;s:12:"IMG_1713.JPG";i:1;s:12:"IMG_1714.JPG";}', '19.99', '0.00', 1, '2017-07-23 20:17:11', '2017-07-18 19:51:53'),
+(3, 2, 'Oceanic Mask', '', 'oceanic-mask', 'IMG_1702.JPG', 'a:3:{i:0;s:12:"IMG_1701.JPG";i:1;s:12:"IMG_1702.JPG";i:2;s:12:"IMG_1707.JPG";}', '65.50', '0.00', 1, '2017-07-23 20:17:11', '2017-07-19 03:22:44'),
+(4, 2, 'Sepa Mask', 'Aenean libero nibh, porta at sagittis sit amet, viverra a eros. Etiam vel erat imperdiet est dapibus pulvinar. Curabitur eget libero bibendum, ultrices felis a, egestas mauris. Nunc malesuada nisi id purus maximus posuere. Integer dignissim volutpat augue', 'sepa-mask', 'IMG_1709.JPG', 'a:2:{i:0;s:12:"IMG_1709.JPG";i:1;s:12:"IMG_1710.JPG";}', '45.00', '7.00', 0, '2017-07-23 20:17:11', '2017-07-19 03:22:44'),
+(5, 2, 'Oceanic ULTRA DRY snorkel', 'Nulla rhoncus dapibus gravida. Phasellus maximus nunc quis quam pretium, a commodo ligula dapibus. Quisque quam leo, consequat consequat rutrum non, posuere in justo. Suspendisse iaculis ex eget purus placerat laoreet. Morbi vitae tellus sed nunc placerat', 'Oceanic-ultra-dry', 'IMG_1742.JPG', 'a:2:{i:0;s:12:"IMG_1742.JPG";i:1;s:12:"IMG_1743.JPG";}', '49.50', '0.00', 10, '2017-07-23 20:17:11', '2017-07-19 03:31:41'),
+(6, 2, 'Sepa Snorkel', 'Duis sodales erat urna, et dictum augue condimentum vel. Maecenas vitae pulvinar odio. Donec dignissim gravida sollicitudin. Cras sed placerat ligula. Sed vestibulum egestas sem, quis bibendum ipsum aliquet quis. Aenean maximus sodales odio nec varius. Al', 'sepa-snorkel', 'IMG_1723.JPG', 'a:1:{i:0;s:12:"IMG_1723.JPG";}', '25.90', '0.00', 1, '2017-07-23 20:17:11', '2017-07-19 03:31:41'),
+(7, 5, 'Camera 360', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra magna vel libero vehicula, eu facilisis arcu bibendum. Vivamus ut interdum arcu, non pulvinar est. Vestibulum at tempor libero. Mauris sit amet malesuada tellus. Donec auctor, mi sed viv', 'camera-360', 'IMG_1715.JPG', 'a:3:{i:0;s:12:"IMG_1715.JPG";i:1;s:12:"IMG_1717.JPG";i:2;s:12:"IMG_1718.JPG";}', '49.90', '0.00', 3, '2017-07-23 20:17:11', '2017-07-19 03:45:05'),
+(8, 5, 'SJCAM SJ-4000', 'Nullam eu dictum tellus. Maecenas nec pulvinar velit, quis porttitor nisi. Nam et pretium nibh. Sed est turpis, mattis at lorem ac, aliquam lobortis felis. Fusce tempor, odio ut ultrices pulvinar, orci nulla scelerisque dolor, eu interdum sapien tortor ne', 'sjcam-sj-4000', 'IMG_1750.JPG', 'a:6:{i:0;s:12:"IMG_1749.JPG";i:1;s:14:"IMG_1749_1.jpg";i:2;s:14:"IMG_1749_2.jpg";i:3;s:12:"IMG_1750.JPG";i:4;s:12:"IMG_1751.JPG";i:5;s:12:"IMG_1752.JPG";}', '40.55', '0.00', 3, '2017-07-23 20:17:11', '2017-07-19 03:45:05'),
+(9, 5, 'Canon A4000', 'Nunc metus quam, finibus blandit lectus in, consequat tristique nibh. Sed dignissim, nisi id aliquet volutpat, neque purus ullamcorper arcu, et fringilla nibh neque id leo. Maecenas posuere elit dolor, a pretium eros egestas at. Etiam auctor interdum diam', 'canon-a4000', 'IMG_1744.JPG', 'a:1:{i:0;s:12:"IMG_1744.JPG";}', '600.00', '7.00', 3, '2017-07-23 20:17:11', '2017-07-19 03:47:35'),
+(10, 5, 'Red filter for ikelite 3"', 'Donec vel nisi vel lorem faucibus ullamcorper at et risus. Suspendisse et porttitor diam, sed euismod risus. Aliquam vehicula imperdiet tempor. Proin dignissim vulputate sem, nec pulvinar felis vulputate non. Nulla arcu ante, vehicula vitae mi quis, eleif', 'red-filter-iklite', 'IMG_1745.JPG', 'a:1:{i:0;s:12:"IMG_1745.JPG";}', '80.50', '0.00', 2, '2017-07-23 20:17:11', '2017-07-19 03:47:35'),
+(11, 5, 'Extreme Camera Floating Stick', 'Quisque tempor, tellus tincidunt venenatis tristique, massa lectus viverra tortor, ac dignissim dolor nulla non sapien. Suspendisse id quam tristique metus consectetur congue. Etiam eu justo diam. Vestibulum nunc neque, porta in condimentum sed, ultricies', 'extreme-camera-floating-stick', 'IMG_1732.JPG', 'a:2:{i:0;s:12:"IMG_1732.JPG";i:1;s:12:"IMG_1733.JPG";}', '12.30', '0.00', 0, '2017-07-23 20:17:11', '2017-07-19 03:54:58'),
+(12, 5, 'Extreme Camera Long Stick', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ex massa, cursus sed dolor id, vehicula scelerisque turpis. Vivamus eu arcu eros. Cras finibus neque ut nisl elementum, ac vulputate nunc vehicula. Nullam id maximus tellus, eget ultricies pu', 'extreme-camera-long-stick', 'IMG_1719.JPG', 'a:2:{i:0;s:12:"IMG_1719.JPG";i:1;s:12:"IMG_1720.JPG";}', '26.90', '3.00', 3, '2017-07-23 20:17:11', '2017-07-19 03:54:58'),
+(13, 3, 'Sepa Diving Likra Suit', 'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque laoreet elit vitae risus posuere pulvinar. Duis interdum ex mi, ac consequat nisi ornare eget. Pellentesque sed nunc id magna sollicitudin tincidunt. Pra', 'sepa-diving-likra-suit', 'IMG_1743.JPG', 'a:2:{i:0;s:12:"IMG_1734.JPG";i:1;s:12:"IMG_1735.JPG";}', '39.00', '0.00', 3, '2017-07-23 20:17:11', '2017-07-19 04:02:56'),
+(14, 4, 'EezyCut', 'In laoreet malesuada felis, commodo maximus urna facilisis eget. Nunc aliquam lacus ut vestibulum suscipit. Nam at quam vitae nulla mattis ornare. Aliquam dictum augue eu sem consectetur aliquet. Proin non accumsan turpis, sit amet aliquam ex. Donec mi ni', 'eezycut', 'IMG_1729_1.jpg', 'a:4:{i:0;s:12:"IMG_1727.JPG";i:1;s:12:"IMG_1729.JPG";i:2;s:14:"IMG_1729_1.jpg";i:3;s:14:"IMG_1729_2.jpg";}', '49.00', '5.35', 1, '2017-07-23 20:17:11', '2017-07-19 04:08:26'),
+(15, 4, 'Diving Flashlight\r\n', 'In nec risus tincidunt, maximus neque eget, euismod mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque ut enim et odio porta sagittis vel sit amet metus. Proin pulvinar neque vitae sapien tristique, id portt', 'diving-flashlight', 'IMG_1739.JPG', 'a:1:{i:0;s:12:"IMG_1739.JPG";}', '23.00', '0.00', 2, '2017-07-23 20:17:11', '2017-07-19 04:08:26'),
+(16, 4, 'Scuba Whistle', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a tempus dolor, vel volutpat quam. In ex purus, consequat ac mollis eu, pellentesque ac dui. Donec at semper lacus. Quisque vehicula, metus ut vulputate dapibus, risus dui dapibus dui, sed laoree', 'scuba-whistle', 'IMG_1736.JPG', 'a:1:{i:0;s:12:"IMG_1736.JPG";}', '9.50', '2.00', 1, '2017-07-23 20:17:11', '2017-07-19 04:10:19'),
+(17, 4, 'Dive Log', 'Integer rhoncus, neque elementum vestibulum mollis, nunc tellus congue eros, non tincidunt erat diam vitae nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque hendrerit ornare est, ut mollis est. Viv', 'dive-log', 'IMG_1740.JPG', 'a:2:{i:0;s:12:"IMG_1740.JPG";i:1;s:12:"IMG_1741.JPG";}', '23.90', '0.00', 0, '2017-07-23 20:17:11', '2017-07-19 04:10:19');
 
 --
 -- Indexes for dumped tables
@@ -476,12 +420,6 @@ ALTER TABLE `products`
   ADD UNIQUE KEY `url` (`url`);
 
 --
--- Indexes for table `product_images`
---
-ALTER TABLE `product_images`
-  ADD PRIMARY KEY (`id`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -494,7 +432,7 @@ ALTER TABLE `backups`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `menus`
 --
@@ -504,7 +442,7 @@ ALTER TABLE `menus`
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `page_contents`
 --
@@ -514,12 +452,7 @@ ALTER TABLE `page_contents`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
---
--- AUTO_INCREMENT for table `product_images`
---
-ALTER TABLE `product_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
