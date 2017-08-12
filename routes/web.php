@@ -10,8 +10,13 @@ Route::group( [ 'prefix' => 'ajax' ], function () {
     Route::post( 'up', 'Site\AjaxController@up' );
 } );
 Route::group( [ 'prefix' => 'shop' ], function () {
-    Route::get( '{cat}', 'Shop\CategorieController@show' );
-    Route::get( '{cat}/{item}', 'Shop\ProductController@show' );
+    Route::get( 'add-to-cart/{id}', 'Shop\ShopController@addToCart' );
+    Route::get( 'add-to-cart/{id}/{count}', 'Shop\ShopController@addToCart' );
+    Route::get( 'update-cart/{id}/{count}', 'Shop\ShopController@updateCart' );
+    Route::get( 'remove-from-cart/{id}', 'Shop\ShopController@removeFromCart' );
+    Route::get( 'view-cart', 'Shop\ShopController@viewCart' );
+    Route::get( '{cat}', 'Shop\ShopController@showCategory' );
+    Route::get( '{cat}/{item}', 'Shop\ShopController@showProduct' );
 } );
 
 
@@ -19,6 +24,7 @@ Route::group( [ 'prefix' => 'shop' ], function () {
 #   Dashboard:
 Route::group( [ 'prefix' => 'dashboard' ], function () {
     Route::get( '/', 'Dashboard\DashboardController@index' );
+    Route::resource( 'advertisings', 'Dashboard\ManageAdvertisingsController' );
 
 #   Dashboard/CMS:
 

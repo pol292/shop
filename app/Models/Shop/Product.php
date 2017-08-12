@@ -5,8 +5,9 @@ namespace App\Models\Shop;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Backup;
-use Session;
 use App\Models\Shop\Categorie;
+use Session,
+    Cart;
 
 class Product extends Model {
 
@@ -53,15 +54,13 @@ class Product extends Model {
         if ( $product ) {
             $data[ 'product' ]             = $product->toArray();
             $data[ 'product' ][ 'images' ] = unserialize( $data[ 'product' ][ 'images' ] );
-
-            $cat = Categorie::find( $data[ 'product' ][ 'categorie_id' ] );
+            self::getProductInCart( $data[ 'product' ][ 'id' ], $data[ 'cart' ] );
+            $cat                           = Categorie::find( $data[ 'product' ][ 'categorie_id' ] );
             if ( $cat ) {
                 $cat                    = $cat->toArray();
                 $data[ 'breadcrumb' ][] = [ 'title' => $cat[ 'title' ], 'url' => url( "shop/{$cat[ 'url' ]}" ) ];
             }
             $data[ 'breadcrumb' ][ 'active' ] = $data[ 'product' ][ 'title' ];
-        } else {
-            //TODO: 404
         }
     }
 
@@ -102,9 +101,8 @@ class Product extends Model {
         $product       = $product->where( 'sale', '>', '0' );
     }
 
-    public static function getIndexProducts( &$data ) {
-        $data[ 'max_discount' ] = self::max( 'sale' );
-        $new                    = self::orderBy( 'created_at', 'DESC' )
+    public static function getNewProducts( &$data ) {
+        $new = self::orderBy( 'created_at', 'DESC' )
                 ->where( 'stock', '>', '0' )
                 ->limit( 5 )
                 ->with( 'category' )
@@ -112,6 +110,12 @@ class Product extends Model {
         if ( $new ) {
             $data[ 'new_product' ] = $new->toArray();
         }
+    }
+
+    public static function getIndexProducts( &$data ) {
+        $data[ 'max_discount' ] = self::max( 'sale' );
+
+        self::getNewProducts( $data );
 
         $sale = self::where( 'sale', '>', '0' )
                 ->inRandomOrder()
@@ -235,7 +239,7 @@ class Product extends Model {
         try {
 
             $product = self::find( $id );
-            $title    = $product[ 'title' ];
+            $title   = $product[ 'title' ];
             if ( $product ) {
 //                self::pageBackup( 'delete', $category, 'trash-o' );
                 $product->delete();
@@ -249,6 +253,48 @@ class Product extends Model {
             DB::rollback();
             Session::flash( 'wm', 'Can\'t delete product now please try after' );
         }
+    }
+
+    public static function addToCart( $productId, $count ) {
+        if ( $product = self::where( 'id', $productId )->with( 'category' )->first() ) {
+            $product       = $product->toArray();
+            $productToCart = [
+                'id'      => $productId,
+                'name'    => $product[ 'title' ],
+                'qty'     => $count,
+                'price'   => $product[ 'price' ] * (1 - $product[ 'sale' ] / 100),
+                'options' => [
+                    'url'   => url( "shop/{$product[ 'category' ][ 'url' ]}/{$product[ 'url' ]}" ),
+                    'image' => $product[ 'image' ],
+                ],
+            ];
+            $cart          = Cart::add( $productToCart );
+            if ( $cart->qty > $product[ 'stock' ] ) {
+                Cart::update( $cart->rowId, $product[ 'stock' ] );
+                if ( $product[ 'stock' ] == 0 ) {
+                    Session::flash( 'wm', 'Product\'s ' . $product[ 'title' ] . ' Out of stock.' );
+                } else {
+                    Session::flash( 'wm', 'In product ' . $product[ 'title' ] . ' max stock is ' . $product[ 'stock' ] . '.' );
+                }
+            } else {
+                Session::flash( 'sm', 'You added successfull ' . $product[ 'title' ] . ' to cart.' );
+            }
+        }
+    }
+
+    private static function getProductInCart( $id, &$product ) {
+        $cart = Cart::content()->groupBy( 'id' )->toArray();
+        if ( !empty( $cart[ $id ] ) ) {
+            $product = $cart[ $id ][ 0 ];
+        }
+    }
+
+    public static function removeFromCart( $rowId ) {
+        Cart::remove( $rowId );
+    }
+
+    public static function updateCart( $rowId, $count ) {
+        Cart::update( $rowId, $count );
     }
 
 }

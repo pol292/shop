@@ -14,20 +14,20 @@
             <div class="image-detail">
                 <img src="{{asset("images/up/{$product['image']}")}}" data-zoom-image="{{asset("images/up/{$product['image']}")}}" alt="{{$product['title']}}">
             </div>
-                @if(count($product['images']) > 1)
-                <div class="products-slider-detail owl-carousel owl-theme m-b-2">
-                    <a href="#">
-                        <img src="{{asset("images/up/{$product['image']}")}}" data-zoom-image="{{asset("images/up/{$product['image']}")}}" alt="{{$product['title']}}" class="img-thumbnail">
-                    </a>
-                    @foreach($product['images'] as $image)
-                        @if($image != $product['image'] )
-                            <a href="#">
-                                <img src="{{asset("images/up/{$image}")}}"  data-zoom-image="{{asset("images/up/{$image}")}}" alt="{{$product['title']}}" class="img-thumbnail">
-                            </a>
-                        @endif
-                    @endforeach
-                </div>
+            @if(count($product['images']) > 1)
+            <div class="products-slider-detail owl-carousel owl-theme m-b-2">
+                <a href="#">
+                    <img src="{{asset("images/up/{$product['image']}")}}" data-zoom-image="{{asset("images/up/{$product['image']}")}}" alt="{{$product['title']}}" class="img-thumbnail">
+                </a>
+                @foreach($product['images'] as $image)
+                @if($image != $product['image'] )
+                <a href="#">
+                    <img src="{{asset("images/up/{$image}")}}"  data-zoom-image="{{asset("images/up/{$image}")}}" alt="{{$product['title']}}" class="img-thumbnail">
+                </a>
                 @endif
+                @endforeach
+            </div>
+            @endif
             @endif
 
             <div class="title"><span>Share to</span></div>
@@ -71,7 +71,15 @@
                             @elseif($product['stock'] == 1)
                             <span class="label label-warning">Last 1 Ready in Stock</span>
                             @elseif($product['stock'] > 1)
-                            <span class="label label-success">Ready in Stock</span>
+                            <span class="label label-success">{{$product['stock']}} Ready in Stock</span>
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>In cart</td>
+                        <td>
+                            @if(!empty($cart))
+                            <span class="label label-default">{{$cart['qty']}} in your cart</span>
                             @endif
                         </td>
                     </tr>
@@ -79,16 +87,17 @@
                         <td>Quantity</td>
                         <td>
                             <div class="input-qty">
-                                <input type="text" value="1" class="form-control text-center"/>
+                                <input type="text" data-bts-max="{{$product['stock']}}" id='qty' value="1" class="form-control text-center"/>
                             </div>
                         </td>
                     </tr>
+
                     <tr>
                         <td></td>
                         <td>
-                            <button class="btn btn-theme m-b-1" type="button"><i class="fa fa-shopping-cart"></i> Add to Cart</button>
-                            <button class="btn btn-theme m-b-1" type="button"><i class="fa fa-align-left"></i> Add to Compare</button>
-                            <button class="btn btn-theme m-b-1" type="button"><i class="fa fa-heart"></i> Add to Wishlist</button>
+                            <button class="addMenyToCart btn btn-theme m-b-1" type="button" data-id='{{$product['id']}}'><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+                            <i class="fa fa-spinner rotating" aria-hidden="true" style="color:#000;display: none; font-size: 30px; margin-right: 10px; "></i>
+                            <button class="btn btn-theme m-b-1" type="button"><i class="fa fa-check"></i> Checkout</button>
                         </td>
                     </tr>
                 </tbody>
@@ -197,9 +206,6 @@
         </div>
     </div>
     <!-- End Related Products -->
-    <script>
-        var max_qty = {{$product['stock']}};
-    </script>
 </div>
 
 <!-- End Main Content -->

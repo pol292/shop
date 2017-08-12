@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CMS\Menu;
 use Illuminate\Http\Request;
+use Session;
 
 class MainController extends Controller {
 
@@ -15,6 +16,7 @@ class MainController extends Controller {
         self::$data[ 'breadcrumb' ] = [ [ 'title' => 'home', 'url' => url( '/' ) ] ];
         self::$data[ 'request' ]      = $request;
         Menu::getMenu( self::$data );
+        
     }
 
     public static function setTitle( $title ) {

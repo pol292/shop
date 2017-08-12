@@ -4,13 +4,13 @@ $color = ['danger', 'success', 'info', 'primary'];
 <div class="img-wrapper">
 
     @if(empty($product['image']))
-        <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
-            <img src="{{asset('images/empty.png')}}" alt="Empty image">
-        </a>
+    <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
+        <img src="{{asset('images/empty.png')}}" alt="Empty image">
+    </a>
     @else
-        <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
-            <img alt="{{$product['title']}}" src="{{asset("images/up/{$product['image']}")}}" height="150">
-        </a>
+    <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
+        <img alt="{{$product['title']}}" src="{{asset("images/up/{$product['image']}")}}" height="150">
+    </a>
     @endif
     @if(!empty((float) $product['sale']))
     <div class="tags">
@@ -30,9 +30,8 @@ $color = ['danger', 'success', 'info', 'primary'];
     @endif
 
     <div class="option">
-        <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
-        <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-        <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
+        <a href="#" data-toggle="tooltip" title="Add to Cart" class="addToCart" data-pid="{{$product['id']}}"><i class="fa fa-shopping-cart"></i></a>
+        <i class="fa fa-spinner rotating" aria-hidden="true" style="color:#fff;display: none;"></i>
     </div>
 </div>
 <h6><a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">{{$product['title']}}</a></h6>
