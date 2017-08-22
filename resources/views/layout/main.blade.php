@@ -39,8 +39,13 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <ul class="list-inline pull-right">
-                            <li><a href="#"><i class="fa fa-plus" style="display: inline-block; position: relative;font-size: 10px;top: -9px;left: 22px;"></i><i class="fa fa-address-card"></i> Sing-up</a></li>
-                            <li><a href="#"><i class="fa fa-sign-in"></i> Sing-in</a></li>
+                            @if(Session::get('user'))
+                            <li><a href="{{url('user/logout')}}"><i class="fa fa-user"></i> User details</a></li>
+                            <li><a href="{{url('user/logout')}}"><i class="fa fa-sign-out"></i> Sign-out</a></li>
+                            @else
+                            <li><a href="{{url('user/register')}}"><i class="fa fa-plus" style="display: inline-block; position: relative;font-size: 10px;top: -9px;left: 22px;"></i><i class="fa fa-address-card"></i> Sign-up</a></li>
+                            <li><a href="{{url('user/login')}}"><i class="fa fa-sign-in"></i> Sign-in</a></li>
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -53,6 +58,16 @@
             <div id="top-content" class="container">
 
                 <!-- messages -->
+                @if ($errors->any())
+                <div class="alert alert-danger message">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
                 @if (session('wm'))
                 <div class="alert alert-danger message">
                     {{ session('wm') }}

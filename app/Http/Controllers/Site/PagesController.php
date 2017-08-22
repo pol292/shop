@@ -8,6 +8,7 @@ use App\Models\CMS\Pages;
 use App\Models\Shop\Categorie;
 use App\Models\Shop\Product;
 use App\Models\Advertising;
+use Session;
 
 class PagesController extends MainController {
 

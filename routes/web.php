@@ -1,14 +1,26 @@
 <?php
 
 Route::get( 'test', function() {
-    $files = File::allFiles( public_path().DIRECTORY_SEPARATOR .'images'.DIRECTORY_SEPARATOR.'up' );
-    dd($files[0]->getFilename());
+    $files = File::allFiles( public_path() . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'up' );
+    dd( $files[ 0 ]->getFilename() );
 } );
 
 Route::group( [ 'prefix' => 'ajax' ], function () {
     Route::get( 'product-list', 'Site\AjaxController@getProductList' );
     Route::post( 'up', 'Site\AjaxController@up' );
 } );
+
+
+
+Route::group( [ 'prefix' => 'user' ], function () {
+    Route::get('register','Site\UserController@register');
+    Route::post('register','Site\UserController@postRegister');
+    Route::get('login','Site\UserController@login');
+    Route::post('login','Site\UserController@postLogin');
+    Route::get('logout','Site\UserController@logout');
+    Route::get('facebook','Site\UserController@facebook');
+} );
+
 Route::group( [ 'prefix' => 'shop' ], function () {
     Route::get( 'add-to-cart/{id}', 'Shop\ShopController@addToCart' );
     Route::get( 'add-to-cart/{id}/{count}', 'Shop\ShopController@addToCart' );
