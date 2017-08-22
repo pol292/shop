@@ -25,21 +25,32 @@ class User extends Model {
         }
     }
 
-    public static function login( &$request, $new = false ) {
+    public static function login( &$request ) {
         if ( $user = self::where( 'email', $request[ 'email' ] )->first() ) {
-            $check = $user->email == $request[ 'email' ] &&
-                    Hash::check( $request[ 'password' ], $user->password );
+
+            $session_user = Session::get( 'user' );
+            if ( !empty( $session_user ) ) {
+                $check = $user->email == $session_user[ 'email' ] &&
+                        $session_user[ 'password' ] == $user->password;
+            } else {
+                $check = $user->email == $request[ 'email' ] &&
+                        Hash::check( $request[ 'password' ], $user->password );
+            }
             if ( $check ) {
-                if ( $new ) {
-                    Session::put( [ 'user' => $user ] );
+                Session::put( [ 'user' => $user ] );
+                if ( empty( $session_user ) ) {
                     $request->redirect = !empty( $request->redirect ) ? $request->redirect : '/';
+                }else{
+                    $request = $user;
                 }
+                $request->login = TRUE;
             } else {
                 Session::forget( 'user' );
-                if ( $new ) {
+                if ( empty( $session_user ) ) {
                     Session::flash( 'wm', 'Worng email or password please try again.' );
                     $request->redirect = 'user/login';
                 }
+                $request->login = FALSE;
             }
         }
     }
@@ -48,7 +59,7 @@ class User extends Model {
         Session::forget( 'user' );
     }
 
-    public static function facebookLogin(&$data) {
+    public static function facebookLogin( &$data ) {
         $fb = new \Facebook\Facebook( [
             'app_id'                => '1969953169955602',
             'app_secret'            => '679d3d5350af5eec5b7d4753e3b5ad09',

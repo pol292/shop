@@ -109,7 +109,7 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#desc" aria-controls="desc" role="tab" data-toggle="tab">Description</a></li>
-                <li role="presentation"><a href="#review" aria-controls="review" role="tab" data-toggle="tab">Reviews (2)</a></li>
+                <li role="presentation"><a href="#review" aria-controls="review" role="tab" data-toggle="tab">Reviews ({{count($product['rates'])}})</a></li>
             </ul>
             <!-- End Nav tabs -->
 
@@ -129,63 +129,54 @@
                 <!-- Review Tab Content -->
                 <div role="tabpanel" class="tab-pane" id="review">
                     <div class="well">
-                        <div class="media">
-                            <div class="media-left">
-                                <a href="#">
-                                    <img class="media-object img-thumbnail" alt="64x64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZWVlIi8+PHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzIiIHk9IjMyIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjEycHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9zdmc+">
-                                </a>
-                                <div class="product-rating">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star-half-o"></i>
+                        @if(empty($product['rates']))
+                        <div class="alert alert-warning">In currently product don't have a reviews.</div>
+                        @else
+                        <div style="overflow-y: auto; max-height: 200px;">
+                            @foreach($product['rates'] as $rate)
+                            <div class="media">
+                                <div class="media-body">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <h5 class="media-heading"><strong>{{$rate['user']['name']}}</strong></h5>
+                                        </div>
+                                        <div class="col-md-2 product-rating">
+                                            @for($i = 0; $i < 5; $i++ , $rate['rate']--)
+                                            @if($rate['rate'] >= 1)
+                                            <i class="fa fa-star"></i>
+                                            @elseif($rate['rate'] === 0.5)
+                                            <i class="fa fa-star-half-o"></i>
+                                            @else
+                                            <i class="fa fa-star-o"></i>
+                                            @endif
+                                            @endfor
+                                        </div>
+                                    </div>
+                                    {{$rate['review']}}
                                 </div>
                             </div>
-                            <div class="media-body">
-                                <h5 class="media-heading"><strong>John Thor</strong></h5>
-                                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                            </div>
+                            @endforeach
                         </div>
-                        <div class="media">
-                            <div class="media-left">
-                                <a href="#">
-                                    <img class="media-object img-thumbnail" alt="64x64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZWVlIi8+PHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzIiIHk9IjMyIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjEycHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9zdmc+">
-                                </a>
-                                <div class="product-rating">
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star"></i>
-                                    <i class="fa fa-star-half-o"></i>
-                                    <i class="fa fa-star-o"></i>
-                                </div>
-                            </div>
-                            <div class="media-body">
-                                <h5 class="media-heading"><strong>Michael Lelep</strong></h5>
-                                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                            </div>
-                        </div>
+                        @endif
+                        @if(!empty($user_id))
                         <hr/>
                         <h4 class="m-b-2">Add your review</h4>
-                        <form role="form">
-                            <div class="form-group">
-                                <label for="Name">Name</label>
-                                <input type="text" id="Name" class="form-control" placeholder="Name">
-                            </div>
-                            <div class="form-group">
-                                <label for="Email">Email</label>
-                                <input type="text" id="Email" class="form-control" placeholder="Email">
-                            </div>
+                        <form role="form" method="post" action="{{url('shop/add-rate')}}">
+                            {{ csrf_field() }}
+                            <input type="hidden" name="user_id" value="{{$user_id}}">
+                            <input type="hidden" name="product_id" value="{{$product['id']}}">
+                            <input type="hidden" name="back" value="{{$back}}">
                             <div class="form-group">
                                 <label>Rating</label><div class="clearfix"></div>
                                 <div class="input-rating"></div>
                             </div>
                             <div class="form-group">
                                 <label for="Review">Your Review</label>
-                                <textarea id="Review" class="form-control" rows="5" placeholder="Your Review"></textarea>
+                                <textarea id="Review" class="form-control" rows="5" placeholder="Your Review" name='review'></textarea>
                             </div>
                             <button type="submit" class="btn btn-theme">Submit Review</button>
                         </form>
+                        @endif
                     </div>
                 </div>
                 <!-- End Review Tab Content -->

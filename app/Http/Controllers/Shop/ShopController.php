@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\MainController;
 use App\Models\Shop\Categorie;
 use App\Models\Shop\Product;
+use App\Models\Shop\ProductReview;
 
 class ShopController extends MainController {
 
@@ -17,6 +18,7 @@ class ShopController extends MainController {
     }
 
     public function showProduct( Request $request, $cat, $product ) {
+        self::$data[ 'back' ] = $request->url();
         Product::getProduct( $product, self::$data );
         if ( !empty( self::$data[ 'product' ] ) ) {
             Product::randomItems( self::$data );
@@ -43,6 +45,13 @@ class ShopController extends MainController {
 
     public function updateCart( $rowId, $count ) {
         Product::updateCart( $rowId, $count );
+    }
+
+    public function addRate( Request $request ) {
+        ProductReview::addRate( $request );
+        if ( empty( $request[ 'back' ] ) )
+            return redirect( url( '/' ) );
+        return redirect( url( $request[ 'back' ] ) );
     }
 
 }

@@ -11,6 +11,11 @@ use Session,
 
 class Product extends Model {
 
+    public function rates() {
+        return $this->hasMany( 'App\Models\Shop\ProductReview', 'product_id', 'id' )->with( 'user' );
+    }
+
+
     public static function addProduct( &$request ) {
         DB::beginTransaction();
         try {
@@ -48,9 +53,12 @@ class Product extends Model {
     }
 
     public static function getProduct( &$product, &$data ) {
-        $product = self::where( 'url', $product );
+        $data[ 'user_id' ] = Session::get( 'user' );
+        if ( !empty( $data[ 'user_id' ][ 'id' ] ) ) {
+            $data[ 'user_id' ] = $data[ 'user_id' ][ 'id' ];
+        }
+        $product = self::where( 'url', $product )->with( 'rates' );
         $product = $product->first();
-
         if ( $product ) {
             $data[ 'product' ]             = $product->toArray();
             $data[ 'product' ][ 'images' ] = unserialize( $data[ 'product' ][ 'images' ] );
@@ -91,14 +99,14 @@ class Product extends Model {
     }
 
     public static function getSale( &$request, &$data, &$product ) {
-        $product = Product::where( 'sale', '>', '0' );
+        $product = Product::where( 'sale', '>', '0' )
+                ->with( 'rates' );
 
         $data[ 'cat' ] = [
             'title'   => 'Sale',
             'article' => 'Sale Sale Sale',
             'url'     => 'sale',
         ];
-        $product       = $product->where( 'sale', '>', '0' );
     }
 
     public static function getNewProducts( &$data ) {
@@ -106,7 +114,9 @@ class Product extends Model {
                 ->where( 'stock', '>', '0' )
                 ->limit( 5 )
                 ->with( 'category' )
+                ->with( 'rates' )
                 ->get();
+        
         if ( $new ) {
             $data[ 'new_product' ] = $new->toArray();
         }
@@ -121,6 +131,7 @@ class Product extends Model {
                 ->inRandomOrder()
                 ->limit( 4 )
                 ->with( 'category' )
+                ->with( 'rates' )
                 ->get();
         if ( $sale ) {
             $data[ 'sale_product' ] = $sale->toArray();
@@ -132,6 +143,7 @@ class Product extends Model {
         $randomList = self::inRandomOrder()
                 ->limit( 8 )
                 ->with( 'category' )
+                ->with( 'rates' )
                 ->get();
         if ( $randomList ) {
             $data[ 'random_list_product' ] = $randomList->toArray();
@@ -156,7 +168,7 @@ class Product extends Model {
         }
     }
 
-    public static function getContentsById( &$id, &$data ) {
+    public static function getCxontentsById( &$id, &$data ) {
         if ( $product = self::find( $id ) ) {
             $data[ 'product' ]             = $product->toArray();
             $data[ 'product' ][ 'images' ] = unserialize( $data[ 'product' ][ 'images' ] );

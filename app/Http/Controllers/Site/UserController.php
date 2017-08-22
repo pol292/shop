@@ -30,7 +30,7 @@ class UserController extends MainController {
     }
 
     public function postLogin( Request $request ) {
-        User::login( $request, TRUE );
+        User::login( $request );
         return redirect( url( $request->redirect ) );
     }
 

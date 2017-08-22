@@ -1,84 +1,82 @@
 <?php
 
-Route::get( 'test', function() {
-    $files = File::allFiles( public_path() . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'up' );
-    dd( $files[ 0 ]->getFilename() );
+Route::group( [ 'prefix' => 'ajax', 'namespace' => 'Site' ], function () {
+    Route::get( 'product-list', 'AjaxController@getProductList' );
+    Route::post( 'up', 'AjaxController@up' );
 } );
 
-Route::group( [ 'prefix' => 'ajax' ], function () {
-    Route::get( 'product-list', 'Site\AjaxController@getProductList' );
-    Route::post( 'up', 'Site\AjaxController@up' );
+Route::group( [ 'prefix' => 'user', 'middleware' => [ 'guest' ], 'namespace' => 'Site' ], function () {
+    Route::get( 'register', 'UserController@register' );
+    Route::post( 'register', 'UserController@postRegister' );
+    Route::get( 'login', 'UserController@login' );
+    Route::post( 'login', 'UserController@postLogin' );
+    Route::get( 'facebook', 'UserController@facebook' );
 } );
 
+Route::group( [ 'prefix' => 'user', 'middleware' => [ 'AuthUser' ], 'namespace' => 'Site' ], function () {
+    Route::get( 'logout', 'UserController@logout' );
 
-
-Route::group( [ 'prefix' => 'user' ], function () {
-    Route::get('register','Site\UserController@register');
-    Route::post('register','Site\UserController@postRegister');
-    Route::get('login','Site\UserController@login');
-    Route::post('login','Site\UserController@postLogin');
-    Route::get('logout','Site\UserController@logout');
-    Route::get('facebook','Site\UserController@facebook');
 } );
 
-Route::group( [ 'prefix' => 'shop' ], function () {
-    Route::get( 'add-to-cart/{id}', 'Shop\ShopController@addToCart' );
-    Route::get( 'add-to-cart/{id}/{count}', 'Shop\ShopController@addToCart' );
-    Route::get( 'update-cart/{id}/{count}', 'Shop\ShopController@updateCart' );
-    Route::get( 'remove-from-cart/{id}', 'Shop\ShopController@removeFromCart' );
-    Route::get( 'view-cart', 'Shop\ShopController@viewCart' );
-    Route::get( '{cat}', 'Shop\ShopController@showCategory' );
-    Route::get( '{cat}/{item}', 'Shop\ShopController@showProduct' );
+Route::group( [ 'prefix' => 'shop', 'namespace' => 'Shop' ], function () {
+    Route::get( 'add-to-cart/{id}', 'ShopController@addToCart' );
+    Route::get( 'add-to-cart/{id}/{count}', 'ShopController@addToCart' );
+    Route::get( 'update-cart/{id}/{count}', 'ShopController@updateCart' );
+    Route::get( 'remove-from-cart/{id}', 'ShopController@removeFromCart' );
+    Route::get( 'view-cart', 'ShopController@viewCart' );
+    Route::post( 'add-rate', 'ShopController@addRate' )->middleware('AuthUser');
+    Route::get( '{cat}', 'ShopController@showCategory' );
+    Route::get( '{cat}/{item}', 'ShopController@showProduct' );
 } );
 
 
 
 #   Dashboard:
-Route::group( [ 'prefix' => 'dashboard' ], function () {
-    Route::get( '/', 'Dashboard\DashboardController@index' );
-    Route::resource( 'advertisings', 'Dashboard\ManageAdvertisingsController' );
+Route::group( [ 'prefix' => 'dashboard', 'middleware' => [ 'AuthAdmin' ], 'namespace' => 'Dashboard' ], function () {
+    Route::get( '/', 'DashboardController@index' );
+    Route::resource( 'advertisings', 'ManageAdvertisingsController' );
 
 #   Dashboard/CMS:
 
-    Route::group( [ 'prefix' => 'CMS' ], function () {
+    Route::group( [ 'prefix' => 'CMS', 'namespace' => 'CMS' ], function () {
 
 #   Dashboard/CMS/Page:
 
-        Route::resource( 'page', 'Dashboard\CMS\ManagePageController' );
+        Route::resource( 'page', 'ManagePageController' );
 
 
 #   Dashboard/CMS/Menu:
         Route::group( [ 'prefix' => 'menu' ], function () {
-            Route::get( 'view', 'Dashboard\CMS\ManageMenuController@edit' );
-            Route::put( 'update', 'Dashboard\CMS\ManageMenuController@update' );
+            Route::get( 'view', 'ManageMenuController@edit' );
+            Route::put( 'update', 'ManageMenuController@update' );
         } );
 
 #   Dashboard/CMS/Content:
         Route::group( [ 'prefix' => 'content' ], function () {
-            Route::post( 'add', 'Dashboard\CMS\ManageContentController@add' );
-            Route::put( 'update', 'Dashboard\CMS\ManageContentController@update' );
-            Route::put( 'update-sort', 'Dashboard\CMS\ManageContentController@updateSort' );
-            Route::delete( 'delete/{id}', 'Dashboard\CMS\ManageContentController@delete' );
+            Route::post( 'add', 'ManageContentController@add' );
+            Route::put( 'update', 'ManageContentController@update' );
+            Route::put( 'update-sort', 'ManageContentController@updateSort' );
+            Route::delete( 'delete/{id}', 'ManageContentController@delete' );
         } );
     } );
 
 
 #   Dashboard/Shop:
 
-    Route::group( [ 'prefix' => 'shop' ], function () {
+    Route::group( [ 'prefix' => 'shop', 'namespace' => 'shop' ], function () {
 
 #   Dashboard/Shop/Category:
-        Route::resource( 'category', 'Dashboard\Shop\ManageCategoriesController', [ 'except' => [ 'show' ] ] );
+        Route::resource( 'category', 'ManageCategoriesController', [ 'except' => [ 'show' ] ] );
 
 #   Dashboard/Shop/Product:
-        Route::resource( 'product', 'Dashboard\Shop\ManageProductController', [ 'except' => [ 'show' ] ] );
+        Route::resource( 'product', 'ManageProductController', [ 'except' => [ 'show' ] ] );
     } );
 
 #   Dashboard/restore:
     Route::group( [ 'prefix' => 'restore' ], function () {
-        Route::get( 'view/{id}', 'Dashboard\BackupController@view' );
-        Route::get( 'history/{id}', 'Dashboard\BackupController@history' );
-        Route::get( '{id}', 'Dashboard\BackupController@restore' );
+        Route::get( 'view/{id}', 'BackupController@view' );
+        Route::get( 'history/{id}', 'BackupController@history' );
+        Route::get( '{id}', 'BackupController@restore' );
     } );
 } );
 

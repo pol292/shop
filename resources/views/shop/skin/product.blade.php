@@ -15,12 +15,26 @@ $color = ['danger', 'success', 'info', 'primary'];
     @if(!empty((float) $product['sale']))
     <div class="tags">
         <span class="label-tags">
+            @if($product['stock'] == 0)
+            <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
+                <span class="label label-danger arrowed">Out of Stock</span>
+            </a>
+            @endif
+        </span>
+        <span class="label-tags">
             <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
                 <span class="label label-default arrowed">-{{$product['sale']}}%</span>
             </a>
         </span>
     </div>
     <div class="tags tags-left">
+        <span class="label-tags">
+            @if($product['stock'] == 0)
+            <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
+                <span class="label label-danger arrowed-right">Out of Stock</span>
+            </a>
+            @endif
+        </span>
         <span class="label-tags">
             <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">
                 <span class="label label-{{$color[array_rand($color)]}} arrowed-right">Sale</span>
@@ -48,11 +62,18 @@ $color = ['danger', 'success', 'info', 'primary'];
     <span class="price-old">${{$product['price']}}</span>
 </div>
 @endif
+@if(!empty($product['rates']))
 <div class="rating">
+    @for($i = 0 , $rate= collect($product['rates'])->avg('rate'); $i < 5; $i++ , $rate--)
+    @if($rate >= 1)
     <i class="fa fa-star"></i>
-    <i class="fa fa-star"></i>
-    <i class="fa fa-star"></i>
-    <i class="fa fa-star"></i>
+    @elseif($rate === 0.5)
     <i class="fa fa-star-half-o"></i>
-    <a href="#">(5 reviews)</a>
+    @else
+    <i class="fa fa-star-o"></i>
+    @endif
+    @endfor
+    <a href="{{url("shop/{$product['category']['url']}/{$product['url']}")}}">({{count($product['rates'])}} reviews)</a>
+
 </div>
+@endif
