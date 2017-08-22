@@ -16,7 +16,11 @@ class User extends Model {
             $user->password = Hash::make( $request[ 'password' ] );
             $user->name     = $request[ 'name' ];
             $user->role     = 1;
+            $user->facebook = !empty( $request[ 'facebook' ] ) ? $request[ 'facebook' ] : false;
             $user->save();
+
+            Session::put( [ 'user' => $user ] );
+
             Session::flash( 'sm', 'Hello ' . $user->name . ', you are successfull register.' );
         }
     }
@@ -28,7 +32,7 @@ class User extends Model {
             if ( $check ) {
                 if ( $new ) {
                     Session::put( [ 'user' => $user ] );
-                    $request->redirect = !empty($request->redirect)? $request->redirect : '/';  
+                    $request->redirect = !empty( $request->redirect ) ? $request->redirect : '/';
                 }
             } else {
                 Session::forget( 'user' );
@@ -39,9 +43,55 @@ class User extends Model {
             }
         }
     }
-    
-    public static function logout(){
-        Session::forget('user');
+
+    public static function logout() {
+        Session::forget( 'user' );
+    }
+
+    public static function facebookLogin(&$data) {
+        $fb = new \Facebook\Facebook( [
+            'app_id'                => '1969953169955602',
+            'app_secret'            => '679d3d5350af5eec5b7d4753e3b5ad09',
+            'default_graph_version' => 'v2.10',
+                ] );
+
+
+        $helper = $fb->getRedirectLoginHelper();
+
+        $data[ 'facebook' ] = $helper->getLoginUrl( url( 'user/facebook' ), [ 'email' ] );
+    }
+
+    public static function facebookAuth( &$data ) {
+        $fb     = new \Facebook\Facebook( [
+            'app_id'                => '1969953169955602',
+            'app_secret'            => '679d3d5350af5eec5b7d4753e3b5ad09',
+            'default_graph_version' => 'v2.10',
+                ] );
+        $helper = $fb->getRedirectLoginHelper();
+        if ( isset( $_GET[ 'state' ] ) ) {
+            $helper->getPersistentDataHandler()->set( 'state', $_GET[ 'state' ] );
+        }
+        try {
+            $accessToken = $helper->getAccessToken();
+            $response    = $fb->get( '/me?fields=name,email', $accessToken );
+        } catch ( \Facebook\Exceptions\FacebookResponseException $e ) {
+            return;
+        } catch ( \Facebook\Exceptions\FacebookSDKException $e ) {
+            return;
+        }
+
+        $user = $response->getGraphUser();
+        if ( !empty( $user[ 'id' ] ) ) {
+            if ( $log = self::where( 'facebook', $user[ 'id' ] )->first() ) {
+                Session::put( [ 'user' => $log ] );
+            } else {
+                $data[ 'facebook' ] = [
+                    'id'    => $user[ 'id' ],
+                    'name'  => empty( $user[ 'name' ] ) ? '' : $user[ 'name' ],
+                    'email' => empty( $user[ 'email' ] ) ? '' : $user[ 'email' ],
+                ];
+            }
+        }
     }
 
 }

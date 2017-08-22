@@ -49,6 +49,8 @@
                     <input type="password" class="form-control" id="passwordInputLogin" name="password" placeholder="Password">
                 </div>
                 <button type="submit" class="btn btn-theme"><i class="fa fa-long-arrow-right"></i> Login</button>
+                <a href="{{$facebook}}" class="btn btn-primary btn-md"><i class="fa fa-facebook"></i> Facebook</a>
+
             </form>
         </div>
         <!-- End Login Form -->
