@@ -11,11 +11,11 @@
                 {{ csrf_field() }}
                 <div class="form-group">
                     <label for="emailInputLogin">Email address</label>
-                    <input type="email" class="form-control" id="emailInputLogin" placeholder="Email">
+                    <input type="email" class="form-control" id="emailInputLogin" placeholder="Email" name="email">
                 </div>
                 <div class="form-group">
                     <label for="passwordInputLogin">Password</label>
-                    <input type="password" class="form-control" id="passwordInputLogin" placeholder="Password">
+                    <input type="password" class="form-control" id="passwordInputLogin" placeholder="Password" name="password">
                 </div>
                 <div class="checkbox">
                     <label>

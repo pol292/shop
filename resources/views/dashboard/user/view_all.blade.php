@@ -27,8 +27,8 @@
         <th>Title</th>
         <th>URL</th>
         <th>Role</th>
-        <th>Created at</th>
         <th>Facebook</th>
+        <th>Created at</th>
         <th>Actions</th>
     </tr>
     @foreach($users as $user)

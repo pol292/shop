@@ -46,8 +46,8 @@ class ManageUserController extends BaseDashboardController {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store( AdvertisingRequest $request ) {
-        Advertising::addAdvertising( $request );
+    public function store( RegisterRequest $request ) {
+        User::addUser( $request );
         return redirect( url( "dashboard/users/" ) );
     }
 

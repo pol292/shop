@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 25, 2017 at 03:55 PM
+-- Generation Time: Aug 25, 2017 at 12:18 AM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 7.0.9
 
@@ -19,6 +19,32 @@ SET time_zone = "+00:00";
 --
 -- Database: `idiver`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `advertisings`
+--
+
+CREATE TABLE `advertisings` (
+  `id` int(11) NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `article` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `advertisings`
+--
+
+INSERT INTO `advertisings` (`id`, `url`, `title`, `article`, `image`, `updated_at`, `created_at`) VALUES
+(1, '/', 'test 1', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod, soluta, consectetur, exercitationem, nostrum molestiae autem a eveniet assumenda quae excepturi optio quasi mollitia numquam at velit cum est fugiat quos!', '/images/demo/blog4.jpg', '2017-07-28 17:50:18', '2017-07-26 12:23:37'),
+(2, '', 'test 2', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum, esse est vero labore? Temporibus, nostrum ex laudantium modi deleniti veritatis nobis magnam fuga iusto perspiciatis. Velit, cupiditate doloribus amet nulla.', '/images/demo/blog3.jpg', '2017-07-26 12:23:37', '2017-07-26 12:23:37'),
+(3, '/', 'test 3', '', 'images/demo/blog2.jpg', '2017-07-28 18:05:37', '2017-07-28 18:05:37'),
+(4, '/', 'test 4', '', 'images/demo/blog1.jpg', '2017-07-28 18:07:44', '2017-07-28 18:07:44');
 
 -- --------------------------------------------------------
 
@@ -222,7 +248,8 @@ INSERT INTO `backups` (`id`, `change`, `type`, `description`, `data`, `icon`, `c
 (176, 'update', 'page', 'Update page: backup test', 'a:2:{s:5:"pages";a:7:{s:2:"id";i:1;s:3:"url";s:11:"backup-test";s:5:"title";s:11:"backup test";s:7:"article";s:32:"<p>dasds sadsa dsa dsa&nbsp;</p>";s:6:"active";i:1;s:10:"created_at";s:19:"2017-07-03 14:54:37";s:10:"updated_at";s:19:"2017-07-03 14:54:37";}s:13:"page_contents";a:3:{i:0;a:8:{s:2:"id";i:3;s:8:"pages_id";i:1;s:16:"page_contents_id";i:0;s:4:"sort";i:0;s:5:"title";s:9:"more test";s:7:"article";s:0:"";s:10:"created_at";s:19:"2017-07-03 14:57:59";s:10:"updated_at";s:19:"2017-07-06 14:00:10";}i:1;a:8:{s:2:"id";i:11;s:8:"pages_id";i:1;s:16:"page_contents_id";i:0;s:4:"sort";i:1;s:5:"title";s:5:"adssa";s:7:"article";s:12:"<p>dsada</p>";s:10:"created_at";s:19:"2017-07-15 18:15:20";s:10:"updated_at";s:19:"2017-07-15 18:15:20";}i:2;a:8:{s:2:"id";i:1;s:8:"pages_id";i:1;s:16:"page_contents_id";i:3;s:4:"sort";i:0;s:5:"title";s:12:"test content";s:7:"article";s:23:"<p>&nbsp;fdf da fds</p>";s:10:"created_at";s:19:"2017-07-03 14:54:49";s:10:"updated_at";s:19:"2017-07-06 14:00:11";}}}', 'chevron-circle-up', '2017-07-15 18:15:20', '2017-07-15 18:15:20'),
 (177, 'update', 'page', 'Update page: backup test', 'a:2:{s:5:"pages";a:7:{s:2:"id";i:1;s:3:"url";s:11:"backup-test";s:5:"title";s:11:"backup test";s:7:"article";s:32:"<p>dasds sadsa dsa dsa&nbsp;</p>";s:6:"active";i:1;s:10:"created_at";s:19:"2017-07-03 14:54:37";s:10:"updated_at";s:19:"2017-07-03 14:54:37";}s:13:"page_contents";a:3:{i:0;a:8:{s:2:"id";i:3;s:8:"pages_id";i:1;s:16:"page_contents_id";i:0;s:4:"sort";i:0;s:5:"title";s:9:"more test";s:7:"article";s:0:"";s:10:"created_at";s:19:"2017-07-03 14:57:59";s:10:"updated_at";s:19:"2017-07-06 14:00:10";}i:1;a:8:{s:2:"id";i:11;s:8:"pages_id";i:1;s:16:"page_contents_id";i:0;s:4:"sort";i:1;s:5:"title";s:5:"adssa";s:7:"article";s:12:"<p>dsada</p>";s:10:"created_at";s:19:"2017-07-15 18:15:20";s:10:"updated_at";s:19:"2017-07-15 18:15:20";}i:2;a:8:{s:2:"id";i:1;s:8:"pages_id";i:1;s:16:"page_contents_id";i:3;s:4:"sort";i:0;s:5:"title";s:12:"test content";s:7:"article";s:23:"<p>&nbsp;fdf da fds</p>";s:10:"created_at";s:19:"2017-07-03 14:54:49";s:10:"updated_at";s:19:"2017-07-06 14:00:11";}}}', 'chevron-circle-up', '2017-07-19 01:15:38', '2017-07-19 01:15:38'),
 (178, 'create', 'page', 'Create page: dsadsasa fdd sf sfds fds', 'a:1:{s:5:"pages";a:1:{s:2:"id";i:8;}}', 'plus', '2017-07-22 07:55:43', '2017-07-22 07:55:43'),
-(179, 'delete', 'page', 'Delete page: dsadsasa fdd sf sfds fds', 'a:2:{s:5:"pages";a:7:{s:2:"id";i:8;s:3:"url";s:24:"dsadsasa-fdd-sf-sfds-fds";s:5:"title";s:24:"dsadsasa fdd sf sfds fds";s:7:"article";s:0:"";s:6:"active";i:0;s:10:"created_at";s:19:"2017-07-22 07:55:43";s:10:"updated_at";s:19:"2017-07-22 07:55:43";}s:13:"page_contents";a:0:{}}', 'trash-o', '2017-07-22 10:20:50', '2017-07-22 10:20:50');
+(179, 'delete', 'page', 'Delete page: dsadsasa fdd sf sfds fds', 'a:2:{s:5:"pages";a:7:{s:2:"id";i:8;s:3:"url";s:24:"dsadsasa-fdd-sf-sfds-fds";s:5:"title";s:24:"dsadsasa fdd sf sfds fds";s:7:"article";s:0:"";s:6:"active";i:0;s:10:"created_at";s:19:"2017-07-22 07:55:43";s:10:"updated_at";s:19:"2017-07-22 07:55:43";}s:13:"page_contents";a:0:{}}', 'trash-o', '2017-07-22 10:20:50', '2017-07-22 10:20:50'),
+(180, 'update', 'page', 'Update page: backup test', 'a:2:{s:5:"pages";a:7:{s:2:"id";i:1;s:3:"url";s:11:"backup-test";s:5:"title";s:11:"backup test";s:7:"article";s:32:"<p>dasds sadsa dsa dsa&nbsp;</p>";s:6:"active";i:1;s:10:"created_at";s:19:"2017-07-03 14:54:37";s:10:"updated_at";s:19:"2017-07-03 14:54:37";}s:13:"page_contents";a:3:{i:0;a:8:{s:2:"id";i:3;s:8:"pages_id";i:1;s:16:"page_contents_id";i:0;s:4:"sort";i:0;s:5:"title";s:9:"more test";s:7:"article";s:0:"";s:10:"created_at";s:19:"2017-07-03 14:57:59";s:10:"updated_at";s:19:"2017-07-06 14:00:10";}i:1;a:8:{s:2:"id";i:1;s:8:"pages_id";i:1;s:16:"page_contents_id";i:0;s:4:"sort";i:1;s:5:"title";s:12:"test content";s:7:"article";s:23:"<p>&nbsp;fdf da fds</p>";s:10:"created_at";s:19:"2017-07-03 14:54:49";s:10:"updated_at";s:19:"2017-07-19 01:15:38";}i:2;a:8:{s:2:"id";i:11;s:8:"pages_id";i:1;s:16:"page_contents_id";i:0;s:4:"sort";i:2;s:5:"title";s:5:"adssa";s:7:"article";s:12:"<p>dsada</p>";s:10:"created_at";s:19:"2017-07-15 18:15:20";s:10:"updated_at";s:19:"2017-07-19 01:15:38";}}}', 'chevron-circle-up', '2017-07-26 19:37:40', '2017-07-26 19:37:40');
 
 -- --------------------------------------------------------
 
@@ -376,9 +403,66 @@ INSERT INTO `products` (`id`, `categorie_id`, `title`, `article`, `url`, `image`
 (16, 4, 'Scuba Whistle', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a tempus dolor, vel volutpat quam. In ex purus, consequat ac mollis eu, pellentesque ac dui. Donec at semper lacus. Quisque vehicula, metus ut vulputate dapibus, risus dui dapibus dui, sed laoree', 'scuba-whistle', 'IMG_1736.JPG', 'a:1:{i:0;s:12:"IMG_1736.JPG";}', '9.50', '2.00', 1, '2017-07-23 20:17:11', '2017-07-19 04:10:19'),
 (17, 4, 'Dive Log', 'Integer rhoncus, neque elementum vestibulum mollis, nunc tellus congue eros, non tincidunt erat diam vitae nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque hendrerit ornare est, ut mollis est. Viv', 'dive-log', 'IMG_1740.JPG', 'a:2:{i:0;s:12:"IMG_1740.JPG";i:1;s:12:"IMG_1741.JPG";}', '23.90', '0.00', 0, '2017-07-23 20:17:11', '2017-07-19 04:10:19');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_reviews`
+--
+
+CREATE TABLE `product_reviews` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `rate` decimal(2,1) NOT NULL,
+  `review` varchar(255) NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `created_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `product_reviews`
+--
+
+INSERT INTO `product_reviews` (`id`, `product_id`, `user_id`, `rate`, `review`, `updated_at`, `created_at`) VALUES
+(1, 12, 3, '4.0', 'fdsfdsfdsfds', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(2, 12, 2, '5.0', 'sfdfdsfdsf', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(3, 8, 3, '3.0', 'ewrew', '2017-08-22 22:17:22', '2017-08-22 22:17:22'),
+(4, 9, 3, '4.0', 'trertrtef re gegr gr er', '2017-08-22 23:04:04', '2017-08-22 23:04:04');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` int(11) NOT NULL,
+  `facebook` varchar(255) NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `created_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `facebook`, `updated_at`, `created_at`) VALUES
+(2, 'pol', 'pol292@gmail.com', '$2y$10$tJeBYyNvHSH7juL3bra5iOpzCoWmg6z9kt97q6y1O9IvR2HS75HDS', 3, '1809227715772171', '2017-08-24 22:16:51', '2017-08-22 11:36:09'),
+(3, 'Karina Mayzel', 'karina9994@walla.com', '$2y$10$/9bxIO9rRKpGtTX7hzPEuuWyJRoGxfq2T0j8GM6QKDFRDoV6EiHpS', 3, '1471512526228440', '2017-08-24 20:20:59', '2017-08-22 14:51:12');
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `advertisings`
+--
+ALTER TABLE `advertisings`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `backups`
@@ -420,19 +504,37 @@ ALTER TABLE `products`
   ADD UNIQUE KEY `url` (`url`);
 
 --
+-- Indexes for table `product_reviews`
+--
+ALTER TABLE `product_reviews`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
+-- AUTO_INCREMENT for table `advertisings`
+--
+ALTER TABLE `advertisings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
 -- AUTO_INCREMENT for table `backups`
 --
 ALTER TABLE `backups`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `menus`
 --
@@ -452,7 +554,17 @@ ALTER TABLE `page_contents`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+--
+-- AUTO_INCREMENT for table `product_reviews`
+--
+ALTER TABLE `product_reviews`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

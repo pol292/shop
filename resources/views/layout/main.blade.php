@@ -39,11 +39,29 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <ul class="list-inline pull-right">
-                            @if(Session::get('user'))
-                            <li><a href="{{url('user/logout')}}"><i class="fa fa-user"></i> User details</a></li>
-                            <li><a href="{{url('user/logout')}}"><i class="fa fa-sign-out"></i> Sign-out</a></li>
+                            @if(!empty(Session::get( 'user' )))
+                            @php
+                                $user = Session::get( 'user' );
+                            @endphp
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> Hi {{$user['name']}}  <span class="caret"></span></a>
+                                <ul class="dropdown-menu dropdown-menu-right ">
+                                    <li><a href="{{url('user/profile')}}">My Account</a></li>
+                                    @if(empty($user['facebook']))
+                                        @php
+                                            $facebook = [];
+                                            \App\Models\User::facebookLogin($facebook , 'user/link-facebook');
+                                            $facebook = $facebook['facebook'];
+                                        @endphp
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="{{$facebook}}">Link to Facebook</a></li>
+                                    @endif
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{{url('user/logout')}}"><i class="fa fa-sign-out"></i> Sign-out</a></li>
+                                </ul>
+                            </li>
                             @else
-                            <li><a href="{{url('user/register')}}"><i class="fa fa-plus" style="display: inline-block; position: relative;font-size: 10px;top: -9px;left: 22px;"></i><i class="fa fa-address-card"></i> Sign-up</a></li>
+                            <li><a href="{{url('user/register')}}"><i class="fa fa-user-plus"></i> Sign-up</a></li>
                             <li><a href="{{url('user/login')}}"><i class="fa fa-sign-in"></i> Sign-in</a></li>
                             @endif
                         </ul>

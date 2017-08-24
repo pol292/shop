@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\CMS\Menu;
 use Illuminate\Http\Request;
 use Session;
@@ -10,13 +11,12 @@ class MainController extends Controller {
 
     protected static $data = [];
 
-    public function __construct(Request $request) {
+    public function __construct( Request $request ) {
         self::$data[ 'title' ]      = 'iDiver';
         self::$data[ 'page_url' ]   = '';
         self::$data[ 'breadcrumb' ] = [ [ 'title' => 'home', 'url' => url( '/' ) ] ];
-        self::$data[ 'request' ]      = $request;
+        self::$data[ 'request' ]    = $request;
         Menu::getMenu( self::$data );
-        
     }
 
     public static function setTitle( $title ) {

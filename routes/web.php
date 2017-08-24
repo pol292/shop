@@ -15,7 +15,10 @@ Route::group( [ 'prefix' => 'user', 'middleware' => [ 'guest' ], 'namespace' => 
 
 Route::group( [ 'prefix' => 'user', 'middleware' => [ 'AuthUser' ], 'namespace' => 'Site' ], function () {
     Route::get( 'logout', 'UserController@logout' );
-
+    Route::get( 'link-facebook', 'UserController@facebookLink' );
+    Route::get( 'profile', 'UserController@profile' );
+    Route::get( 'change-pass', 'UserController@editPass' );
+    Route::post( 'change-pass', 'UserController@editPassPost' );
 } );
 
 Route::group( [ 'prefix' => 'shop', 'namespace' => 'Shop' ], function () {
@@ -24,7 +27,7 @@ Route::group( [ 'prefix' => 'shop', 'namespace' => 'Shop' ], function () {
     Route::get( 'update-cart/{id}/{count}', 'ShopController@updateCart' );
     Route::get( 'remove-from-cart/{id}', 'ShopController@removeFromCart' );
     Route::get( 'view-cart', 'ShopController@viewCart' );
-    Route::post( 'add-rate', 'ShopController@addRate' )->middleware('AuthUser');
+    Route::post( 'add-rate', 'ShopController@addRate' )->middleware( 'AuthUser' );
     Route::get( '{cat}', 'ShopController@showCategory' );
     Route::get( '{cat}/{item}', 'ShopController@showProduct' );
 } );

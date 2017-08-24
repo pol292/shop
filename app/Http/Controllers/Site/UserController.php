@@ -7,6 +7,7 @@ use App\Http\Controllers\MainController;
 use App\Models\Shop\Product;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\PassRequest;
 use App\Models\User;
 use Session;
 
@@ -45,6 +46,29 @@ class UserController extends MainController {
             return redirect( url( '/' ) );
         }
         return view( 'user.facebook_register', self::$data );
+    }
+
+    public function facebookLink() {
+        User::facebookAuthLink();
+        return redirect( url( '/' ) );
+    }
+
+    public function profile() {
+        self::$data[ 'user' ] = Session::get( 'user' );
+        return view( 'user.profile', self::$data );
+    }
+
+    public function editPass() {
+        self::$data[ 'user' ] = Session::get( 'user' );
+        return view( 'user.change-pass', self::$data );
+    }
+
+    public function editPassPost( PassRequest $request ) {
+        if ( User::changePass( $request ) ) {
+            return redirect( 'user/profile' );
+        }
+        self::$data[ 'user' ] = Session::get( 'user' );
+        return view( 'user.change-pass', self::$data );
     }
 
 }

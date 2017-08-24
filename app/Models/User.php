@@ -59,7 +59,7 @@ class User extends Model {
         Session::forget( 'user' );
     }
 
-    public static function facebookLogin( &$data ) {
+    public static function facebookLogin( &$data, $url = 'user/facebook' ) {
         $fb = new \Facebook\Facebook( [
             'app_id'                => '1969953169955602',
             'app_secret'            => '679d3d5350af5eec5b7d4753e3b5ad09',
@@ -69,7 +69,7 @@ class User extends Model {
 
         $helper = $fb->getRedirectLoginHelper();
 
-        $data[ 'facebook' ] = $helper->getLoginUrl( url( 'user/facebook' ), [ 'email' ] );
+        $data[ 'facebook' ] = $helper->getLoginUrl( url( $url ), [ 'email' ] );
     }
 
     public static function facebookAuth( &$data ) {
@@ -105,6 +105,35 @@ class User extends Model {
         }
     }
 
+    public static function facebookAuthLink() {
+        $fb     = new \Facebook\Facebook( [
+            'app_id'                => '1969953169955602',
+            'app_secret'            => '679d3d5350af5eec5b7d4753e3b5ad09',
+            'default_graph_version' => 'v2.10',
+                ] );
+        $helper = $fb->getRedirectLoginHelper();
+        if ( isset( $_GET[ 'state' ] ) ) {
+            $helper->getPersistentDataHandler()->set( 'state', $_GET[ 'state' ] );
+        }
+        try {
+            $accessToken = $helper->getAccessToken();
+            $response    = $fb->get( '/me?fields=name,email', $accessToken );
+        } catch ( \Facebook\Exceptions\FacebookResponseException $e ) {
+            return;
+        } catch ( \Facebook\Exceptions\FacebookSDKException $e ) {
+            return;
+        }
+
+        $facebook = $response->getGraphUser();
+        $user     = Session::get( 'user' );
+        if ( !empty( $facebook[ 'id' ] ) && !empty( $user ) ) {
+            $user               = self::find( $user[ 'id' ] );
+            $user[ 'facebook' ] = $facebook[ 'id' ];
+            $user->save();
+            Session::put( [ 'user' => $user ] );
+        }
+    }
+
     public static function getUser( &$request, &$data ) {
         $data[ 'pagination' ][ 'url' ] = url( "dashboard/users?page=" );
 
@@ -136,6 +165,7 @@ class User extends Model {
 
             $user[ 'name' ]     = $request[ 'name' ];
             $user[ 'email' ]    = $request[ 'email' ];
+            $user[ 'role' ]     = $request[ 'role' ];
             if ( !empty( $user[ 'password' ] ) )
                 $user[ 'password' ] = Hash::make( $user[ 'password' ] );
             else
@@ -155,13 +185,13 @@ class User extends Model {
             Session::flash( 'wm', $e->getMessage() );
         }
     }
-    
+
     public static function deleteUser( $id ) {
         DB::beginTransaction();
         try {
 
             $user = self::find( $id );
-            $name    = $user[ 'name' ];
+            $name = $user[ 'name' ];
             if ( $user ) {
 //                self::pageBackup( 'delete', $category, 'trash-o' );
                 $user->delete();
@@ -175,6 +205,47 @@ class User extends Model {
             DB::rollback();
             Session::flash( 'wm', 'Can\'t delete user now please try after' );
         }
+    }
+
+    public static function addUser( &$request ) {
+        DB::beginTransaction();
+        try {
+
+            $user            = new self;
+            $user[ 'name' ]  = $request[ 'name' ];
+            $user[ 'email' ] = $request[ 'email' ];
+            $user[ 'role' ]  = $request[ 'role' ];
+            $user->password  = Hash::make( $request[ 'password' ] );
+            $user->facebook  = false;
+
+
+            $user->save();
+//            $backup = [
+//                'pages' => [ 'id' => $page[ 'id' ] ],
+//            ];
+            DB::commit();
+//            Backup::set( 'create', 'page', "Create page: {$category[ 'title' ]}", $backup, 'plus' );
+            Session::flash( 'sm', "You are update successfull (  {$request[ 'name' ]} ) user." );
+        } catch ( \Exception $e ) {
+            DB::rollback();
+            Session::flash( 'wm', 'Can\'t update user now please try after' );
+            Session::flash( 'wm', $e->getMessage() );
+        }
+    }
+
+    public static function changePass( &$request ) {
+        $user = self::find( Session::get( 'user' )[ 'id' ] );
+        if ( Hash::check( $request[ 'old' ], $user[ 'password' ] ) ) {
+            $user->password = Hash::make( $request[ 'password' ] );
+            $user->save();
+            Session::put( [ 'user' => $user ] );
+
+            Session::flash( 'sm', "You are update successfull your password." );
+
+            return true;
+        }
+        Session::flash( 'wm', 'Worng Password!!!' );
+        return false;
     }
 
 }
