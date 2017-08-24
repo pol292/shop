@@ -12,7 +12,7 @@ class MainController extends Controller {
     protected static $data = [];
 
     public function __construct( Request $request ) {
-        self::$data[ 'title' ]      = 'iDiver';
+        self::$data[ 'title' ]      = 'Diver';
         self::$data[ 'page_url' ]   = '';
         self::$data[ 'breadcrumb' ] = [ [ 'title' => 'home', 'url' => url( '/' ) ] ];
         self::$data[ 'request' ]    = $request;
