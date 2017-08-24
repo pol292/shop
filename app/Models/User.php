@@ -40,7 +40,7 @@ class User extends Model {
                 Session::put( [ 'user' => $user ] );
                 if ( empty( $session_user ) ) {
                     $request->redirect = !empty( $request->redirect ) ? $request->redirect : '/';
-                }else{
+                } else {
                     $request = $user;
                 }
                 $request->login = TRUE;
@@ -102,6 +102,78 @@ class User extends Model {
                     'email' => empty( $user[ 'email' ] ) ? '' : $user[ 'email' ],
                 ];
             }
+        }
+    }
+
+    public static function getUser( &$request, &$data ) {
+        $data[ 'pagination' ][ 'url' ] = url( "dashboard/users?page=" );
+
+        $limit                            = 5;
+        $data[ 'pagination' ][ 'active' ] = !empty( $request[ 'page' ] ) ? $request[ 'page' ] : 1;
+        $page                             = $data[ 'pagination' ][ 'active' ] - 1;
+        $offset                           = $limit * $page;
+        if ( empty( $request[ 'find' ] ) ) {
+            $data[ 'pagination' ][ 'count' ] = ( int ) ceil( self::count() / $limit );
+            $data[ 'users' ]                 = self::offset( $offset )->limit( $limit )->get()->toArray();
+        } else {
+            $data[ 'users' ]                 = self::where( 'name', 'LIKE', "%{$request[ 'find' ]}%" );
+            $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'users' ]->count() / $limit );
+            $data[ 'users' ]                 = $data[ 'users' ]->offset( $offset )->limit( $limit )->get()->toArray();
+        }
+    }
+
+    public static function getContentsById( &$id, &$data ) {
+        if ( $user = self::find( $id ) ) {
+            $data[ 'user' ] = $user->toArray();
+        }
+    }
+
+    public static function updateByAdmin( &$request ) {
+        DB::beginTransaction();
+        try {
+
+            $user = self::find( $request[ 'id' ] );
+
+            $user[ 'name' ]     = $request[ 'name' ];
+            $user[ 'email' ]    = $request[ 'email' ];
+            if ( !empty( $user[ 'password' ] ) )
+                $user[ 'password' ] = Hash::make( $user[ 'password' ] );
+            else
+                $user[ 'password' ] = $request[ 'password' ];
+
+
+            $user->save();
+//            $backup = [
+//                'pages' => [ 'id' => $page[ 'id' ] ],
+//            ];
+            DB::commit();
+//            Backup::set( 'create', 'page', "Create page: {$category[ 'title' ]}", $backup, 'plus' );
+            Session::flash( 'sm', "You are update successfull (  {$request[ 'name' ]} ) user." );
+        } catch ( \Exception $e ) {
+            DB::rollback();
+            Session::flash( 'wm', 'Can\'t update user now please try after' );
+            Session::flash( 'wm', $e->getMessage() );
+        }
+    }
+    
+    public static function deleteUser( $id ) {
+        DB::beginTransaction();
+        try {
+
+            $user = self::find( $id );
+            $name    = $user[ 'name' ];
+            if ( $user ) {
+//                self::pageBackup( 'delete', $category, 'trash-o' );
+                $user->delete();
+
+                DB::commit();
+                Session::flash( 'sm', "You are successfull delete user ($name)" );
+            } else {
+                
+            }
+        } catch ( \Exception $e ) {
+            DB::rollback();
+            Session::flash( 'wm', 'Can\'t delete user now please try after' );
         }
     }
 

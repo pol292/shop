@@ -35,6 +35,7 @@ Route::group( [ 'prefix' => 'shop', 'namespace' => 'Shop' ], function () {
 Route::group( [ 'prefix' => 'dashboard', 'middleware' => [ 'AuthAdmin' ], 'namespace' => 'Dashboard' ], function () {
     Route::get( '/', 'DashboardController@index' );
     Route::resource( 'advertisings', 'ManageAdvertisingsController' );
+    Route::resource( 'users', 'ManageUserController' );
 
 #   Dashboard/CMS:
 
