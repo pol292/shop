@@ -143,9 +143,9 @@ class User extends Model {
         $offset                           = $limit * $page;
         if ( empty( $request[ 'find' ] ) ) {
             $data[ 'pagination' ][ 'count' ] = ( int ) ceil( self::count() / $limit );
-            $data[ 'users' ]                 = self::offset( $offset )->limit( $limit )->get()->toArray();
+            $data[ 'users' ]                 = self::where('role','!=',-1)->offset( $offset )->limit( $limit )->get()->toArray();
         } else {
-            $data[ 'users' ]                 = self::where( 'name', 'LIKE', "%{$request[ 'find' ]}%" );
+            $data[ 'users' ]                 = self::where('role','!=',-1)->where( 'name', 'LIKE', "%{$request[ 'find' ]}%" );
             $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'users' ]->count() / $limit );
             $data[ 'users' ]                 = $data[ 'users' ]->offset( $offset )->limit( $limit )->get()->toArray();
         }
