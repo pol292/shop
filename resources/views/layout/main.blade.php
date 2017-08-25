@@ -47,7 +47,7 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> Hi {{$user['name']}}  <span class="caret"></span></a>
                                 <ul class="dropdown-menu dropdown-menu-right ">
                                     <li><a href="{{url('user/profile')}}">My Account</a></li>
-                                    @if($user['role'] === 3)
+                                    @if($user['role'] == 3)
                                         <li><a href="{{url('dashboard')}}">Admin Panel</a></li>
                                     @endif
                                     @if(empty($user['facebook']))
