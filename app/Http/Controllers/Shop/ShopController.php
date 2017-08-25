@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\MainController;
 use App\Models\Shop\Categorie;
 use App\Models\Shop\Product;
+use App\Models\Shop\Order;
 use App\Models\Shop\ProductReview;
 
 class ShopController extends MainController {
@@ -52,6 +53,17 @@ class ShopController extends MainController {
         if ( empty( $request[ 'back' ] ) )
             return redirect( url( '/' ) );
         return redirect( url( $request[ 'back' ] ) );
+    }
+
+    public function checkout( Request $request, $product ) {
+        Product::selectForCheckOut( $product, $request, $cart );
+        Order::checkout( $cart );
+        return redirect( 'user/order-history' );
+    }
+
+    public function checkoutCart(  ) {
+        Order::checkoutCart( $redirect );
+        return redirect( $redirect );
     }
 
 }

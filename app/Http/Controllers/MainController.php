@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\CMS\Menu;
+use App\Models\Shop\Product;
 use Illuminate\Http\Request;
 use Session;
 
@@ -22,5 +22,6 @@ class MainController extends Controller {
     public static function setTitle( $title ) {
         self::$data[ 'title' ] = $title . ' - ' . self::$data[ 'title' ];
     }
+    
 
 }

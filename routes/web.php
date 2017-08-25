@@ -19,9 +19,12 @@ Route::group( [ 'prefix' => 'user', 'middleware' => [ 'AuthUser' ], 'namespace' 
     Route::get( 'profile', 'UserController@profile' );
     Route::get( 'change-pass', 'UserController@editPass' );
     Route::post( 'change-pass', 'UserController@editPassPost' );
+    Route::post( 'order-history', 'UserController@orderHistory' );
 } );
 
 Route::group( [ 'prefix' => 'shop', 'namespace' => 'Shop' ], function () {
+    Route::get( 'checkout', 'ShopController@checkoutCart' )->middleware( 'AuthUser' );
+    Route::post( 'checkout/{item}', 'ShopController@checkout' )->middleware( 'AuthUser' );
     Route::get( 'add-to-cart/{id}', 'ShopController@addToCart' );
     Route::get( 'add-to-cart/{id}/{count}', 'ShopController@addToCart' );
     Route::get( 'update-cart/{id}/{count}', 'ShopController@updateCart' );

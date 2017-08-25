@@ -47,6 +47,9 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> Hi {{$user['name']}}  <span class="caret"></span></a>
                                 <ul class="dropdown-menu dropdown-menu-right ">
                                     <li><a href="{{url('user/profile')}}">My Account</a></li>
+                                    @if($user['role'] === 3)
+                                        <li><a href="{{url('dashboard')}}">Admin Panel</a></li>
+                                    @endif
                                     @if(empty($user['facebook']))
                                         @php
                                             $facebook = [];
@@ -85,7 +88,7 @@
                     </ul>
                 </div>
                 @endif
-
+                
                 @if (session('wm'))
                 <div class="alert alert-danger message">
                     {{ session('wm') }}
@@ -114,6 +117,9 @@
                     </form>
                     <div class="col-sm-4 col-md-3 cart-btn hidden-xs m-t-2">
                         @if(Cart::count())
+                        @php
+                            App\Models\Shop\Product::updateAllCart();
+                        @endphp
                         <button type="button" class="btn btn-default dropdown-toggle" id="dropdown-cart" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             <i class="fa fa-shopping-cart"></i> Shopping Cart : {{Cart::count()}} items <i class="fa fa-caret-down"></i>
                         </button>
@@ -135,7 +141,7 @@
                             <div class="text-center">
                                 <div class="btn-group" role="group" aria-label="View Cart and Checkout Button">
                                     <a href="{{url('shop/view-cart')}}" class="btn btn-default btn-sm"><i class="fa fa-shopping-cart"></i> View Cart</a>
-                                    <button class="btn btn-default btn-sm" type="button"><i class="fa fa-check"></i> Checkout</button>
+                                    <a href="{{url('shop/checkout')}}" class="btn btn-default btn-sm" ><i class="fa fa-check"></i> Checkout</a>
                                 </div>
                             </div>
                         </div>

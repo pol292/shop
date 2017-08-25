@@ -54,7 +54,7 @@
         <nav aria-label="Shopping Cart Next Navigation">
             <ul class="pager">
                 <li class="previous"><a href="{{url('/')}}"><span aria-hidden="true">&larr;</span> Continue Shopping</a></li>
-                <li class="next"><a href="checkout.html">Proceed to Checkout <span aria-hidden="true">&rarr;</span></a></li>
+                <li class="next"><a href="{{url('shop/checkout')}}">Proceed to Checkout <span aria-hidden="true">&rarr;</span></a></li>
             </ul>
         </nav>
     </div>
@@ -62,7 +62,7 @@
 
     <!-- New Arrivals -->
     <div class="col-md-3 hidden-sm hidden-xs">
-        <div class="title"><span><a href="products.html">New Arrivals <i class="fa fa-chevron-circle-right"></i></a></span></div>
+        <div class="title"><span>New Arrivals <i class="fa fa-chevron-circle-right"></i></span></div>
         <div class="widget-slider owl-carousel owl-theme owl-controls-top-offset">
             @each('shop.skin.product_slider', $new_product, 'product')
         </div>

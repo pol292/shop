@@ -15,7 +15,6 @@ class Product extends Model {
         return $this->hasMany( 'App\Models\Shop\ProductReview', 'product_id', 'id' )->with( 'user' );
     }
 
-
     public static function addProduct( &$request ) {
         DB::beginTransaction();
         try {
@@ -116,7 +115,7 @@ class Product extends Model {
                 ->with( 'category' )
                 ->with( 'rates' )
                 ->get();
-        
+
         if ( $new ) {
             $data[ 'new_product' ] = $new->toArray();
         }
@@ -168,7 +167,7 @@ class Product extends Model {
         }
     }
 
-    public static function getCxontentsById( &$id, &$data ) {
+    public static function getContentsById( &$id, &$data ) {
         if ( $product = self::find( $id ) ) {
             $data[ 'product' ]             = $product->toArray();
             $data[ 'product' ][ 'images' ] = unserialize( $data[ 'product' ][ 'images' ] );
@@ -307,6 +306,46 @@ class Product extends Model {
 
     public static function updateCart( $rowId, $count ) {
         Cart::update( $rowId, $count );
+    }
+
+    public static function updateAllCart() {
+        $cart = Cart::content();
+        foreach ( $cart as $item ) {
+            $product = self::find( $item->id );
+            $change  = [];
+            if ( $product->price != $item->price ) {
+                $change[ 'price' ] = $product->price;
+            }
+            if ( $product->stock < $item->qty ) {
+                $change[ 'qty' ] = $product->stock;
+            }
+            if ( !empty( $change ) ) {
+                Session::flash( 'wm', 'An product change price or stock pleace check your cart to see.' );
+                Cart::update( $item->rowId, $change );
+            }
+        }
+    }
+    
+    public static function selectForCheckOut($productUrl, &$request, &$data){
+        if ( $product = self::where( 'url', $productUrl )->with( 'category' )->first() ) {
+            $product       = $product->toArray();
+            $data = [
+                'id'      => $product[ 'id' ],
+                'name'    => $product[ 'title' ],
+                'qty'     => $request['qty'],
+                'price'   => $product[ 'price' ] * (1 - $product[ 'sale' ] / 100),
+                'options' => [
+                    'url'   => url( "shop/{$product[ 'category' ][ 'url' ]}/{$product[ 'url' ]}" ),
+                    'image' => $product[ 'image' ],
+                ],
+            ];
+        }
+    }
+    
+    public static function removeQty(&$buyed){
+        $product = self::find($buyed['id']);
+        $product->stock = $product->stock - $buyed['qty'];
+        $product->save();
     }
 
 }

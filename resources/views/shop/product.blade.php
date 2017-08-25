@@ -43,65 +43,72 @@
 
         <div class="col-sm-8">
             <div class="title-detail">{{$product['title']}}</div>
-            <table class="table table-detail">
-                <tbody>
-                    <tr>
-                        <td>Price</td>
-                        <td>
-                            @if(empty((float) $product['sale']))
-                            <div>${{$product['price']}} </div>
-                            @else
-                            <div class="price">
-                                <div>
-                                    ${{$product['price']*(1-$product['sale']/100)}} 
-                                    <span class="label-tags">
-                                        <span class="label label-default">-{{$product['sale']}}%</span>
-                                    </span>
+            <form method="post" action="{{url('shop/checkout/'.$product['url'] )}}">
+                {{ csrf_field() }}
+                <table class="table table-detail">
+                    <tbody>
+                        <tr>
+                            <td>Price</td>
+                            <td>
+                                @if(empty((float) $product['sale']))
+                                <div>${{$product['price']}} </div>
+                                @else
+                                <div class="price">
+                                    <div>
+                                        ${{$product['price']*(1-$product['sale']/100)}} 
+                                        <span class="label-tags">
+                                            <span class="label label-default">-{{$product['sale']}}%</span>
+                                        </span>
+                                    </div>
+                                    <span class="price-old">${{$product['price']}}</span>
                                 </div>
-                                <span class="price-old">${{$product['price']}}</span>
-                            </div>
-                            @endif
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Availability</td>
-                        <td>
-                            @if(empty($product['stock']))
-                            <span class="label label-danger"><s>Out of Stock</s></span>
-                            @elseif($product['stock'] == 1)
-                            <span class="label label-warning">Last 1 Ready in Stock</span>
-                            @elseif($product['stock'] > 1)
-                            <span class="label label-success">{{$product['stock']}} Ready in Stock</span>
-                            @endif
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>In cart</td>
-                        <td>
-                            @if(!empty($cart))
-                            <span class="label label-default">{{$cart['qty']}} in your cart</span>
-                            @endif
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Quantity</td>
-                        <td>
-                            <div class="input-qty">
-                                <input type="text" data-bts-max="{{$product['stock']}}" id='qty' value="1" class="form-control text-center"/>
-                            </div>
-                        </td>
-                    </tr>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Availability</td>
+                            <td>
+                                @if(empty($product['stock']))
+                                <span class="label label-danger"><s>Out of Stock</s></span>
+                                @elseif($product['stock'] == 1)
+                                <span class="label label-warning">Last 1 Ready in Stock</span>
+                                @elseif($product['stock'] > 1)
+                                <span class="label label-success">{{$product['stock']}} Ready in Stock</span>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>In cart</td>
+                            <td>
+                                @if(!empty($cart))
+                                <span class="label label-default">{{$cart['qty']}} in your cart</span>
+                                @else
+                                <span class="label label-danger">0 in your cart</span>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Quantity</td>
+                            <td>
 
-                    <tr>
-                        <td></td>
-                        <td>
-                            <button class="addMenyToCart btn btn-theme m-b-1" type="button" data-id='{{$product['id']}}'><i class="fa fa-shopping-cart"></i> Add to Cart</button>
-                            <i class="fa fa-spinner rotating" aria-hidden="true" style="color:#000;display: none; font-size: 30px; margin-right: 10px; "></i>
-                            <button class="btn btn-theme m-b-1" type="button"><i class="fa fa-check"></i> Checkout</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                                <div class="input-qty">
+                                    <input type="text" data-bts-max="{{$product['stock']}}" id='qty' value="1" class="form-control text-center" name="qty"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td>
+                                <button class="addMenyToCart btn btn-theme m-b-1" type="button" data-id='{{$product['id']}}'><i class="fa fa-shopping-cart"></i> Add to Cart</button>
+                                <i class="fa fa-spinner rotating" aria-hidden="true" style="color:#000;display: none; font-size: 30px; margin-right: 10px; "></i>
+                                <button type="submit" class="btn btn-theme m-b-1"><i class="fa fa-check"></i> Checkout</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+
         </div>
 
         <div class="col-md-8">
