@@ -78,6 +78,9 @@ Route::group( [ 'prefix' => 'dashboard', 'middleware' => [ 'AuthAdmin' ], 'names
 
 #   Dashboard/Shop/Product:
         Route::resource( 'product', 'ManageProductController', [ 'except' => [ 'show' ] ] );
+
+        Route::get( 'order', 'ManageOrderController@showOrders' );
+        Route::get( 'order/{id}', 'ManageOrderController@viewOrder' );
     } );
 
 #   Dashboard/restore:

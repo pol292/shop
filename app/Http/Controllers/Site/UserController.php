@@ -17,6 +17,7 @@ class UserController extends MainController {
     public function register() {
         User::facebookLogin( self::$data );
         self::setTitle( 'Register' );
+        self::$data[ 'breadcrumb' ][ 'active' ] = 'Register';
         return view( 'user.register', self::$data );
     }
 
@@ -28,6 +29,7 @@ class UserController extends MainController {
     public function login() {
         User::facebookLogin( self::$data );
         self::setTitle( 'Login' );
+        self::$data[ 'breadcrumb' ][ 'active' ] = 'Login';
         return view( 'user.login', self::$data );
     }
 
@@ -55,12 +57,16 @@ class UserController extends MainController {
     }
 
     public function profile() {
-        self::$data[ 'user' ] = Session::get( 'user' );
+        self::$data[ 'user' ]                   = Session::get( 'user' );
+        self::setTitle( self::$data[ 'user' ][ 'name' ] . ' Profile' );
+        self::$data[ 'breadcrumb' ][ 'active' ] = self::$data[ 'user' ][ 'name' ] . ' Profile';
         return view( 'user.profile', self::$data );
     }
 
     public function editPass() {
-        self::$data[ 'user' ] = Session::get( 'user' );
+        self::$data[ 'user' ]                   = Session::get( 'user' );
+        self::setTitle( self::$data[ 'user' ][ 'name' ] . ' Change pass' );
+        self::$data[ 'breadcrumb' ][ 'active' ] = self::$data[ 'user' ][ 'name' ] . ' Change pass';
         return view( 'user.change-pass', self::$data );
     }
 
@@ -73,18 +79,22 @@ class UserController extends MainController {
     }
 
     public function orderHistory() {
-        self::$data[ 'user' ] = Session::get( 'user' );
-        Order::getOrderById(self::$data[ 'user' ]['id'] , self::$data);
+        self::$data[ 'user' ]                   = Session::get( 'user' );
+        self::setTitle( self::$data[ 'user' ][ 'name' ] . ' Order History' );
+        self::$data[ 'breadcrumb' ][ 'active' ] = self::$data[ 'user' ][ 'name' ] . ' Order History';
+        Order::getOrderById( self::$data[ 'user' ][ 'id' ], self::$data );
         return view( 'user.history', self::$data );
     }
-    public function itemsHistory($orderId){
-        self::$data[ 'user' ] = Session::get( 'user' );
-        Order::getOrderByOrderId($orderId , self::$data);
-        if(empty(self::$data[ 'order' ])){
-            return redirect('user/order-history');
+
+    public function itemsHistory( $orderId ) {
+        self::$data[ 'user' ]                   = Session::get( 'user' );
+        self::setTitle( self::$data[ 'user' ][ 'name' ] . ' Order History' );
+        self::$data[ 'breadcrumb' ][ 'active' ] = self::$data[ 'user' ][ 'name' ] . ' Order History';
+        Order::getOrderByOrderId( $orderId, self::$data );
+        if ( empty( self::$data[ 'order' ] ) ) {
+            return redirect( 'user/order-history' );
         }
         return view( 'user.history-list', self::$data );
-        
     }
 
 }

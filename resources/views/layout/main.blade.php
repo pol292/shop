@@ -209,7 +209,7 @@
             </div>
         </nav>
         <!-- End Navigation Bar -->
-        @if($title === 'iDiver' && !empty($advs))
+        @if($title === 'Diver' && !empty($advs))
         <!-- Full Slider -->
         <style>
             .owl-carousel .item img{

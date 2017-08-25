@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 25, 2017 at 12:18 AM
+-- Generation Time: Aug 25, 2017 at 12:46 PM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 7.0.9
 
@@ -303,6 +303,21 @@ INSERT INTO `menus` (`id`, `page_id`, `menu_id`, `sort`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `orders` text NOT NULL,
+  `total` decimal(8,2) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `pages`
 --
 
@@ -393,12 +408,12 @@ INSERT INTO `products` (`id`, `categorie_id`, `title`, `article`, `url`, `image`
 (6, 2, 'Sepa Snorkel', 'Duis sodales erat urna, et dictum augue condimentum vel. Maecenas vitae pulvinar odio. Donec dignissim gravida sollicitudin. Cras sed placerat ligula. Sed vestibulum egestas sem, quis bibendum ipsum aliquet quis. Aenean maximus sodales odio nec varius. Al', 'sepa-snorkel', 'IMG_1723.JPG', 'a:1:{i:0;s:12:"IMG_1723.JPG";}', '25.90', '0.00', 1, '2017-07-23 20:17:11', '2017-07-19 03:31:41'),
 (7, 5, 'Camera 360', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra magna vel libero vehicula, eu facilisis arcu bibendum. Vivamus ut interdum arcu, non pulvinar est. Vestibulum at tempor libero. Mauris sit amet malesuada tellus. Donec auctor, mi sed viv', 'camera-360', 'IMG_1715.JPG', 'a:3:{i:0;s:12:"IMG_1715.JPG";i:1;s:12:"IMG_1717.JPG";i:2;s:12:"IMG_1718.JPG";}', '49.90', '0.00', 3, '2017-07-23 20:17:11', '2017-07-19 03:45:05'),
 (8, 5, 'SJCAM SJ-4000', 'Nullam eu dictum tellus. Maecenas nec pulvinar velit, quis porttitor nisi. Nam et pretium nibh. Sed est turpis, mattis at lorem ac, aliquam lobortis felis. Fusce tempor, odio ut ultrices pulvinar, orci nulla scelerisque dolor, eu interdum sapien tortor ne', 'sjcam-sj-4000', 'IMG_1750.JPG', 'a:6:{i:0;s:12:"IMG_1749.JPG";i:1;s:14:"IMG_1749_1.jpg";i:2;s:14:"IMG_1749_2.jpg";i:3;s:12:"IMG_1750.JPG";i:4;s:12:"IMG_1751.JPG";i:5;s:12:"IMG_1752.JPG";}', '40.55', '0.00', 3, '2017-07-23 20:17:11', '2017-07-19 03:45:05'),
-(9, 5, 'Canon A4000', 'Nunc metus quam, finibus blandit lectus in, consequat tristique nibh. Sed dignissim, nisi id aliquet volutpat, neque purus ullamcorper arcu, et fringilla nibh neque id leo. Maecenas posuere elit dolor, a pretium eros egestas at. Etiam auctor interdum diam', 'canon-a4000', 'IMG_1744.JPG', 'a:1:{i:0;s:12:"IMG_1744.JPG";}', '600.00', '7.00', 3, '2017-07-23 20:17:11', '2017-07-19 03:47:35'),
+(9, 5, 'Canon A4000', 'Nunc metus quam, finibus blandit lectus in, consequat tristique nibh. Sed dignissim, nisi id aliquet volutpat, neque purus ullamcorper arcu, et fringilla nibh neque id leo. Maecenas posuere elit dolor, a pretium eros egestas at. Etiam auctor interdum diam', 'canon-a4000', 'IMG_1744.JPG', 'a:1:{i:0;s:12:"IMG_1744.JPG";}', '600.00', '7.00', 1, '2017-08-25 09:13:19', '2017-07-19 03:47:35'),
 (10, 5, 'Red filter for ikelite 3"', 'Donec vel nisi vel lorem faucibus ullamcorper at et risus. Suspendisse et porttitor diam, sed euismod risus. Aliquam vehicula imperdiet tempor. Proin dignissim vulputate sem, nec pulvinar felis vulputate non. Nulla arcu ante, vehicula vitae mi quis, eleif', 'red-filter-iklite', 'IMG_1745.JPG', 'a:1:{i:0;s:12:"IMG_1745.JPG";}', '80.50', '0.00', 2, '2017-07-23 20:17:11', '2017-07-19 03:47:35'),
 (11, 5, 'Extreme Camera Floating Stick', 'Quisque tempor, tellus tincidunt venenatis tristique, massa lectus viverra tortor, ac dignissim dolor nulla non sapien. Suspendisse id quam tristique metus consectetur congue. Etiam eu justo diam. Vestibulum nunc neque, porta in condimentum sed, ultricies', 'extreme-camera-floating-stick', 'IMG_1732.JPG', 'a:2:{i:0;s:12:"IMG_1732.JPG";i:1;s:12:"IMG_1733.JPG";}', '12.30', '0.00', 0, '2017-07-23 20:17:11', '2017-07-19 03:54:58'),
 (12, 5, 'Extreme Camera Long Stick', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ex massa, cursus sed dolor id, vehicula scelerisque turpis. Vivamus eu arcu eros. Cras finibus neque ut nisl elementum, ac vulputate nunc vehicula. Nullam id maximus tellus, eget ultricies pu', 'extreme-camera-long-stick', 'IMG_1719.JPG', 'a:2:{i:0;s:12:"IMG_1719.JPG";i:1;s:12:"IMG_1720.JPG";}', '26.90', '3.00', 3, '2017-07-23 20:17:11', '2017-07-19 03:54:58'),
 (13, 3, 'Sepa Diving Likra Suit', 'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque laoreet elit vitae risus posuere pulvinar. Duis interdum ex mi, ac consequat nisi ornare eget. Pellentesque sed nunc id magna sollicitudin tincidunt. Pra', 'sepa-diving-likra-suit', 'IMG_1743.JPG', 'a:2:{i:0;s:12:"IMG_1734.JPG";i:1;s:12:"IMG_1735.JPG";}', '39.00', '0.00', 3, '2017-07-23 20:17:11', '2017-07-19 04:02:56'),
-(14, 4, 'EezyCut', 'In laoreet malesuada felis, commodo maximus urna facilisis eget. Nunc aliquam lacus ut vestibulum suscipit. Nam at quam vitae nulla mattis ornare. Aliquam dictum augue eu sem consectetur aliquet. Proin non accumsan turpis, sit amet aliquam ex. Donec mi ni', 'eezycut', 'IMG_1729_1.jpg', 'a:4:{i:0;s:12:"IMG_1727.JPG";i:1;s:12:"IMG_1729.JPG";i:2;s:14:"IMG_1729_1.jpg";i:3;s:14:"IMG_1729_2.jpg";}', '49.00', '5.35', 1, '2017-07-23 20:17:11', '2017-07-19 04:08:26'),
+(14, 4, 'EezyCut', 'In laoreet malesuada felis, commodo maximus urna facilisis eget. Nunc aliquam lacus ut vestibulum suscipit. Nam at quam vitae nulla mattis ornare. Aliquam dictum augue eu sem consectetur aliquet. Proin non accumsan turpis, sit amet aliquam ex. Donec mi ni', 'eezycut', 'IMG_1729_1.jpg', 'a:4:{i:0;s:12:"IMG_1727.JPG";i:1;s:12:"IMG_1729.JPG";i:2;s:14:"IMG_1729_1.jpg";i:3;s:14:"IMG_1729_2.jpg";}', '49.00', '5.30', 2, '2017-08-25 07:31:02', '2017-07-19 04:08:26'),
 (15, 4, 'Diving Flashlight\r\n', 'In nec risus tincidunt, maximus neque eget, euismod mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque ut enim et odio porta sagittis vel sit amet metus. Proin pulvinar neque vitae sapien tristique, id portt', 'diving-flashlight', 'IMG_1739.JPG', 'a:1:{i:0;s:12:"IMG_1739.JPG";}', '23.00', '0.00', 2, '2017-07-23 20:17:11', '2017-07-19 04:08:26'),
 (16, 4, 'Scuba Whistle', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In a tempus dolor, vel volutpat quam. In ex purus, consequat ac mollis eu, pellentesque ac dui. Donec at semper lacus. Quisque vehicula, metus ut vulputate dapibus, risus dui dapibus dui, sed laoree', 'scuba-whistle', 'IMG_1736.JPG', 'a:1:{i:0;s:12:"IMG_1736.JPG";}', '9.50', '2.00', 1, '2017-07-23 20:17:11', '2017-07-19 04:10:19'),
 (17, 4, 'Dive Log', 'Integer rhoncus, neque elementum vestibulum mollis, nunc tellus congue eros, non tincidunt erat diam vitae nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque hendrerit ornare est, ut mollis est. Viv', 'dive-log', 'IMG_1740.JPG', 'a:2:{i:0;s:12:"IMG_1740.JPG";i:1;s:12:"IMG_1741.JPG";}', '23.90', '0.00', 0, '2017-07-23 20:17:11', '2017-07-19 04:10:19');
@@ -418,16 +433,6 @@ CREATE TABLE `product_reviews` (
   `updated_at` datetime NOT NULL,
   `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `product_reviews`
---
-
-INSERT INTO `product_reviews` (`id`, `product_id`, `user_id`, `rate`, `review`, `updated_at`, `created_at`) VALUES
-(1, 12, 3, '4.0', 'fdsfdsfdsfds', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(2, 12, 2, '5.0', 'sfdfdsfdsf', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(3, 8, 3, '3.0', 'ewrew', '2017-08-22 22:17:22', '2017-08-22 22:17:22'),
-(4, 9, 3, '4.0', 'trertrtef re gegr gr er', '2017-08-22 23:04:04', '2017-08-22 23:04:04');
 
 -- --------------------------------------------------------
 
@@ -451,8 +456,13 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `facebook`, `updated_at`, `created_at`) VALUES
-(2, 'pol', 'pol292@gmail.com', '$2y$10$tJeBYyNvHSH7juL3bra5iOpzCoWmg6z9kt97q6y1O9IvR2HS75HDS', 3, '1809227715772171', '2017-08-24 22:16:51', '2017-08-22 11:36:09'),
-(3, 'Karina Mayzel', 'karina9994@walla.com', '$2y$10$/9bxIO9rRKpGtTX7hzPEuuWyJRoGxfq2T0j8GM6QKDFRDoV6EiHpS', 3, '1471512526228440', '2017-08-24 20:20:59', '2017-08-22 14:51:12');
+(1, '-------------------', '-------------------', '-------------------', -1, 'false', '2017-08-25 00:00:00', '2017-08-25 00:00:00'),
+(2, '--------------------------------------', '--------------------------------------', '--------------------------------------', -1, 'false', '2017-08-25 00:00:00', '2017-08-25 00:00:00'),
+(3, '-------------------------------------', '-------------------------------------', '-------------------------------------', -1, 'false', '2017-08-25 00:00:00', '2017-08-25 00:00:00'),
+(4, 'Pol Bogopolsky', 'pol292@gmail.com', '$2y$10$.wAHD1aXlYng9/nbUvoutuHZE45UZ4301ydmLoLdrzlvHSJjdKGXm', 3, '1809227715772171', '2017-08-25 10:43:53', '2017-08-25 10:43:53'),
+(5, 'Shlomi Lahav', 'shlomil.mail@gmail.com', '$2y$10$xKPYOROQigBl/tQVFe0b2O3HNO.rRjF9FlOvkPfwoufXp2751FCyG', 3, '0', '2017-08-25 10:44:10', '2017-08-25 10:44:10'),
+(6, 'Demo user', 'demo@demo.com', '$2y$10$vNDHtsFHCHah46v62DkRKO8sveb3Bm6HCM33OHKeyhY1MYREbwrwq', 1, '0', '2017-08-25 10:44:33', '2017-08-25 10:44:33'),
+(7, 'Karina Mayzel', 'karina9994@walla.com', '$2y$10$zvvTnibHLdWSn5UYGYoI3OjiZC1RpTLYYNWgGxNxLpFB429GPY1n2', 1, '1471512526228440', '2017-08-25 10:45:38', '2017-08-25 10:45:38');
 
 --
 -- Indexes for dumped tables
@@ -481,6 +491,12 @@ ALTER TABLE `categories`
 -- Indexes for table `menus`
 --
 ALTER TABLE `menus`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -541,6 +557,11 @@ ALTER TABLE `categories`
 ALTER TABLE `menus`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `pages`
 --
 ALTER TABLE `pages`
@@ -559,12 +580,12 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `product_reviews`
 --
 ALTER TABLE `product_reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

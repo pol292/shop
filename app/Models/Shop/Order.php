@@ -70,4 +70,26 @@ class Order extends Model {
         }
     }
 
+    public static function getOrders(&$data) {
+        $data[ 'pagination' ][ 'url' ] = url( "dashboard/shop/orders?page=" );
+
+        $limit                            = 5;
+        $data[ 'pagination' ][ 'active' ] = !empty( $request[ 'page' ] ) ? $request[ 'page' ] : 1;
+        $page                             = $data[ 'pagination' ][ 'active' ] - 1;
+        $offset                           = $limit * $page;
+
+        if ( empty( $request[ 'find' ] ) ) {
+            $data[ 'pagination' ][ 'count' ] = ( int ) ceil( self::count() / $limit );
+            $data[ 'orders' ]              = self::offset( $offset )->limit( $limit )->with('user')->get()->toArray();
+        } else {
+            $data[ 'orders' ]              = self::where( 'title', 'LIKE', "%{$request[ 'find' ]}%" );
+            $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'orders' ]->count() / $limit );
+            $data[ 'orders' ]              = $data[ 'orders' ]->offset( $offset )->limit( $limit )->with('user')->get()->toArray();
+        }
+        foreach($data['orders'] as  $k => $order){
+            $data['orders'][$k]['orders'] = unserialize($order['orders']);
+            $data['orders'][$k]['count'] = count($data['orders'][$k]['orders']);
+        }
+    }
+
 }
