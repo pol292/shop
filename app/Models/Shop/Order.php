@@ -18,12 +18,15 @@ class Order extends Model {
     public static function checkout( &$cart ) {
         $user = Session::get( 'user' )[ 'id' ];
         if ( !empty( $user ) ) {
-            Product::removeQty( $cart );
-            $order          = new self;
-            $order->user_id = $user;
-            $order->orders  = serialize( $cart );
-            $order->total   = $cart[ 'price' ];
-            $order->save();
+            if ( Product::removeQty( $cart[0] ) ) {
+                $order          = new self;
+                $order->user_id = $user;
+                $order->orders  = serialize( $cart );
+                $order->total   = $cart[0][ 'price' ];
+                $order->save();
+            } else {
+                Session::flash( 'wm', 'An product change out of stock pleace check your cart to see.' );
+            }
         }
     }
 
@@ -32,15 +35,21 @@ class Order extends Model {
         $cart = Cart::content();
         if ( !empty( $user ) && !empty( $cart ) ) {
             $cart = $cart->toArray();
+            $updated = [];
+            $total = 0;
             foreach ( $cart as $item ) {
-                Product::removeQty( $item );
+                if ( Product::removeQty( $item ) ) {
+                    $updated[] = $item;
+                    
+                    $total += $item['price'];
+                    Cart::remove($item['rowId']);
+                }
             }
             $order          = new self;
             $order->user_id = $user;
             $order->orders  = serialize( $cart );
-            $order->total   = Cart::total();
+            $order->total   = $total;
             $order->save();
-            Cart::destroy();
             $redirect       = 'user/order-history';
         } else {
             $redirect = '/';
@@ -70,7 +79,7 @@ class Order extends Model {
         }
     }
 
-    public static function getOrders(&$data) {
+    public static function getOrders( &$data ) {
         $data[ 'pagination' ][ 'url' ] = url( "dashboard/shop/orders?page=" );
 
         $limit                            = 5;
@@ -80,15 +89,15 @@ class Order extends Model {
 
         if ( empty( $request[ 'find' ] ) ) {
             $data[ 'pagination' ][ 'count' ] = ( int ) ceil( self::count() / $limit );
-            $data[ 'orders' ]              = self::offset( $offset )->limit( $limit )->with('user')->get()->toArray();
+            $data[ 'orders' ]                = self::offset( $offset )->limit( $limit )->with( 'user' )->get()->toArray();
         } else {
-            $data[ 'orders' ]              = self::where( 'title', 'LIKE', "%{$request[ 'find' ]}%" );
+            $data[ 'orders' ]                = self::where( 'title', 'LIKE', "%{$request[ 'find' ]}%" );
             $data[ 'pagination' ][ 'count' ] = ( int ) ceil( $data[ 'orders' ]->count() / $limit );
-            $data[ 'orders' ]              = $data[ 'orders' ]->offset( $offset )->limit( $limit )->with('user')->get()->toArray();
+            $data[ 'orders' ]                = $data[ 'orders' ]->offset( $offset )->limit( $limit )->with( 'user' )->get()->toArray();
         }
-        foreach($data['orders'] as  $k => $order){
-            $data['orders'][$k]['orders'] = unserialize($order['orders']);
-            $data['orders'][$k]['count'] = count($data['orders'][$k]['orders']);
+        foreach ( $data[ 'orders' ] as $k => $order ) {
+            $data[ 'orders' ][ $k ][ 'orders' ] = unserialize( $order[ 'orders' ] );
+            $data[ 'orders' ][ $k ][ 'count' ]  = count( $data[ 'orders' ][ $k ][ 'orders' ] );
         }
     }
 

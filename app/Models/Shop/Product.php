@@ -325,14 +325,14 @@ class Product extends Model {
             }
         }
     }
-    
-    public static function selectForCheckOut($productUrl, &$request, &$data){
+
+    public static function selectForCheckOut( $productUrl, &$request, &$data ) {
         if ( $product = self::where( 'url', $productUrl )->with( 'category' )->first() ) {
-            $product       = $product->toArray();
-            $data = [
+            $product = $product->toArray();
+            $data[0]    = [
                 'id'      => $product[ 'id' ],
                 'name'    => $product[ 'title' ],
-                'qty'     => $request['qty'],
+                'qty'     => $request[ 'qty' ],
                 'price'   => $product[ 'price' ] * (1 - $product[ 'sale' ] / 100),
                 'options' => [
                     'url'   => url( "shop/{$product[ 'category' ][ 'url' ]}/{$product[ 'url' ]}" ),
@@ -341,11 +341,15 @@ class Product extends Model {
             ];
         }
     }
-    
-    public static function removeQty(&$buyed){
-        $product = self::find($buyed['id']);
-        $product->stock = $product->stock - $buyed['qty'];
-        $product->save();
+
+    public static function removeQty( &$buyed ) {
+        $product = self::find( $buyed[ 'id' ] );
+        if ( $buyed[ 'qty' ] >= 1 && $product->stock >= $buyed[ 'qty' ] ) {
+            $product->stock = $product->stock - $buyed[ 'qty' ];
+            $product->save();
+            return TRUE;
+        }
+        return FALSE;
     }
 
 }
