@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MainController;
 use App\Models\Shop\Product;
+use App\Models\Shop\Order;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\PassRequest;
@@ -69,6 +70,21 @@ class UserController extends MainController {
         }
         self::$data[ 'user' ] = Session::get( 'user' );
         return view( 'user.change-pass', self::$data );
+    }
+
+    public function orderHistory() {
+        self::$data[ 'user' ] = Session::get( 'user' );
+        Order::getOrderById(self::$data[ 'user' ]['id'] , self::$data);
+        return view( 'user.history', self::$data );
+    }
+    public function itemsHistory($orderId){
+        self::$data[ 'user' ] = Session::get( 'user' );
+        Order::getOrderByOrderId($orderId , self::$data);
+        if(empty(self::$data[ 'order' ])){
+            return redirect('user/order-history');
+        }
+        return view( 'user.history-list', self::$data );
+        
     }
 
 }

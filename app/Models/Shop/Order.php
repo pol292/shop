@@ -18,7 +18,7 @@ class Order extends Model {
     public static function checkout( &$cart ) {
         $user = Session::get( 'user' )[ 'id' ];
         if ( !empty( $user ) ) {
-            Product::removeQty($cart);
+            Product::removeQty( $cart );
             $order          = new self;
             $order->user_id = $user;
             $order->orders  = serialize( $cart );
@@ -32,8 +32,8 @@ class Order extends Model {
         $cart = Cart::content();
         if ( !empty( $user ) && !empty( $cart ) ) {
             $cart = $cart->toArray();
-            foreach ($cart as $item){
-                Product::removeQty($item);
+            foreach ( $cart as $item ) {
+                Product::removeQty( $item );
             }
             $order          = new self;
             $order->user_id = $user;
@@ -44,6 +44,29 @@ class Order extends Model {
             $redirect       = 'user/order-history';
         } else {
             $redirect = '/';
+        }
+    }
+
+    public static function getOrderById( $id, &$data ) {
+        if ( $orders = self::where( 'user_id', $id )->get() ) {
+            $data[ 'orders' ] = $orders->toArray();
+            foreach ( $data[ 'orders' ] as $key => $order ) {
+                $data[ 'orders' ][ $key ][ 'orders' ] = unserialize( $order[ 'orders' ] );
+                $data[ 'orders' ][ $key ][ 'count' ]  = count( $data[ 'orders' ][ $key ][ 'orders' ] );
+            }
+        }
+    }
+
+    public static function getOrderByOrderId( $id, &$data ) {
+        if ( $orders = self::find( $id ) ) {
+            $data[ 'order' ]             = $orders->toArray();
+            $data[ 'order' ][ 'orders' ] = unserialize( $data[ 'order' ][ 'orders' ] );
+            $data[ 'order' ][ 'count' ]  = count( $data[ 'order' ][ 'orders' ] );
+            if ( !empty( $data[ 'order' ][ 'orders' ][ 'id' ] ) ) {
+                $temp                          = $data[ 'order' ][ 'orders' ];
+                unset( $data[ 'order' ][ 'orders' ] );
+                $data[ 'order' ][ 'orders' ][] = $temp;
+            }
         }
     }
 

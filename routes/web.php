@@ -18,8 +18,9 @@ Route::group( [ 'prefix' => 'user', 'middleware' => [ 'AuthUser' ], 'namespace' 
     Route::get( 'link-facebook', 'UserController@facebookLink' );
     Route::get( 'profile', 'UserController@profile' );
     Route::get( 'change-pass', 'UserController@editPass' );
+    Route::get( 'order-history', 'UserController@orderHistory' );
+    Route::get( 'history/{id}', 'UserController@itemsHistory' );
     Route::post( 'change-pass', 'UserController@editPassPost' );
-    Route::post( 'order-history', 'UserController@orderHistory' );
 } );
 
 Route::group( [ 'prefix' => 'shop', 'namespace' => 'Shop' ], function () {
